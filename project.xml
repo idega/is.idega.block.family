@@ -3,8 +3,8 @@
 <project>
   <extend>${base.project.dir}/block-dependencies.xml</extend>
   <pomVersion>3</pomVersion>
-  <name>idegaWeb Nationalregister Block</name>
-  <artifactId>is.idega.block.nationalregister</artifactId>
+  <name>idegaWeb Family Block</name>
+  <artifactId>is.idega.block.family</artifactId>
   <currentVersion>1.0-SNAPSHOT</currentVersion>
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Application</shortDescription>
