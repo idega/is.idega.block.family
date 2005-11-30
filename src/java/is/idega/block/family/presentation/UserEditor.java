@@ -726,7 +726,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 		// address layout section
 
 		row++;
-		int startRow = row;
 		Commune primaryCommune = null;
 
 		if (primaryAddress != null) {
@@ -818,7 +817,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 			Script S = p.getAssociatedScript();
 			S.addFunction("checkInfoForm", getInfoCheckScript());
 		}
-		Table infoTable = new Table();
 		Table addressTable = new Table();
 		addressTable.setColumns(3);
 		int row = 1;
@@ -1495,7 +1493,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 							}
 							else if (iwc.isParameterSet(prm_coaddress_postal_id)) {
-								Integer postalID = Integer.valueOf(iwc.getParameter(prm_coaddress_postal_id));
 								try {
 									postalCode = userService.getAddressBusiness().getPostalCodeHome().findByPrimaryKey(postalCode);
 								}
