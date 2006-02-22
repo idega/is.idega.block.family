@@ -95,8 +95,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 	private static final String prm_coaddress_postal_id = "co_postal_id";
 
-	private static final String prm_primaddress_country_id = "prim_country_id";
-
 	private static final String prm_primaddress_postal_id = "prim_postal_id";
 
 	private static final String prm_deceased_date = "deceased_date";
@@ -179,8 +177,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 	/** The list of relationstyped handle by the editor */
 	private List relationTypes = new Vector();
 
-	private CountryDropdownMenu countryMenu = null;
-
 	/** Determines if we show the users relations */
 	protected boolean showUserRelations = true;
 
@@ -191,7 +187,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	private int mainRow = 1;
 
 	/** the button table */
-	private Table buttonTable = null, actionButtonTable = null;
+	private Table buttonTable = null;
 
 	/** flag for family relation types */
 	protected boolean showAllRelationTypes = true;
@@ -1688,10 +1684,6 @@ public class UserEditor extends Block implements IWPageEventListener {
 		if (iwc.isParameterSet(pName + prm_old_value_suffix) && value != null && value.length() == 0)
 			return true;
 		return false;
-	}
-
-	private String getOldValue(IWContext iwc, String pName) {
-		return iwc.getParameter(pName + prm_old_value_suffix);
 	}
 
 	/**

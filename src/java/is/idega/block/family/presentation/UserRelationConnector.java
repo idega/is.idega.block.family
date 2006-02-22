@@ -453,9 +453,6 @@ public void process(IWContext iwc) throws RemoteException {
 
 }
 
-private boolean isAttachRequest(){
-	return this.action==PARAM_ATTACH;
-}
 private boolean isDetachRequest(){
 	return this.action==PARAM_DETACH;
 }
