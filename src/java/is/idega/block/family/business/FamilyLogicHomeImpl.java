@@ -1,22 +1,28 @@
 /*
- * $Id: FamilyLogicHomeImpl.java,v 1.4 2005/05/22 16:30:52 laddi Exp $
- * Created on May 22, 2005
+ * $Id: FamilyLogicHomeImpl.java,v 1.5 2006/03/30 07:27:06 laddi Exp $
+ * Created on Mar 29, 2006
  *
- * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
+ * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
  *
  * This software is the proprietary information of Idega hf.
  * Use is subject to license terms.
  */
 package is.idega.block.family.business;
 
+
+
+
 import com.idega.business.IBOHomeImpl;
 
 
 /**
- * Last modified: $Date: 2005/05/22 16:30:52 $ by $Author: laddi $
+ * <p>
+ * TODO laddi Describe Type FamilyLogicHomeImpl
+ * </p>
+ *  Last modified: $Date: 2006/03/30 07:27:06 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 public class FamilyLogicHomeImpl extends IBOHomeImpl implements FamilyLogicHome {
 
@@ -27,4 +33,5 @@ public class FamilyLogicHomeImpl extends IBOHomeImpl implements FamilyLogicHome 
 	public FamilyLogic create() throws javax.ejb.CreateException {
 		return (FamilyLogic) super.createIBO();
 	}
+
 }

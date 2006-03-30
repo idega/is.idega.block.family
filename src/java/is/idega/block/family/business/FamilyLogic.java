@@ -1,32 +1,50 @@
 /*
- * $Id: FamilyLogic.java,v 1.6 2005/05/22 16:30:52 laddi Exp $
- * Created on May 22, 2005
+ * $Id: FamilyLogic.java,v 1.7 2006/03/30 07:27:06 laddi Exp $
+ * Created on Mar 29, 2006
  *
- * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
+ * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
  *
  * This software is the proprietary information of Idega hf.
  * Use is subject to license terms.
  */
 package is.idega.block.family.business;
 
+import is.idega.block.family.data.Child;
+import is.idega.block.family.data.Custodian;
 import is.idega.block.family.data.FamilyData;
+
 import java.util.Collection;
 import java.util.Date;
+
 import javax.ejb.CreateException;
 import javax.ejb.FinderException;
 import javax.ejb.RemoveException;
+
 import com.idega.business.IBOService;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.User;
 
 
 /**
- * Last modified: $Date: 2005/05/22 16:30:52 $ by $Author: laddi $
+ * <p>
+ * TODO laddi Describe Type FamilyLogic
+ * </p>
+ *  Last modified: $Date: 2006/03/30 07:27:06 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 public interface FamilyLogic extends IBOService {
+
+	/**
+	 * @see is.idega.block.family.business.FamilyLogicBean#getChild
+	 */
+	public Child getChild(User child) throws java.rmi.RemoteException;
+
+	/**
+	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodian
+	 */
+	public Custodian getCustodian(User custodian) throws java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getChildrenFor
@@ -56,8 +74,7 @@ public interface FamilyLogic extends IBOService {
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor
 	 */
-	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound,
-			java.rmi.RemoteException;
+	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor
@@ -182,8 +199,7 @@ public interface FamilyLogic extends IBOService {
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsCohabitantFor
 	 */
-	public void removeAsCohabitantFor(User personToSet, User relatedPerson) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsCohabitantFor(User personToSet, User relatedPerson) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsSiblingFor
@@ -193,38 +209,32 @@ public interface FamilyLogic extends IBOService {
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsChildFor
 	 */
-	public void removeAsChildFor(User personToSet, User parent, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsChildFor(User personToSet, User parent, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsParentFor
 	 */
-	public void removeAsParentFor(User parent, User child, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsParentFor(User parent, User child, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsCustodianFor
 	 */
-	public void removeAsCustodianFor(User custodian, User child, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsCustodianFor(User custodian, User child, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsSpouseFor
 	 */
-	public void removeAsSpouseFor(User personToSet, User relatedPerson, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsSpouseFor(User personToSet, User relatedPerson, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsCohabitantFor
 	 */
-	public void removeAsCohabitantFor(User personToSet, User relatedPerson, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsCohabitantFor(User personToSet, User relatedPerson, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#removeAsSiblingFor
 	 */
-	public void removeAsSiblingFor(User personToSet, User relatedPerson, User performer) throws RemoveException,
-			java.rmi.RemoteException;
+	public void removeAsSiblingFor(User personToSet, User relatedPerson, User performer) throws RemoveException, java.rmi.RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getChildRelationType
@@ -295,4 +305,5 @@ public interface FamilyLogic extends IBOService {
 	 * @see is.idega.block.family.business.FamilyLogicBean#getFamily
 	 */
 	public FamilyData getFamily(String familyNr) throws FinderException, java.rmi.RemoteException;
+
 }
