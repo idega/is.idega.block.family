@@ -41,10 +41,10 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	public static final String METADATA_ALLERGIES = "allergies";
 	public static final String METADATA_ALLERGIES_DETAILS = "allergies_details";
 
-	public static final String METADATA_LAST_CARE_PROVIDER = "last_care_provider";
-	public static final String METADATA_CAN_CONTACT_LAST_PROVIDER = "can_contact_last_provider";
+	public static final String METADATA_MULTI_LANGUAGE_HOME = "multi_language_home";
+	public static final String METADATA_LANGUAGE = "language";
+
 	public static final String METADATA_OTHER_INFORMATION = "other_information";
-	public static final String METADATA_CAN_DISPLAY_PARENT_INFORMATION = "can_display_parent_information";
 
 	public static final String METADATA_OTHER_CUSTODIAN = "other_custodian";
 	public static final String METADATA_RELATIVE_1 = "relative_1";
@@ -251,6 +251,44 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		}
 	}
 	
+	public boolean hasMultiLanguageHome() {
+		String meta = getMetaData(METADATA_MULTI_LANGUAGE_HOME);
+		if (meta != null) {
+			return new Boolean(meta).booleanValue();
+		}
+		return false;
+	}
+	
+	public void setHasMultiLanguageHome(boolean hasMultiLanguageHome) {
+		setMetaData(METADATA_MULTI_LANGUAGE_HOME, String.valueOf(hasMultiLanguageHome), "java.lang.Boolean");
+	}
+	
+	public String getLanguage() {
+		return getMetaData(METADATA_LANGUAGE);
+	}
+	
+	public void setLanguage(String language) {
+		if (language != null && language.length() > 0) {
+			setMetaData(METADATA_LANGUAGE, language, "java.lang.String");
+		}
+		else {
+			removeMetaData(METADATA_LANGUAGE);
+		}
+	}
+
+	public String getOtherInformation() {
+		return getMetaData(METADATA_OTHER_INFORMATION);
+	}
+	
+	public void setOtherInformation(String otherInformation) {
+		if (otherInformation != null && otherInformation.length() > 0) {
+			setMetaData(METADATA_OTHER_INFORMATION, otherInformation);
+		}
+		else {
+			removeMetaData(METADATA_OTHER_INFORMATION);
+		}
+	}
+
 	private Custodian getCustodianByPrimaryKey(Object primaryKey) throws FinderException {
 		try {
 			CustodianHome home = (CustodianHome) getIDOHome(Custodian.class);

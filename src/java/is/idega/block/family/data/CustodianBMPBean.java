@@ -15,6 +15,7 @@ import is.idega.block.family.business.NoCohabitantFound;
 import is.idega.block.family.business.NoSpouseFound;
 
 import java.rmi.RemoteException;
+import java.sql.Date;
 import java.util.Collection;
 
 import javax.ejb.CreateException;
@@ -31,9 +32,15 @@ import com.idega.user.business.UserBusiness;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
+import com.idega.util.IWTimestamp;
 
 
 public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
+
+	private static final String METADATA_HAS_STUDIES = "has_studies";
+	private static final String METADATA_STUDIES = "studies";
+	private static final String METADATA_STUDY_START = "study_start";
+	private static final String METADATA_STUDY_END = "study_end";
 
 	public Collection getChildrenInCustody() throws NoChildrenFound {
 		try {
@@ -143,6 +150,65 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 		catch (RemoteException re) {
 			throw new IBORuntimeException(re);
+		}
+	}
+	
+	public boolean hasStudies() {
+		String meta = getMetaData(METADATA_HAS_STUDIES);
+		if (meta != null) {
+			return new Boolean(meta).booleanValue();
+		}
+		return false;
+	}
+	
+	public void setHasStudies(boolean hasStudies) {
+		setMetaData(METADATA_HAS_STUDIES, String.valueOf(hasStudies), "java.lang.Boolean");
+	}
+	
+	public String getStudies() {
+		return getMetaData(METADATA_STUDIES);
+	}
+	
+	public void setStudies(String studies) {
+		if (studies != null && studies.length() > 0) {
+			setMetaData(METADATA_STUDIES, studies, "java.lang.String");
+		}
+		else {
+			removeMetaData(METADATA_STUDIES);
+		}
+	}
+	
+	public Date getStudyStart() {
+		String meta = getMetaData(METADATA_STUDY_START);
+		if (meta != null) {
+			return new IWTimestamp(meta).getDate();
+		}
+		return null;
+	}
+	
+	public void setStudyStart(Date date) {
+		if (date != null) {
+			setMetaData(METADATA_STUDY_START, date.toString());
+		}
+		else {
+			removeMetaData(METADATA_STUDY_START);
+		}
+	}
+	
+	public Date getStudyEnd() {
+		String meta = getMetaData(METADATA_STUDY_END);
+		if (meta != null) {
+			return new IWTimestamp(meta).getDate();
+		}
+		return null;
+	}
+	
+	public void setStudyEnd(Date date) {
+		if (date != null) {
+			setMetaData(METADATA_STUDY_END, date.toString());
+		}
+		else {
+			removeMetaData(METADATA_STUDY_END);
 		}
 	}
 

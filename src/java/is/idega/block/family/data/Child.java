@@ -131,4 +131,34 @@ public interface Child extends IDOEntity, User {
 	 */
 	public void setAllergiesDetails(String details);
 
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#hasMultiLanguageHome
+	 */
+	public boolean hasMultiLanguageHome();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setHasMultiLanguageHome
+	 */
+	public void setHasMultiLanguageHome(boolean hasMultiLanguageHome);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getLanguage
+	 */
+	public String getLanguage();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setLanguage
+	 */
+	public void setLanguage(String language);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getOtherInformation
+	 */
+	public String getOtherInformation();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setOtherInformation
+	 */
+	public void setOtherInformation(String otherInformation);
+
 }

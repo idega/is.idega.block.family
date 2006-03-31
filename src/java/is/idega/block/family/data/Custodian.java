@@ -13,6 +13,7 @@ import is.idega.block.family.business.NoChildrenFound;
 import is.idega.block.family.business.NoCohabitantFound;
 import is.idega.block.family.business.NoSpouseFound;
 
+import java.sql.Date;
 import java.util.Collection;
 
 
@@ -94,5 +95,45 @@ public interface Custodian extends IDOEntity, User {
 	 * @see is.idega.block.family.data.CustodianBMPBean#setEmail
 	 */
 	public void setEmail(String email);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#hasStudies
+	 */
+	public boolean hasStudies();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudies
+	 */
+	public String getStudies();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyStart
+	 */
+	public Date getStudyStart();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyEnd
+	 */
+	public Date getStudyEnd();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setHasStudies
+	 */
+	public void setHasStudies(boolean hasStudies);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setStudies
+	 */
+	public void setStudies(String studies);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setStudyStart
+	 */
+	public void setStudyStart(Date date);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setStudyEnd
+	 */
+	public void setStudyEnd(Date date);
 
 }
