@@ -1,6 +1,6 @@
 /*
  * $Id$
- * Created on Mar 30, 2006
+ * Created on Apr 1, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
  *
@@ -102,24 +102,14 @@ public interface Custodian extends IDOEntity, User {
 	public boolean hasStudies();
 
 	/**
-	 * @see is.idega.block.family.data.CustodianBMPBean#getStudies
-	 */
-	public String getStudies();
-
-	/**
-	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyStart
-	 */
-	public Date getStudyStart();
-
-	/**
-	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyEnd
-	 */
-	public Date getStudyEnd();
-
-	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#setHasStudies
 	 */
 	public void setHasStudies(boolean hasStudies);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudies
+	 */
+	public String getStudies();
 
 	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#setStudies
@@ -127,13 +117,43 @@ public interface Custodian extends IDOEntity, User {
 	public void setStudies(String studies);
 
 	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyStart
+	 */
+	public Date getStudyStart();
+
+	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#setStudyStart
 	 */
 	public void setStudyStart(Date date);
 
 	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getStudyEnd
+	 */
+	public Date getStudyEnd();
+
+	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#setStudyEnd
 	 */
 	public void setStudyEnd(Date date);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getNationality
+	 */
+	public String getNationality();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setNationality
+	 */
+	public void setNationality(String nationality);
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#getMaritalStatus
+	 */
+	public String getMaritalStatus();
+
+	/**
+	 * @see is.idega.block.family.data.CustodianBMPBean#setMaritalStatus
+	 */
+	public void setMaritalStatus(String maritalStatus);
 
 }

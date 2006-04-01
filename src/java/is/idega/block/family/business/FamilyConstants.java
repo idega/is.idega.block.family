@@ -21,4 +21,10 @@ public class FamilyConstants {
 	public static final String RELATION_SIBLING = "sibling";
 	public static final String RELATION_OTHER = "other";
 	
+	public static final String MARITAL_STATUS_MARRIED = "married";
+	public static final String MARITAL_STATUS_SINGLE = "single";
+	public static final String MARITAL_STATUS_COHABITANT = "cohabitant";
+	public static final String MARITAL_STATUS_DIVORCED = "divorced";
+	public static final String MARITAL_STATUS_WIDOWED = "widowed";
+	
 }

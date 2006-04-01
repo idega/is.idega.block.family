@@ -41,6 +41,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 	private static final String METADATA_STUDIES = "studies";
 	private static final String METADATA_STUDY_START = "study_start";
 	private static final String METADATA_STUDY_END = "study_end";
+	private static final String METADATA_NATIONALITY = "nationality";
+	private static final String METADATA_MARITAL_STATUS = "marital_status";
 
 	public Collection getChildrenInCustody() throws NoChildrenFound {
 		try {
@@ -212,6 +214,32 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 	}
 
+	public String getNationality() {
+		return getMetaData(METADATA_NATIONALITY);
+	}
+	
+	public void setNationality(String nationality) {
+		if (nationality != null && nationality.length() > 0) {
+			setMetaData(METADATA_NATIONALITY, nationality, "java.lang.String");
+		}
+		else {
+			removeMetaData(METADATA_NATIONALITY);
+		}
+	}
+	
+	public String getMaritalStatus() {
+		return getMetaData(METADATA_MARITAL_STATUS);
+	}
+	
+	public void setMaritalStatus(String maritalStatus) {
+		if (maritalStatus != null && maritalStatus.length() > 0) {
+			setMetaData(METADATA_MARITAL_STATUS, maritalStatus, "java.lang.String");
+		}
+		else {
+			removeMetaData(METADATA_MARITAL_STATUS);
+		}
+	}
+	
 	private UserBusiness getUserBusiness() {
 		try {
 			return (UserBusiness) IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), UserBusiness.class);
