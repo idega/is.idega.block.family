@@ -189,6 +189,7 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
 		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
 		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
+		store();
 	}
 	
 	public Boolean hasGrowthDeviation() {
