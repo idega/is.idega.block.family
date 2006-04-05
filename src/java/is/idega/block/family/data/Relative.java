@@ -19,11 +19,13 @@ package is.idega.block.family.data;
 public class Relative {
 	
 	private String name;
+	private String personalID;
 	private String homePhone;
 	private String workPhone;
 	private String mobilePhone;
 	private String email;
 	private String relation;
+	private String details;
 	
 	public String getEmail() {
 		return email;
@@ -71,5 +73,21 @@ public class Relative {
 
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+	
+	public String getPersonalID() {
+		return personalID;
+	}
+	
+	public void setPersonalID(String personalID) {
+		this.personalID = personalID;
 	}
 }

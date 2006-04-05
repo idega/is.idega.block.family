@@ -1,6 +1,6 @@
 /*
  * $Id$
- * Created on Mar 30, 2006
+ * Created on Apr 5, 2006
  *
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
  *
@@ -90,6 +90,16 @@ public interface Child extends IDOEntity, User {
 	 * @see is.idega.block.family.data.ChildBMPBean#storeRelative
 	 */
 	public void storeRelative(String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#storeForbiddenRelative
+	 */
+	public void storeForbiddenRelative(String name, String personalID, String details);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getForbiddenRelative
+	 */
+	public Relative getForbiddenRelative();
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#hasGrowthDeviation

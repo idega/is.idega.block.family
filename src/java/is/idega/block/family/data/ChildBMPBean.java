@@ -50,6 +50,8 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	public static final String METADATA_RELATIVE_1 = "relative_1";
 	public static final String METADATA_RELATIVE_2 = "relative_2";
 	public static final String METADATA_RELATION = "relation_";
+
+	public static final String METADATA_FORBIDDEN_RELATIVE = "forbidden_relative";
 	
 	public Collection getSiblings() throws NoSiblingFound {
 		try {
@@ -191,7 +193,31 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
 		store();
 	}
+
+	public void storeForbiddenRelative(String name, String personalID, String details) {
+		setMetaData(METADATA_FORBIDDEN_RELATIVE + "_name", name, "java.lang.String");
+		setMetaData(METADATA_FORBIDDEN_RELATIVE + "_personalID", personalID, "java.lang.String");
+		setMetaData(METADATA_FORBIDDEN_RELATIVE + "_details", details, "java.lang.String");
+		store();
+	}
 	
+	public Relative getForbiddenRelative() {
+		String name = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_name");
+		String personalID = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_personalID");
+		String details = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_details");
+		
+		if (name != null && name.length() > 0) {
+			Relative relative = new Relative();
+			relative.setName(name);
+			relative.setPersonalID(personalID);
+			relative.setDetails(details);
+			
+			return relative;
+		}
+		
+		return null;
+	}
+		
 	public Boolean hasGrowthDeviation() {
 		String meta = getMetaData(METADATA_GROWTH_DEVIATION);
 		if (meta != null && meta.length() > 0) {
