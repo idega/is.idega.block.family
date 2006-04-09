@@ -87,8 +87,8 @@ public class UserRelationConnector extends Window {
 		}
 
 	protected User getUser(IWContext iwc) throws RemoteException {
-		userID = Integer.valueOf(iwc.getParameter(PARAM_USER_ID));
-		return getUserService(iwc).getUser(userID);
+		this.userID = Integer.valueOf(iwc.getParameter(PARAM_USER_ID));
+		return getUserService(iwc).getUser(this.userID);
 	}
 
 	/**
@@ -113,28 +113,28 @@ public class UserRelationConnector extends Window {
 	 * @see com.idega.presentation.PresentationObject#getBundleIdentifier()
 	 */
 	public String getBundleIdentifier() {
-		return bundleIdentifier;
+		return this.bundleIdentifier;
 	}
 	/**
 	 * @param string
 	 */
 	public void setBundleIdentifier(String string) {
-		bundleIdentifier = string;
+		this.bundleIdentifier = string;
 	}
 	/* (non-Javadoc)
 	 * @see com.idega.presentation.PresentationObject#main(com.idega.presentation.IWContext)
 	 */
 	public void main(IWContext iwc) throws Exception {
 		//debugParameters(iwc);
-		iwb = getBundle(iwc);
-		iwrb = getResourceBundle(iwc);
+		this.iwb = getBundle(iwc);
+		this.iwrb = getResourceBundle(iwc);
 		
 		try {
 			//iwc.getApplication().getLog().info("Who is your daddy ?");
 			process(iwc);
 		}
 		catch (RemoteException e) {
-			processExceptionMessage = e.getMessage();
+			this.processExceptionMessage = e.getMessage();
 		}
 		//System.err.println("user is null ? " + (user == null));
 		
@@ -151,26 +151,30 @@ public class UserRelationConnector extends Window {
 		searcher.setFirstNameLength(25);
 		searcher.setLastNameLength(25);
 		searcher.setShowMiddleNameInSearch(false);
-		searcher.maintainParameter(new Parameter(PARAM_USER_ID, userID.toString()));
+		searcher.maintainParameter(new Parameter(PARAM_USER_ID, this.userID.toString()));
 		//searcher.maintainParameter(new Parameter(PARAM_ACTION,String.valueOf( action)));
-		if (type != null)
-			searcher.maintainParameter(new Parameter(PARAM_TYPE, type));
-		if (rtype != null)
-			searcher.maintainParameter(new Parameter(PARAM_REVERSE_TYPE, rtype));
-		if(parentPageID!=null)
-			searcher.maintainParameter(new Parameter(PARAM_RELOAD_PAGE_ID,parentPageID.toString()));
-		if(userIDParameterName!=null)
-			searcher.maintainParameter(new Parameter(PARAM_RELOAD_USER_PRM_NAME,userIDParameterName));
+		if (this.type != null) {
+			searcher.maintainParameter(new Parameter(PARAM_TYPE, this.type));
+		}
+		if (this.rtype != null) {
+			searcher.maintainParameter(new Parameter(PARAM_REVERSE_TYPE, this.rtype));
+		}
+		if(this.parentPageID!=null) {
+			searcher.maintainParameter(new Parameter(PARAM_RELOAD_PAGE_ID,this.parentPageID.toString()));
+		}
+		if(this.userIDParameterName!=null) {
+			searcher.maintainParameter(new Parameter(PARAM_RELOAD_USER_PRM_NAME,this.userIDParameterName));
+		}
 		searcher.setUniqueIdentifier(searchIdentifer);
 		searcher.setOwnFormContainer(false);
 
-		if (relatedUser != null) {
-			searcher.setUser(relatedUser);
+		if (this.relatedUser != null) {
+			searcher.setUser(this.relatedUser);
 		}
-		else if (relatedUser == null) {
+		else if (this.relatedUser == null) {
 			try {
 				searcher.process(iwc);
-				relatedUser = searcher.getUser();
+				this.relatedUser = searcher.getUser();
 			}
 			catch (RemoteException e1) {
 				e1.printStackTrace();
@@ -183,11 +187,11 @@ public class UserRelationConnector extends Window {
 		mainTable.add((searcher), 1, row++);
 		mainTable.add(Text.getBreak(), 1, row++);
 
-		Text tCurrentUser = new Text(iwrb.getLocalizedString("current_user", "Current user"));
+		Text tCurrentUser = new Text(this.iwrb.getLocalizedString("current_user", "Current user"));
 		tCurrentUser.setBold();
 		mainTable.add(tCurrentUser, 1, row++);
-		Text tCurrentUserName = new Text(user.getName());
-		Text tCurrentUserPersonalID = new Text(user.getPersonalID());
+		Text tCurrentUserName = new Text(this.user.getName());
+		Text tCurrentUserPersonalID = new Text(this.user.getPersonalID());
 		mainTable.add(tCurrentUserPersonalID, 1, row);
 		mainTable.add(Text.getNonBrakingSpace(), 1, row);
 		mainTable.add(Text.getNonBrakingSpace(), 1, row);
@@ -195,13 +199,13 @@ public class UserRelationConnector extends Window {
 
 		row++;
 
-		Text tRelatedUser = new Text(iwrb.getLocalizedString("relation_user", "Relation user"));
+		Text tRelatedUser = new Text(this.iwrb.getLocalizedString("relation_user", "Relation user"));
 		tRelatedUser.setBold();
 		mainTable.add(tRelatedUser, 1, row++);
 		
-		if (relatedUser != null) {
-			Text tRelatedUserName = new Text(relatedUser.getName());
-			Text tRelatedUserPersonalID = new Text(relatedUser.getPersonalID());
+		if (this.relatedUser != null) {
+			Text tRelatedUserName = new Text(this.relatedUser.getName());
+			Text tRelatedUserPersonalID = new Text(this.relatedUser.getPersonalID());
 			mainTable.add(tRelatedUserPersonalID, 1, row);
 			mainTable.add(Text.getNonBrakingSpace(), 1, row);
 			mainTable.add(Text.getNonBrakingSpace(), 1, row);
@@ -210,23 +214,23 @@ public class UserRelationConnector extends Window {
 			mainTable.add(Text.getBreak(), 1, row);
 			row++;
 			
-			if(showCurrentRelations){
+			if(this.showCurrentRelations){
 			try {
 				
-				Collection relations = getRelationHome().findGroupsRelationshipsContainingUniDirectional(((Integer)user.getPrimaryKey()).intValue(),((Integer)relatedUser.getPrimaryKey()).intValue());
+				Collection relations = getRelationHome().findGroupsRelationshipsContainingUniDirectional(((Integer)this.user.getPrimaryKey()).intValue(),((Integer)this.relatedUser.getPrimaryKey()).intValue());
 			
 				int trow = 1;
 				if(relations!=null &&!relations.isEmpty()){
 					Table relationsTable = new Table();
-					Text tCurrentRelations = new Text(iwrb.getLocalizedString("current_relations_to", "Current Relations to ")+relatedUser.getFirstName());
+					Text tCurrentRelations = new Text(this.iwrb.getLocalizedString("current_relations_to", "Current Relations to ")+this.relatedUser.getFirstName());
 					tCurrentRelations.setBold();
 					mainTable.add(tCurrentRelations,1,row++);
-					relationsTable.add(iwrb.getLocalizedString("relation_type","Relation type"),1,trow);
-					relationsTable.add(iwrb.getLocalizedString("created","Created"),2,trow);
+					relationsTable.add(this.iwrb.getLocalizedString("relation_type","Relation type"),1,trow);
+					relationsTable.add(this.iwrb.getLocalizedString("created","Created"),2,trow);
 					trow++;
 					for (Iterator iter = relations.iterator(); iter.hasNext();) {
 						GroupRelation element = (GroupRelation) iter.next();
-						relationsTable.add(iwrb.getLocalizedString(element.getRelationshipType(),element.getRelationshipType()),1,trow);
+						relationsTable.add(this.iwrb.getLocalizedString(element.getRelationshipType(),element.getRelationshipType()),1,trow);
 						relationsTable.add(new IWTimestamp(element.getInitiationDate()).getLocaleDateAndTime(iwc.getCurrentLocale()),2,trow);
 						//relationsTable.add(element.getStatus(),3,trow);
 						
@@ -247,25 +251,25 @@ public class UserRelationConnector extends Window {
 			}
 			}
 			
-			Text tManAct = new Text(iwrb.getLocalizedString("managing_action", "Managing action"));
+			Text tManAct = new Text(this.iwrb.getLocalizedString("managing_action", "Managing action"));
 			tManAct.setBold();
 			mainTable.add(tManAct,1,row++);
-			String sUserFirstName = (user.getFirstName());
-			String sRelatedUserFirstName = (relatedUser.getFirstName());
-			String sWillBeRelatedAs = (iwrb.getLocalizedString("related_as","related as"));
-			String sTo = iwrb.getLocalizedString("to","to");
+			String sUserFirstName = (this.user.getFirstName());
+			String sRelatedUserFirstName = (this.relatedUser.getFirstName());
+			String sWillBeRelatedAs = (this.iwrb.getLocalizedString("related_as","related as"));
+			String sTo = this.iwrb.getLocalizedString("to","to");
 			String reltype = null;
 			if(hasSelectedType() || hasSelectedReverseType()){
 				if(hasSelectedType()){
-					reltype = type;
-					String sRelationtype = (iwrb.getLocalizedString(type, type));
+					reltype = this.type;
+					String sRelationtype = (this.iwrb.getLocalizedString(this.type, this.type));
 					String sentence = sUserFirstName+" "+sWillBeRelatedAs+" "+sRelationtype+" "+sTo+" "+sRelatedUserFirstName;
 					mainTable.add(new Text(sentence),1,row++);
 				}
 				
 				if (hasSelectedReverseType()){
-					reltype = rtype;
-					String sReverseRelationtype = (iwrb.getLocalizedString(rtype,rtype));
+					reltype = this.rtype;
+					String sReverseRelationtype = (this.iwrb.getLocalizedString(this.rtype,this.rtype));
 					String sentence = sRelatedUserFirstName+" "+sWillBeRelatedAs+" "+sReverseRelationtype+" "+sTo+" "+sUserFirstName;
 					mainTable.add(new Text(sentence),1,row++);
 				}
@@ -280,22 +284,24 @@ public class UserRelationConnector extends Window {
 			mainTable.add(Text.getBreak(), 1, row);
 			// show button when the planned relationship is legal
 			// or when asking for a delete
-			if(reltype!=null && (isDetachRequest() ||  isRelationshipLegal(iwc,user,relatedUser,  reltype)) ){
-				mainTable.add(getActionButton(iwc,user,relatedUser,  type,rtype), 1, row++);
+			if(reltype!=null && (isDetachRequest() ||  isRelationshipLegal(iwc,this.user,this.relatedUser,  reltype)) ){
+				mainTable.add(getActionButton(iwc,this.user,this.relatedUser,  this.type,this.rtype), 1, row++);
 				
 			}
-			else if(processExceptionMessage!=null){
-				Text errorText = new Text(processExceptionMessage);
+			else if(this.processExceptionMessage!=null){
+				Text errorText = new Text(this.processExceptionMessage);
 				errorText.setBold(true);
 				errorText.setFontColor("#FF0000");
 				mainTable.add(errorText,1,row++);
 			}
 			else{
 				String errorString ="";
-				if(hasSelectedType())
-					errorString = getIllegalRelationMessage(iwc,user, relatedUser,reltype);
-				else
-					errorString = getIllegalRelationMessage(iwc,relatedUser, user,reltype);
+				if(hasSelectedType()) {
+					errorString = getIllegalRelationMessage(iwc,this.user, this.relatedUser,reltype);
+				}
+				else {
+					errorString = getIllegalRelationMessage(iwc,this.relatedUser, this.user,reltype);
+				}
 					
 				Text errorText = new Text(errorString);
 				errorText.setBold(true);
@@ -309,11 +315,11 @@ public class UserRelationConnector extends Window {
 				// create question and link
 				
 			}			
-			mainTable.add(searcher.getUniqueUserParameter((Integer) relatedUser.getPrimaryKey()));
+			mainTable.add(searcher.getUniqueUserParameter((Integer) this.relatedUser.getPrimaryKey()));
 		}
 		
-		CloseButton cancelButton = new CloseButton(iwrb.getLocalizedString("cancel","Cancel"));
-		cancelButton.setStyleAttribute(buttonStyle);
+		CloseButton cancelButton = new CloseButton(this.iwrb.getLocalizedString("cancel","Cancel"));
+		cancelButton.setStyleAttribute(this.buttonStyle);
 		
 		mainTable.add(cancelButton,1,row);
 
@@ -322,14 +328,18 @@ public class UserRelationConnector extends Window {
 		//form.addParameter(PARAM_USER_ID, user.getPrimaryKey().toString());
 		form.maintainParameter(PARAM_USER_ID);
 		form.maintainParameter(UserSearcher.getUniqueUserParameterName(searchIdentifer));
-		if (type != null)
+		if (this.type != null) {
 			form.maintainParameter(PARAM_TYPE);
-		if (rtype != null)
+		}
+		if (this.rtype != null) {
 			form.maintainParameter(PARAM_REVERSE_TYPE);
-		if(parentPageID!=null)
+		}
+		if(this.parentPageID!=null) {
 			form.maintainParameter(PARAM_RELOAD_PAGE_ID);
-		if(userIDParameterName!=null)
+		}
+		if(this.userIDParameterName!=null) {
 			form.maintainParameter(PARAM_RELOAD_USER_PRM_NAME);
+		}
 		form.add(mainTable);
 		add(form);
 
@@ -340,7 +350,7 @@ public class UserRelationConnector extends Window {
 	}
 	
 	protected String  getIllegalRelationMessage(IWContext iwc,User roleUser, User victimUser, String relationType) {
-		String pattern = (iwrb.getLocalizedString("illegal_relationship_msg","Illegal to add relation of type {0} between  {1} and {2}"));
+		String pattern = (this.iwrb.getLocalizedString("illegal_relationship_msg","Illegal to add relation of type {0} between  {1} and {2}"));
 		String[] objs = {relationType,roleUser.getFirstName(),victimUser.getFirstName()};
 		return MessageFormat.format(pattern,objs);
 	}
@@ -362,18 +372,18 @@ public class UserRelationConnector extends Window {
 		//System.err.println("type "+mainType+" reversetype "+reverseType);
 		if (hasActiveRelations(iwc,roleUser,victimUser,mainType,reverseType)) {
 			String detachWarning = 
-			iwrb.getLocalizedString("warning_detach_relation", "Are you shure you want to remove this relation ?");
+			this.iwrb.getLocalizedString("warning_detach_relation", "Are you shure you want to remove this relation ?");
 			SubmitButton detach =
-			getActionButton(iwrb.getLocalizedString("detach", "Detach"), ACTION_DETACH, detachWarning);
+			getActionButton(this.iwrb.getLocalizedString("detach", "Detach"), ACTION_DETACH, detachWarning);
 			return detach;
 		}
 		else {
 			String attachWarning =
-				iwrb.getLocalizedString(
+				this.iwrb.getLocalizedString(
 					"warning_attach_relation",
 					"Are you shure you want to relate these two people ?");
 			SubmitButton attach =
-				getActionButton(iwrb.getLocalizedString("attach", "Attach"), ACTION_ATTACH, attachWarning);
+				getActionButton(this.iwrb.getLocalizedString("attach", "Attach"), ACTION_ATTACH, attachWarning);
 			return attach;
 		}
 }
@@ -396,7 +406,7 @@ protected boolean hasActiveRelations(IWContext iwc,User roleUser, User victimUse
 protected SubmitButton getActionButton(String display, int action, String warningMsg) {
 	SubmitButton btnAction = new SubmitButton(display, PARAM_ACTION, Integer.toString(action));
 	btnAction.setOnClickConfirm(warningMsg);
-	btnAction.setStyleAttribute(buttonStyle);
+	btnAction.setStyleAttribute(this.buttonStyle);
 	return btnAction;
 }
 
@@ -405,27 +415,29 @@ public static String getRelatedUserParameterName() {
 }
 
 public void process(IWContext iwc) throws RemoteException {
-	user = getUser(iwc);
-	type = iwc.getParameter(PARAM_TYPE);
-	rtype = iwc.getParameter(PARAM_REVERSE_TYPE);
-	if(iwc.isParameterSet(PARAM_RELOAD_PAGE_ID))
-		parentPageID = Integer.valueOf(iwc.getParameter(PARAM_RELOAD_PAGE_ID));
-	if(iwc.isParameterSet(PARAM_RELOAD_USER_PRM_NAME))
-		userIDParameterName =iwc.getParameter(PARAM_RELOAD_USER_PRM_NAME);
+	this.user = getUser(iwc);
+	this.type = iwc.getParameter(PARAM_TYPE);
+	this.rtype = iwc.getParameter(PARAM_REVERSE_TYPE);
+	if(iwc.isParameterSet(PARAM_RELOAD_PAGE_ID)) {
+		this.parentPageID = Integer.valueOf(iwc.getParameter(PARAM_RELOAD_PAGE_ID));
+	}
+	if(iwc.isParameterSet(PARAM_RELOAD_USER_PRM_NAME)) {
+		this.userIDParameterName =iwc.getParameter(PARAM_RELOAD_USER_PRM_NAME);
+	}
 	if (iwc.isParameterSet(PARAM_ACTION)) {
 		boolean Continue = false;
-		action = Integer.parseInt(iwc.getParameter(PARAM_ACTION));
+		this.action = Integer.parseInt(iwc.getParameter(PARAM_ACTION));
 		String relUID =iwc.getParameter(UserSearcher.getUniqueUserParameterName(searchIdentifer));
 		if(relUID!=null){
 		Integer relatedUserID =	Integer.valueOf(relUID);
-		switch (action) {
+		switch (this.action) {
 			case ACTION_ATTACH :
-				createRelation(iwc, (Integer) user.getPrimaryKey(), relatedUserID, type, rtype);
+				createRelation(iwc, (Integer) this.user.getPrimaryKey(), relatedUserID, this.type, this.rtype);
 				Continue = true;
 				break;
 
 			case ACTION_DETACH :
-				removeRelation(iwc, (Integer) user.getPrimaryKey(), relatedUserID, type, rtype);
+				removeRelation(iwc, (Integer) this.user.getPrimaryKey(), relatedUserID, this.type, this.rtype);
 				Continue = true;
 				break;
 			case PARAM_ATTACH:
@@ -439,9 +451,9 @@ public void process(IWContext iwc) throws RemoteException {
 			 default: Continue = false;
 		}}
 		if(Continue){
-		if(parentPageID!=null && userIDParameterName!=null){
-			URLUtil URL = new URLUtil(BuilderLogic.getInstance().getIBPageURL(iwc, parentPageID.intValue()));
-			URL.addParameter(userIDParameterName, userID.toString());
+		if(this.parentPageID!=null && this.userIDParameterName!=null){
+			URLUtil URL = new URLUtil(BuilderLogic.getInstance().getIBPageURL(iwc, this.parentPageID.intValue()));
+			URL.addParameter(this.userIDParameterName, this.userID.toString());
 			setParentToRedirect(URL.toString());
 			close();
 		}
@@ -462,7 +474,7 @@ private boolean isDetachRequest(){
  * @return
  */
 public boolean hasSelectedType() {
-	return type != null;
+	return this.type != null;
 }
 
 /**
@@ -470,7 +482,7 @@ public boolean hasSelectedType() {
  * @return
  */
 public boolean hasSelectedReverseType() {
-	return rtype != null;
+	return this.rtype != null;
 }
 
 /**
@@ -479,11 +491,11 @@ public boolean hasSelectedReverseType() {
  */
 public PresentationObject getRelationMenu(IWContext iwc) throws RemoteException {
 	if (hasSelectedType()) {
-		Text tType = new Text(iwrb.getLocalizedString(type, type));
+		Text tType = new Text(this.iwrb.getLocalizedString(this.type, this.type));
 		return tType;
 	}
 	else if (hasSelectedReverseType()) {
-		Text tReverseType = new Text(iwrb.getLocalizedString(rtype, rtype));
+		Text tReverseType = new Text(this.iwrb.getLocalizedString(this.rtype, this.rtype));
 		return tReverseType;
 	}
 	else {
@@ -499,7 +511,7 @@ private DropdownMenu getAllRelationTypesMenu(IWContext iwc) {
 
 		for (Iterator iter = types.iterator(); iter.hasNext();) {
 			GroupRelationType relType = (GroupRelationType) iter.next();
-			menu.addMenuElement(relType.getType(), iwrb.getLocalizedString(relType.getType(), relType.getType()));
+			menu.addMenuElement(relType.getType(), this.iwrb.getLocalizedString(relType.getType(), relType.getType()));
 		}
 	}
 	catch (RemoteException e) {

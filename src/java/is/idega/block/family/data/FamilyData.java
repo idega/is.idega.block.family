@@ -19,7 +19,7 @@ public class FamilyData {
 	 * @return Returns the children.
 	 */
 	public Collection getChildren() {
-		return children;
+		return this.children;
 	}
 	/**
 	 * @param children The children to set.
@@ -32,13 +32,13 @@ public class FamilyData {
 	 * @param child one child to add to the family
 	 */
 	public void addChild(User child) {
-		children.add(child);
+		this.children.add(child);
 	}
 	/**
 	 * @return Returns the husband.
 	 */
 	public User getHusband() {
-		return husband;
+		return this.husband;
 	}
 	/**
 	 * @param husband The husband to set.
@@ -50,7 +50,7 @@ public class FamilyData {
 	 * @return Returns the wife.
 	 */
 	public User getWife() {
-		return wife;
+		return this.wife;
 	}
 	/**
 	 * @param wife The wife to set.

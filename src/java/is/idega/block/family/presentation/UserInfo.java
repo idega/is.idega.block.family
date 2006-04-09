@@ -1,5 +1,5 @@
 /*
- * $Id: UserInfo.java,v 1.2 2005/04/19 11:49:33 laddi Exp $
+ * $Id: UserInfo.java,v 1.3 2006/04/09 11:57:04 laddi Exp $
  * Created on 31.1.2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -30,10 +30,10 @@ import com.idega.util.PersonalIDFormatter;
 
 
 /**
- * Last modified: $Date: 2005/04/19 11:49:33 $ by $Author: laddi $
+ * Last modified: $Date: 2006/04/09 11:57:04 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class UserInfo extends Block {
 
@@ -45,8 +45,8 @@ public class UserInfo extends Block {
 	private Image iAccountImage;
 
 	public void main(IWContext iwc) {
-		iwb = getBundle(iwc);
-		iwrb = getResourceBundle(iwc);
+		this.iwb = getBundle(iwc);
+		this.iwrb = getResourceBundle(iwc);
 		
 		try {
 			User user = getUserSession(iwc).getUser();
@@ -68,8 +68,8 @@ public class UserInfo extends Block {
 				}
 				
 				LoginTable lt = LoginDBHandler.getUserLogin(((Integer) user.getPrimaryKey()).intValue());
-				if (lt != null && iAccountImage != null) {
-					table.add(iAccountImage, 3, 1);
+				if (lt != null && this.iAccountImage != null) {
+					table.add(this.iAccountImage, 3, 1);
 				}
 				
 				add(table);
@@ -94,6 +94,6 @@ public class UserInfo extends Block {
 	}
 	
 	public void setAccountImage(Image accountImage) {
-		iAccountImage = accountImage;
+		this.iAccountImage = accountImage;
 	}
 }

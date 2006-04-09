@@ -269,16 +269,21 @@ public class UserEditor extends Block implements IWPageEventListener {
 	protected boolean showDefaultCommuneOption = false;
 
 	private void initStyleNames() {
-		if (textFontStyleName == null)
-			textFontStyleName = getStyleName(STYLENAME_TEXT);
-		if (headerFontStyleName == null)
-			headerFontStyleName = getStyleName(STYLENAME_HEADER);
-		if (buttonStyleName == null)
-			buttonStyleName = getStyleName(STYLENAME_BUTTON);
-		if (interfaceStyleName == null)
-			interfaceStyleName = getStyleName(STYLENAME_INTERFACE);
-		if (deceasedFontStyleName == null)
-			deceasedFontStyleName = getStyleName(STYLENAME_DECEASED);
+		if (this.textFontStyleName == null) {
+			this.textFontStyleName = getStyleName(STYLENAME_TEXT);
+		}
+		if (this.headerFontStyleName == null) {
+			this.headerFontStyleName = getStyleName(STYLENAME_HEADER);
+		}
+		if (this.buttonStyleName == null) {
+			this.buttonStyleName = getStyleName(STYLENAME_BUTTON);
+		}
+		if (this.interfaceStyleName == null) {
+			this.interfaceStyleName = getStyleName(STYLENAME_INTERFACE);
+		}
+		if (this.deceasedFontStyleName == null) {
+			this.deceasedFontStyleName = getStyleName(STYLENAME_DECEASED);
+		}
 	}
 
 	/**
@@ -302,8 +307,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 		// debugParameters(iwc);
 		// get bundles
 		initStyleNames();
-		iwb = getBundle(iwc);
-		iwrb = getResourceBundle(iwc);
+		this.iwb = getBundle(iwc);
+		this.iwrb = getResourceBundle(iwc);
 		// iwc.getApplication().getLog().info("Who is your daddy ?");
 		if (iwc.isLoggedOn()) {
 			try {
@@ -326,7 +331,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 			}
 		}
 		else {
-			add(iwrb.getLocalizedString("no_user_logged_on", "No user logged on"));
+			add(this.iwrb.getLocalizedString("no_user_logged_on", "No user logged on"));
 		}
 	}
 
@@ -336,8 +341,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @see com.idega.presentation.PresentationObject#getBundleIdentifier()
 	 */
 	public String getBundleIdentifier() {
-		if (bundleIdentifer != null)
-			return bundleIdentifer;
+		if (this.bundleIdentifer != null) {
+			return this.bundleIdentifer;
+		}
 		return BUNDLE_IDENTIFIER;
 	}
 
@@ -347,7 +353,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param string
 	 */
 	public void setBundleIdentifer(String string) {
-		bundleIdentifer = string;
+		this.bundleIdentifer = string;
 	}
 
 	/**
@@ -359,7 +365,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          to be inserted
 	 */
 	public void addRelationType(int index, String type) {
-		relationTypes.add(index, type);
+		this.relationTypes.add(index, type);
 	}
 
 	/**
@@ -369,11 +375,11 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          to be inserted
 	 */
 	public void addRelationType(String type) {
-		relationTypes.add(type);
+		this.relationTypes.add(type);
 	}
 
 	public void setToShowAllRelationTypes(boolean bool) {
-		showAllRelationTypes = bool;
+		this.showAllRelationTypes = bool;
 	}
 
 	/**
@@ -383,13 +389,13 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          the current context
 	 */
 	public void present(IWContext iwc) throws RemoteException {
-		mainTable = new Table();
-		if (user != null || isNewUserView()) {
-			switch (iAction) {
+		this.mainTable = new Table();
+		if (this.user != null || isNewUserView()) {
+			switch (this.iAction) {
 				case ACTION_VIEW:
 					presentUserInfo(iwc);
 
-					if (showUserRelations) {
+					if (this.showUserRelations) {
 						try {
 							presentUserRelations(iwc);
 						}
@@ -411,7 +417,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 		Form form = new Form();
 		form.setOnSubmit("return checkInfoForm()");
-		form.add(mainTable);
+		form.add(this.mainTable);
 		form.setEventListener(UserEditor.class);
 		add(form);
 	}
@@ -423,18 +429,18 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          the context
 	 */
 	protected void presentUserRelations(IWContext iwc) throws RemoteException {
-		addSeperator(iwrb.getLocalizedString("mbe.user_relation", "User relations"));
+		addSeperator(this.iwrb.getLocalizedString("mbe.user_relation", "User relations"));
 		Table relationsTable = new Table();
 		relationsTable.setCellspacing(4);
 		int row = 1;
 		try {
-			Map relations = getRelations(user);
+			Map relations = getRelations(this.user);
 			UserBusiness userService = getUserService(iwc);
 			User relatedUser;
-			if (relationTypes != null && !relationTypes.isEmpty()) {
-				for (Iterator iter = relationTypes.iterator(); iter.hasNext();) {
+			if (this.relationTypes != null && !this.relationTypes.isEmpty()) {
+				for (Iterator iter = this.relationTypes.iterator(); iter.hasNext();) {
 					String type = (String) iter.next();
-					Text tTypeName = new Text(iwrb.getLocalizedString("is_" + type + "_of", "Is " + type.toLowerCase() + " of"));
+					Text tTypeName = new Text(this.iwrb.getLocalizedString("is_" + type + "_of", "Is " + type.toLowerCase() + " of"));
 					relationsTable.add(tTypeName, 1, row++);
 					if (relations.containsKey(type)) {
 						List list = (List) relations.get(type);
@@ -466,19 +472,19 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          the context
 	 */
 	protected void editUserRelations(IWContext iwc) throws RemoteException {
-		addSeperator(iwrb.getLocalizedString("mbe.user_relation", "User relations"));
+		addSeperator(this.iwrb.getLocalizedString("mbe.user_relation", "User relations"));
 		Table relationsTable = new Table();
 		relationsTable.setCellspacing(4);
 		relationsTable.setWidth(Table.HUNDRED_PERCENT);
 		int row = 1;
 		try {
-			Map relations = getRelations(user);
+			Map relations = getRelations(this.user);
 			UserBusiness userService = getUserService(iwc);
 			User relatedUser;
-			if (relationTypes != null && !relationTypes.isEmpty()) {
-				for (Iterator iter = relationTypes.iterator(); iter.hasNext();) {
+			if (this.relationTypes != null && !this.relationTypes.isEmpty()) {
+				for (Iterator iter = this.relationTypes.iterator(); iter.hasNext();) {
 					String type = (String) iter.next();
-					Text tTypeName = new Text(iwrb.getLocalizedString("is_" + type + "_of", "Is " + type.toLowerCase() + " of"));
+					Text tTypeName = new Text(this.iwrb.getLocalizedString("is_" + type + "_of", "Is " + type.toLowerCase() + " of"));
 					relationsTable.add(tTypeName, 1, row);
 					if (relations.containsKey(type)) {
 						List list = (List) relations.get(type);
@@ -487,7 +493,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 							relatedUser = userService.getUser(relation.getRelatedGroupPK());
 							relationsTable.add(relatedUser.getPersonalID(), 2, row);
 							relationsTable.add(getRelatedUserLink(relatedUser), 3, row);
-							Link disconnectLink = getDisconnectorLink(type, null, (Integer) user.getPrimaryKey(), (Integer) relatedUser.getPrimaryKey(), iwb.getImageButton(iwrb.getLocalizedString("mbe.remove_" + type, "Remove " + type)));
+							Link disconnectLink = getDisconnectorLink(type, null, (Integer) this.user.getPrimaryKey(), (Integer) relatedUser.getPrimaryKey(), this.iwb.getImageButton(this.iwrb.getLocalizedString("mbe.remove_" + type, "Remove " + type)));
 							relationsTable.add(disconnectLink, 4, row);
 							row++;
 						}
@@ -510,7 +516,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	}
 
 	protected void addSeperator(String header) {
-		if (showSeperators) {
+		if (this.showSeperators) {
 			Table tSep = new Table(3, 1);
 			tSep.setCellpadding(0);
 			tSep.setWidth(1, 30);
@@ -540,7 +546,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 	protected Link getRelatedUserLink(User relatedUser) {
 		Link relatedLink = new Link(relatedUser.getName());
-		relatedLink.addParameter(searcher.getUniqueUserParameter((Integer) relatedUser.getPrimaryKey()));
+		relatedLink.addParameter(this.searcher.getUniqueUserParameter((Integer) relatedUser.getPrimaryKey()));
 		relatedLink.setEventListener(UserSearcher.class);
 		return relatedLink;
 	}
@@ -551,9 +557,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param iwc
 	 */
 	protected SubmitButton getSaveButton(IWContext iwc) {
-		String ID = user != null ? user.getPrimaryKey().toString() : "-1";
-		SubmitButton save = new SubmitButton(iwrb.getLocalizedString("mbe.save", "Save"), PRM_SAVE, ID);
-		save.setStyleClass(buttonStyleName);
+		String ID = this.user != null ? this.user.getPrimaryKey().toString() : "-1";
+		SubmitButton save = new SubmitButton(this.iwrb.getLocalizedString("mbe.save", "Save"), PRM_SAVE, ID);
+		save.setStyleClass(this.buttonStyleName);
 		return save;
 	}
 
@@ -563,8 +569,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param iwc
 	 */
 	protected SubmitButton getCancelButton(IWContext iwc) {
-		SubmitButton cancel = new SubmitButton(iwrb.getLocalizedString("mbe.cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW));
-		cancel.setStyleClass(buttonStyleName);
+		SubmitButton cancel = new SubmitButton(this.iwrb.getLocalizedString("mbe.cancel", "Cancel"), PRM_ACTION, String.valueOf(ACTION_VIEW));
+		cancel.setStyleClass(this.buttonStyleName);
 		return cancel;
 	}
 
@@ -574,8 +580,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param iwc
 	 */
 	protected SubmitButton getEditButton(IWContext iwc, int action) {
-		SubmitButton cancel = new SubmitButton(iwrb.getLocalizedString("mbe.edit", "Edit"), PRM_ACTION, String.valueOf(action));
-		cancel.setStyleClass(buttonStyleName);
+		SubmitButton cancel = new SubmitButton(this.iwrb.getLocalizedString("mbe.edit", "Edit"), PRM_ACTION, String.valueOf(action));
+		cancel.setStyleClass(this.buttonStyleName);
 		return cancel;
 	}
 
@@ -585,14 +591,14 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param button
 	 */
 	protected void addButton(PresentationObject button) {
-		int cols = buttonTable.getColumns();
-		buttonTable.add(button, cols + 1, 1);
+		int cols = this.buttonTable.getColumns();
+		this.buttonTable.add(button, cols + 1, 1);
 	}
 
 	protected void presentButtons(IWContext iwc) {
-		addSeperator(iwrb.getLocalizedString("mbe.actions","Actions"));
-		buttonTable = new Table();
-		addToMainPart(buttonTable);
+		addSeperator(this.iwrb.getLocalizedString("mbe.actions","Actions"));
+		this.buttonTable = new Table();
+		addToMainPart(this.buttonTable);
 	}
 	/**
 	 * Gets a relation connector link
@@ -605,14 +611,17 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 */
 	protected Link getConnectorLink(Integer roleUserID, String type, String reverseType, PresentationObject object, Integer editorPageID) {
 		Link registerLink = new Link(object);
-		registerLink.setWindowToOpen(connectorWindowClass);
+		registerLink.setWindowToOpen(this.connectorWindowClass);
 		registerLink.addParameter(UserRelationConnector.PARAM_USER_ID, roleUserID.toString());
-		if (type != null)
+		if (type != null) {
 			registerLink.addParameter(UserRelationConnector.PARAM_TYPE, type);
-		if (reverseType != null)
+		}
+		if (reverseType != null) {
 			registerLink.addParameter(UserRelationConnector.PARAM_REVERSE_TYPE, reverseType);
-		if (editorPageID != null)
+		}
+		if (editorPageID != null) {
 			registerLink.addParameter(UserRelationConnector.PARAM_RELOAD_PAGE_ID, editorPageID.toString());
+		}
 		registerLink.addParameter(UserRelationConnector.PARAM_RELOAD_USER_PRM_NAME, PRM_USER_ID);
 		return registerLink;
 	}
@@ -630,24 +639,29 @@ public class UserEditor extends Block implements IWPageEventListener {
 	protected SubmitButton getConnectorButton(IWContext iwc, Image displayImage, String displayString, Integer roleUserID, String type, String reverseType, Integer editorPageID) {
 		SubmitButton button = null;
 		if (displayImage != null) {
-			if (displayString != null)
+			if (displayString != null) {
 				displayImage.setToolTip(displayString);
+			}
 			button = new SubmitButton(displayImage);
 		}
-		else
+		else {
 			button = new SubmitButton(displayString);
-		URLUtil URL = new URLUtil(Window.getWindowURL(connectorWindowClass, iwc));
+		}
+		URLUtil URL = new URLUtil(Window.getWindowURL(this.connectorWindowClass, iwc));
 		URL.addParameter(UserRelationConnector.PARAM_USER_ID, roleUserID.toString());
-		if (type != null)
+		if (type != null) {
 			URL.addParameter(UserRelationConnector.PARAM_TYPE, type);
-		if (reverseType != null)
+		}
+		if (reverseType != null) {
 			URL.addParameter(UserRelationConnector.PARAM_REVERSE_TYPE, reverseType);
-		if (editorPageID != null)
+		}
+		if (editorPageID != null) {
 			URL.addParameter(UserRelationConnector.PARAM_RELOAD_PAGE_ID, editorPageID.toString());
+		}
 		URL.addParameter(UserRelationConnector.PARAM_RELOAD_USER_PRM_NAME, PRM_USER_ID);
 		URL.addParameter(UserRelationConnector.PARAM_ACTION, UserRelationConnector.PARAM_ATTACH);
-		button.setOnClick("javascript:" + Window.getCallingScriptString(connectorWindowClass, URL.toString(), true, iwc) + ";return false;");
-		button.setStyleClass(buttonStyleName);
+		button.setOnClick("javascript:" + Window.getCallingScriptString(this.connectorWindowClass, URL.toString(), true, iwc) + ";return false;");
+		button.setStyleClass(this.buttonStyleName);
 		return button;
 	}
 
@@ -663,13 +677,15 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 */
 	protected Link getDisconnectorLink(String type, String reverseType, Integer roleUserID, Integer victimUserID, PresentationObject object) {
 		Link registerLink = new Link(object);
-		registerLink.setWindowToOpen(connectorWindowClass);
+		registerLink.setWindowToOpen(this.connectorWindowClass);
 		registerLink.addParameter(UserRelationConnector.PARAM_USER_ID, roleUserID.toString());
 		registerLink.addParameter(UserRelationConnector.getRelatedUserParameterName(), victimUserID.toString());
-		if (type != null)
+		if (type != null) {
 			registerLink.addParameter(UserRelationConnector.PARAM_TYPE, type);
-		if (reverseType != null)
+		}
+		if (reverseType != null) {
 			registerLink.addParameter(UserRelationConnector.PARAM_REVERSE_TYPE, reverseType);
+		}
 		registerLink.addParameter(UserRelationConnector.PARAM_ACTION, UserRelationConnector.PARAM_DETACH);
 		return registerLink;
 	}
@@ -681,7 +697,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          the context
 	 */
 	protected void presentUserInfo(IWContext iwc) throws RemoteException {
-		addSeperator(iwrb.getLocalizedString("mbe.user_info", "User info"));
+		addSeperator(this.iwrb.getLocalizedString("mbe.user_info", "User info"));
 		
 		UserBusiness userService = getUserService(iwc);
 		
@@ -693,21 +709,21 @@ public class UserEditor extends Block implements IWPageEventListener {
 		Address primaryAddress = null;
 		UserStatus deceasedStatus = null;
 		Email email = null;
-		if (user != null) {
-			primaryAddress = userService.getUsersMainAddress(user);
-			deceasedStatus = getUserStatusService(iwc).getDeceasedUserStatus((Integer) user.getPrimaryKey());
-			email = userService.getUserMail(user);
+		if (this.user != null) {
+			primaryAddress = userService.getUsersMainAddress(this.user);
+			deceasedStatus = getUserStatusService(iwc).getDeceasedUserStatus((Integer) this.user.getPrimaryKey());
+			email = userService.getUserMail(this.user);
 			
-			Text personalID = new Text(PersonalIDFormatter.format(user.getPersonalID(), iwc.getCurrentLocale()));
+			Text personalID = new Text(PersonalIDFormatter.format(this.user.getPersonalID(), iwc.getCurrentLocale()));
 			personalID.setStyleClass(STYLENAME_TEXT);
 			infoTable.add(personalID, 1, 1);
 
-			Text name = new Text(new Name(user.getFirstName(), user.getMiddleName(), user.getLastName()).getName(iwc.getCurrentLocale(), true));
+			Text name = new Text(new Name(this.user.getFirstName(), this.user.getMiddleName(), this.user.getLastName()).getName(iwc.getCurrentLocale(), true));
 			name.setStyleClass(STYLENAME_TEXT);
 			infoTable.add(name, 2, 1);
 			
 			if (deceasedStatus != null) {
-				Text deceased = new Text(iwrb.getLocalizedString("deceased", "Deceased"));
+				Text deceased = new Text(this.iwrb.getLocalizedString("deceased", "Deceased"));
 				deceased.setStyleClass(STYLENAME_HEADER);
 				infoTable.add(deceased, 1, 6);
 				
@@ -741,11 +757,11 @@ public class UserEditor extends Block implements IWPageEventListener {
 					primaryCommune = primaryAddress.getCommune();
 				}
 				else {
-					primaryCommune = getCommune(iwc, user);
+					primaryCommune = getCommune(iwc, this.user);
 				}
 				
 				if (primaryCommune != null) {
-					Text communeLabel = new Text(iwrb.getLocalizedString("commune", "Commune") + ": ");
+					Text communeLabel = new Text(this.iwrb.getLocalizedString("commune", "Commune") + ": ");
 					communeLabel.setStyleClass(STYLENAME_HEADER);
 					infoTable.add(communeLabel, 3, 1);
 
@@ -762,7 +778,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		row++;
 		boolean hasPhone = false;
 		try {
-			Phone phone = userService.getUsersHomePhone(user);
+			Phone phone = userService.getUsersHomePhone(this.user);
 			if (phone != null && phone.getNumber() != null) {
 				hasPhone = true;
 				
@@ -775,7 +791,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		catch (NoPhoneFoundException e) {
 		}
 		try {
-			Phone phone = userService.getUsersMobilePhone(user);
+			Phone phone = userService.getUsersMobilePhone(this.user);
 			if (phone != null && phone.getNumber() != null) {
 				Text phoneText = new Text(hasPhone ? " / " + phone.getNumber() : phone.getNumber());
 				phoneText.setStyleClass(STYLENAME_TEXT);
@@ -806,7 +822,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 *          the context
 	 */
 	protected void editUserInfo(IWContext iwc) throws RemoteException {
-		addSeperator(iwrb.getLocalizedString("mbe.user_info", "User info"));
+		addSeperator(this.iwrb.getLocalizedString("mbe.user_info", "User info"));
 		UserBusiness userService = getUserService(iwc);
 		Page p = this.getParentPage();
 		if (p != null) {
@@ -821,51 +837,51 @@ public class UserEditor extends Block implements IWPageEventListener {
 		Address coAddress = null;
 		UserStatus deceasedStatus = null;
 		Email email = null;
-		if (user != null) {
-			primaryAddress = userService.getUsersMainAddress(user);
-			coAddress = userService.getUsersCoAddress(user);
-			deceasedStatus = getUserStatusService(iwc).getDeceasedUserStatus((Integer) user.getPrimaryKey());
-			email = userService.getUserMail(user);
+		if (this.user != null) {
+			primaryAddress = userService.getUsersMainAddress(this.user);
+			coAddress = userService.getUsersCoAddress(this.user);
+			deceasedStatus = getUserStatusService(iwc).getDeceasedUserStatus((Integer) this.user.getPrimaryKey());
+			email = userService.getUserMail(this.user);
 		}
-		Text tPersonal = new Text(iwrb.getLocalizedString("mbe.personal_id", "Personal ID"));
-		tPersonal.setStyleClass(headerFontStyleName);
+		Text tPersonal = new Text(this.iwrb.getLocalizedString("mbe.personal_id", "Personal ID"));
+		tPersonal.setStyleClass(this.headerFontStyleName);
 		addressTable.add(tPersonal, 1, row);
-		if(isAllowPersonalIdEdit(user)) {
+		if(isAllowPersonalIdEdit(this.user)) {
 			TextInput primaryPersonalIdInput = new TextInput(prm_personal_id);
-			primaryPersonalIdInput.setStyleClass(interfaceStyleName);
-			primaryPersonalIdInput.setLength(streetInputLength);
-			primaryPersonalIdInput.setContent(user.getPersonalID());//does that show a prefilled form? 
+			primaryPersonalIdInput.setStyleClass(this.interfaceStyleName);
+			primaryPersonalIdInput.setLength(this.streetInputLength);
+			primaryPersonalIdInput.setContent(this.user.getPersonalID());//does that show a prefilled form? 
 			addressTable.add(primaryPersonalIdInput, 2, row++);
 		}
 		else {
-			Text personal = new Text(user.getPersonalID());
-			personal.setStyleClass(deceasedFontStyleName);
+			Text personal = new Text(this.user.getPersonalID());
+			personal.setStyleClass(this.deceasedFontStyleName);
 			addressTable.add(personal, 2, row++);
 		}
 
-		Text tName = new Text(iwrb.getLocalizedString("mbe.name", "Name"));
-		tName.setStyleClass(headerFontStyleName);
+		Text tName = new Text(this.iwrb.getLocalizedString("mbe.name", "Name"));
+		tName.setStyleClass(this.headerFontStyleName);
 		addressTable.add(tName, 1, row);
 
 		TextInput primaryFirstName = new TextInput(prm_first_name);
-		primaryFirstName.setStyleClass(interfaceStyleName);
-		primaryFirstName.setLength(firstNameInputLength);
-		if (user != null && user.getFirstName() != null) {
-			primaryFirstName.setContent(user.getFirstName());
+		primaryFirstName.setStyleClass(this.interfaceStyleName);
+		primaryFirstName.setLength(this.firstNameInputLength);
+		if (this.user != null && this.user.getFirstName() != null) {
+			primaryFirstName.setContent(this.user.getFirstName());
 		}
 		
 		TextInput primaryMiddleName = new TextInput(prm_middle_name);
-		primaryMiddleName.setStyleClass(interfaceStyleName);
-		primaryMiddleName.setLength(middleNameInputLength);
-		if (user != null && user.getMiddleName() != null) {
-			primaryMiddleName.setContent(user.getMiddleName());
+		primaryMiddleName.setStyleClass(this.interfaceStyleName);
+		primaryMiddleName.setLength(this.middleNameInputLength);
+		if (this.user != null && this.user.getMiddleName() != null) {
+			primaryMiddleName.setContent(this.user.getMiddleName());
 		}
 		
 		TextInput primaryLastName = new TextInput(prm_last_name);
-		primaryLastName.setStyleClass(interfaceStyleName);
-		primaryLastName.setLength(lastNameInputLength);
-		if (user != null && user.getLastName() != null) {
-			primaryLastName.setContent(user.getLastName());
+		primaryLastName.setStyleClass(this.interfaceStyleName);
+		primaryLastName.setLength(this.lastNameInputLength);
+		if (this.user != null && this.user.getLastName() != null) {
+			primaryLastName.setContent(this.user.getLastName());
 		}
 		addressTable.mergeCells(2, row, addressTable.getColumns(), row);
 		addressTable.add(primaryFirstName, 2, row);
@@ -876,8 +892,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 		if (!isNewUserView()) {
 			// deceased layout section
-			Text tDeceased = new Text(iwrb.getLocalizedString("mbe.deceased", "Deceased"));
-			tDeceased.setStyleClass(deceasedFontStyleName);
+			Text tDeceased = new Text(this.iwrb.getLocalizedString("mbe.deceased", "Deceased"));
+			tDeceased.setStyleClass(this.deceasedFontStyleName);
 			addressTable.add(tDeceased, 1, row);
 			if (deceasedStatus != null) {
 				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, iwc.getCurrentLocale());
@@ -889,9 +905,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 				DateInput deceasedInput = new DateInput(prm_deceased_date);
 				deceasedInput.setToDisplayDayLast(true);
 				IWTimestamp today = IWTimestamp.RightNow();
-				deceasedInput.setLatestPossibleDate(today.getDate(), iwrb.getLocalizedString("mbe.deceased_date_warning", "Please do not register deceased date in the future"));
+				deceasedInput.setLatestPossibleDate(today.getDate(), this.iwrb.getLocalizedString("mbe.deceased_date_warning", "Please do not register deceased date in the future"));
 				deceasedInput.setYearRange(today.getYear() - 5, today.getYear());
-				deceasedInput.setStyleClass(interfaceStyleName);
+				deceasedInput.setStyleClass(this.interfaceStyleName);
 				addressTable.add(deceasedInput, 2, row++);
 			}
 			row++;
@@ -900,22 +916,22 @@ public class UserEditor extends Block implements IWPageEventListener {
 		addToMainPart(Text.getBreak());
 		// address layout section
 
-		Text tAddress = new Text(iwrb.getLocalizedString("mbe.address", "Address"));
-		Text tPrimary = new Text(iwrb.getLocalizedString("mbe.address.main", "Main"));
-		Text tCO = new Text(iwrb.getLocalizedString("mbe.address.co", "C/O"));
-		Text tStreetAddress = new Text(iwrb.getLocalizedString("mbe.address.street", "Street"));
-		Text tPostalName = new Text(iwrb.getLocalizedString("mbe.address.postal.name", "Postal name"));
-		Text tPostalCode = new Text(iwrb.getLocalizedString("mbe.address.postal.code", "Postal code"));
-		Text tCommune = new Text(iwrb.getLocalizedString("mbe.commune", "Commune"));
-		Text tCountry = new Text(iwrb.getLocalizedString("mbe.address.country", "Country"));
-		tAddress.setStyleClass(headerFontStyleName);
-		tPrimary.setStyleClass(headerFontStyleName);
-		tCO.setStyleClass(headerFontStyleName);
-		tStreetAddress.setStyleClass(headerFontStyleName);
-		tPostalName.setStyleClass(headerFontStyleName);
-		tPostalCode.setStyleClass(headerFontStyleName);
-		tCountry.setStyleClass(headerFontStyleName);
-		tCommune.setStyleClass(headerFontStyleName);
+		Text tAddress = new Text(this.iwrb.getLocalizedString("mbe.address", "Address"));
+		Text tPrimary = new Text(this.iwrb.getLocalizedString("mbe.address.main", "Main"));
+		Text tCO = new Text(this.iwrb.getLocalizedString("mbe.address.co", "C/O"));
+		Text tStreetAddress = new Text(this.iwrb.getLocalizedString("mbe.address.street", "Street"));
+		Text tPostalName = new Text(this.iwrb.getLocalizedString("mbe.address.postal.name", "Postal name"));
+		Text tPostalCode = new Text(this.iwrb.getLocalizedString("mbe.address.postal.code", "Postal code"));
+		Text tCommune = new Text(this.iwrb.getLocalizedString("mbe.commune", "Commune"));
+		Text tCountry = new Text(this.iwrb.getLocalizedString("mbe.address.country", "Country"));
+		tAddress.setStyleClass(this.headerFontStyleName);
+		tPrimary.setStyleClass(this.headerFontStyleName);
+		tCO.setStyleClass(this.headerFontStyleName);
+		tStreetAddress.setStyleClass(this.headerFontStyleName);
+		tPostalName.setStyleClass(this.headerFontStyleName);
+		tPostalCode.setStyleClass(this.headerFontStyleName);
+		tCountry.setStyleClass(this.headerFontStyleName);
+		tCommune.setStyleClass(this.headerFontStyleName);
 
 		addressTable.add(tAddress, 2, row);
 		addressTable.add(tCO, 3, row);
@@ -930,7 +946,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		Commune defaultCommune = null;
 		Commune primaryCommune = null;
 		Commune coCommune = null;
-		if (showDefaultCommuneOption) {
+		if (this.showDefaultCommuneOption) {
 			try {
 				defaultCommune = getCommuneBusiness(iwc).getCommuneHome().findDefaultCommune();
 			}
@@ -959,56 +975,56 @@ public class UserEditor extends Block implements IWPageEventListener {
 			// e1.printStackTrace();
 		}
 		TextInput primaryStreetAddressInput = new TextInput(prm_mainaddress_street);
-		primaryStreetAddressInput.setStyleClass(interfaceStyleName);
-		primaryStreetAddressInput.setLength(streetInputLength);
-		primaryStreetAddressInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		primaryStreetAddressInput.setStyleClass(this.interfaceStyleName);
+		primaryStreetAddressInput.setLength(this.streetInputLength);
+		primaryStreetAddressInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		TextInput primaryPostalCodeInput = new TextInput(prm_mainaddress_postal_code);
-		primaryPostalCodeInput.setStyleClass(interfaceStyleName);
-		primaryPostalCodeInput.setLength(postalcodeInputLength);
-		primaryPostalCodeInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		primaryPostalCodeInput.setStyleClass(this.interfaceStyleName);
+		primaryPostalCodeInput.setLength(this.postalcodeInputLength);
+		primaryPostalCodeInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		TextInput primaryPostalNameInput = new TextInput(prm_mainaddress_postal_name);
-		primaryPostalNameInput.setStyleClass(interfaceStyleName);
-		primaryPostalNameInput.setLength(postalnameInputLength);
-		primaryPostalNameInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		primaryPostalNameInput.setStyleClass(this.interfaceStyleName);
+		primaryPostalNameInput.setLength(this.postalnameInputLength);
+		primaryPostalNameInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		DropdownMenu primaryCommunes = new DropdownMenu(prm_maincommune_id);
-		primaryCommunes.addMenuElement("-1", iwrb.getLocalizedString("none-selected", "None-selected"));
-		primaryCommunes.setStyleClass(interfaceStyleName);
-		primaryCommunes.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		primaryCommunes.addMenuElement("-1", this.iwrb.getLocalizedString("none-selected", "None-selected"));
+		primaryCommunes.setStyleClass(this.interfaceStyleName);
+		primaryCommunes.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 		SelectorUtility su = new SelectorUtility();
 		su.getSelectorFromIDOEntities(primaryCommunes, getCommuneBusiness(iwc).getCommunes(), "getCommuneName");
 
 		CountryDropdownMenu primaryCountryInput = new CountryDropdownMenu(prm_mainaddress_country);
-		primaryCountryInput.setStyleClass(interfaceStyleName);
-		primaryCountryInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		primaryCountryInput.setStyleClass(this.interfaceStyleName);
+		primaryCountryInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		TextInput coStreetAddressInput = new TextInput(prm_coaddress_street);
-		coStreetAddressInput.setStyleClass(interfaceStyleName);
-		coStreetAddressInput.setLength(streetInputLength);
-		coStreetAddressInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		coStreetAddressInput.setStyleClass(this.interfaceStyleName);
+		coStreetAddressInput.setLength(this.streetInputLength);
+		coStreetAddressInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		TextInput coPostalCodeInput = new TextInput(prm_coaddress_postal_code);
-		coPostalCodeInput.setStyleClass(interfaceStyleName);
-		coPostalCodeInput.setLength(postalcodeInputLength);
-		coPostalCodeInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		coPostalCodeInput.setStyleClass(this.interfaceStyleName);
+		coPostalCodeInput.setLength(this.postalcodeInputLength);
+		coPostalCodeInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		TextInput coPostalNameInput = new TextInput(prm_coaddress_postal_name);
-		coPostalNameInput.setStyleClass(interfaceStyleName);
-		coPostalNameInput.setLength(postalnameInputLength);
-		coPostalNameInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		coPostalNameInput.setStyleClass(this.interfaceStyleName);
+		coPostalNameInput.setLength(this.postalnameInputLength);
+		coPostalNameInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		DropdownMenu coCommunes = new DropdownMenu(prm_cocommune_id);
-		coCommunes.addMenuElement("-1", iwrb.getLocalizedString("none-selected", "None-selected"));
+		coCommunes.addMenuElement("-1", this.iwrb.getLocalizedString("none-selected", "None-selected"));
 		su.getSelectorFromIDOEntities(coCommunes, getCommuneBusiness(iwc).getCommunes(), "getCommuneName");
-		coCommunes.setStyleClass(interfaceStyleName);
-		coCommunes.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		coCommunes.setStyleClass(this.interfaceStyleName);
+		coCommunes.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		CountryDropdownMenu coCountryInput = (CountryDropdownMenu) primaryCountryInput.clone();
 		coCountryInput.setName(prm_coaddress_country);
-		coCountryInput.setStyleClass(interfaceStyleName);
-		coCountryInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		coCountryInput.setStyleClass(this.interfaceStyleName);
+		coCountryInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 		/*
 		 * PostalCodeDropdownMenu coPostalAddressInput = new
 		 * PostalCodeDropdownMenu();
@@ -1023,7 +1039,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 			// coPostalAddressInput.setCountry(defaultCountry);
 		}
 
-		if (defaultCommune != null && user == null) {
+		if (defaultCommune != null && this.user == null) {
 			primaryCommunes.setSelectedElement((defaultCommune).getPrimaryKey().toString());
 			coCommunes.setSelectedElement((defaultCommune).getPrimaryKey().toString());
 		} // addressTable.add(tPrimary, 2, 2);
@@ -1049,10 +1065,12 @@ public class UserEditor extends Block implements IWPageEventListener {
 				// System.err.println("postal ID:
 				// "+postalCode.getPrimaryKey().toString());
 				if (postalCode != null) {
-					if (postalCode.getPostalCode() != null)
+					if (postalCode.getPostalCode() != null) {
 						primaryPostalCodeInput.setContent(postalCode.getPostalCode());
-					if (postalCode.getName() != null)
+					}
+					if (postalCode.getName() != null) {
 						primaryPostalNameInput.setContent(postalCode.getName());
+					}
 					addressTable.add(new Parameter(prm_primaddress_postal_id, postalCode.getPrimaryKey().toString()));
 					addressTable.add(getOldParameter(prm_mainaddress_postal_code, postalCode.getPostalCode()));
 					addressTable.add(getOldParameter(prm_mainaddress_postal_name, postalCode.getName()));
@@ -1075,7 +1093,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 					primaryCommunes.setSelectedElement(primaryAddress.getCommuneID());
 				}
 				else {
-					primaryCommune = getCommune(iwc, user);
+					primaryCommune = getCommune(iwc, this.user);
 					if (primaryCommune != null) {
 						primaryCommunes.setSelectedElement(primaryCommune.getPrimaryKey().toString());
 					}
@@ -1092,10 +1110,12 @@ public class UserEditor extends Block implements IWPageEventListener {
 			try {
 				PostalCode postalCode = coAddress.getPostalCode();
 				if (postalCode != null) {
-					if (postalCode.getPostalCode() != null)
+					if (postalCode.getPostalCode() != null) {
 						coPostalCodeInput.setContent(postalCode.getPostalCode());
-					if (postalCode.getName() != null)
+					}
+					if (postalCode.getName() != null) {
 						coPostalNameInput.setContent(postalCode.getName());
+					}
 					addressTable.add(new Parameter(prm_coaddress_postal_id, postalCode.getPrimaryKey().toString()));
 					addressTable.add(getOldParameter(prm_coaddress_postal_code, postalCode.getPostalCode()));
 					addressTable.add(getOldParameter(prm_coaddress_postal_name, postalCode.getName()));
@@ -1113,7 +1133,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 						coCommunes.setSelectedElement(coAddress.getCommuneID());
 					}
 					else {
-						coCommune = getCommune(iwc, user);
+						coCommune = getCommune(iwc, this.user);
 						if (coCommune != null) {
 							coCommunes.setSelectedElement(coCommune.getPrimaryKey().toString());
 						}
@@ -1125,18 +1145,18 @@ public class UserEditor extends Block implements IWPageEventListener {
 		}
 		row++;
 		// phone layout section
-		Text tPhone = new Text(iwrb.getLocalizedString("mbe.phone", "Phone"));
-		tPhone.setStyleClass(headerFontStyleName);
+		Text tPhone = new Text(this.iwrb.getLocalizedString("mbe.phone", "Phone"));
+		tPhone.setStyleClass(this.headerFontStyleName);
 
 		TextInput phoneInput = new TextInput(prm_main_phone);
-		phoneInput.setLength(phoneInputLength);
-		phoneInput.setStyleClass(interfaceStyleName);
-		phoneInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		phoneInput.setLength(this.phoneInputLength);
+		phoneInput.setStyleClass(this.interfaceStyleName);
+		phoneInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
 		addressTable.add(tPhone, 1, row);
 		addressTable.add(phoneInput, 2, row++);
 		try {
-			Phone phone = userService.getUsersHomePhone(user);
+			Phone phone = userService.getUsersHomePhone(this.user);
 			if (phone != null && phone.getNumber() != null) {
 				phoneInput.setContent(phone.getNumber());
 				addressTable.add(getOldParameter(prm_main_phone, phone.getNumber()));
@@ -1146,14 +1166,14 @@ public class UserEditor extends Block implements IWPageEventListener {
 		}
 		row++;
 		// email layout section
-		Text tEmail = new Text(iwrb.getLocalizedString("mbe.email", "Email"));
-		tEmail.setStyleClass(headerFontStyleName);
+		Text tEmail = new Text(this.iwrb.getLocalizedString("mbe.email", "Email"));
+		tEmail.setStyleClass(this.headerFontStyleName);
 		TextInput emailInput = new TextInput(prm_email_address);
-		emailInput.setStyleClass(interfaceStyleName);
-		emailInput.setLength(emailInputLength);
-		emailInput.keepStatusOnAction(isNewUserView() && !reqNewUser);
+		emailInput.setStyleClass(this.interfaceStyleName);
+		emailInput.setLength(this.emailInputLength);
+		emailInput.keepStatusOnAction(isNewUserView() && !this.reqNewUser);
 
-		emailInput.setAsEmail(iwrb.getLocalizedString("mbe.error.email_input", "Please enter a legal email address"));
+		emailInput.setAsEmail(this.iwrb.getLocalizedString("mbe.error.email_input", "Please enter a legal email address"));
 		addressTable.add(tEmail, 1, row);
 		addressTable.add(emailInput, 2, row++);
 		if (email != null && email.getEmailAddress() != null) {
@@ -1176,10 +1196,10 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 */
 	public void process(IWContext iwc) throws IDOLookupException, FinderException, RemoteException {
 		if (iwc.isParameterSet(PRM_ACTION)) {
-			iAction = Integer.parseInt(iwc.getParameter(PRM_ACTION));
+			this.iAction = Integer.parseInt(iwc.getParameter(PRM_ACTION));
 		}
 		else {
-			iAction = ACTION_VIEW;
+			this.iAction = ACTION_VIEW;
 		}
 		initUser(iwc);
 		initRelationTypes(iwc);
@@ -1237,30 +1257,31 @@ public class UserEditor extends Block implements IWPageEventListener {
 			}
 			if (isValidPersonalID(pid) && !"".equals(fname) && !"".equals(lname)) {
 				try {
-					user = findPersonalIDUser(iwc, pid);
+					this.user = findPersonalIDUser(iwc, pid);
 				}
 				catch (FinderException e) {
-					user = null;
+					this.user = null;
 				}
-				if (user == null)
-					user = createUser(iwc, pid, fname, mname, lname, groupID);
+				if (this.user == null) {
+					this.user = createUser(iwc, pid, fname, mname, lname, groupID);
+				}
 				else {
-					String mainPostalExists = iwrb.getLocalizedString("mbe.warning.user_with_pid_exists", "There is already a user registered with this personal id");
+					String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.user_with_pid_exists", "There is already a user registered with this personal id");
 					this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
 				}
 			}
 			else {
-				String mainPostalExists = iwrb.getLocalizedString("mbe.warning.fields_missing", "Please provide a legal personalID and nonempty names");
+				String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.fields_missing", "Please provide a legal personalID and nonempty names");
 				this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
 				setNewUserView(true);
 			}
 		}
 		else {
-			user = userService.getUser(userID);
+			this.user = userService.getUser(userID);
 			try {
 				// user part
 				if (isNewValue(iwc, prm_personal_id) || isNewValue(iwc, prm_first_name) || isNewValue(iwc, prm_middle_name, true) || isNewValue(iwc, prm_last_name) || isNewValue(iwc, prm_primary_group_id) || isRemovedValue(iwc, prm_middle_name)) {
-					String pid = user.getPersonalID(), first = user.getFirstName(), middle = user.getMiddleName(), last = user.getLastName();
+					String pid = this.user.getPersonalID(), first = this.user.getFirstName(), middle = this.user.getMiddleName(), last = this.user.getLastName();
 					Integer groupID = null;
 					boolean legalState = false;
 					if (isNewValue(iwc, prm_personal_id)) {
@@ -1269,9 +1290,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 							try {
 								User pidUser = findPersonalIDUser(iwc, pid);
 								if (pidUser != null && !pidUser.getPrimaryKey().toString().equals(userID.toString())) {
-									String mainPostalExists = iwrb.getLocalizedString("mbe.warning.personal_id_in_use", "Personal ID is already in use");
+									String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.personal_id_in_use", "Personal ID is already in use");
 									this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
-									pid = user.getPersonalID();
+									pid = this.user.getPersonalID();
 									legalState |= false;
 								}
 								else {
@@ -1284,11 +1305,11 @@ public class UserEditor extends Block implements IWPageEventListener {
 							}
 
 						}
-						else if (warnIfPersonalIDIsIllegal) {
+						else if (this.warnIfPersonalIDIsIllegal) {
 							legalState = false;
-							String mainPostalExists = iwrb.getLocalizedString("mbe.warning.personal_id_illegal", "Personal ID is illegally formatted");
+							String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.personal_id_illegal", "Personal ID is illegally formatted");
 							this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
-							pid = user.getPersonalID();
+							pid = this.user.getPersonalID();
 							legalState |= false;
 						}
 
@@ -1311,12 +1332,14 @@ public class UserEditor extends Block implements IWPageEventListener {
 					}
 					if (isNewValue(iwc, prm_primary_group_id)) {
 						groupID = Integer.valueOf(iwc.getParameter(prm_primary_group_id));
-						if (groupID.intValue() <= 0)
+						if (groupID.intValue() <= 0) {
 							groupID = null;
+						}
 						legalState |= true;
 					}
-					if (legalState)
-						userService.updateUser(user, first, middle, last, null, null, null, pid, null, groupID);
+					if (legalState) {
+						userService.updateUser(this.user, first, middle, last, null, null, null, pid, null, groupID);
+					}
 				}
 			}
 			catch (EJBException e3) {
@@ -1326,10 +1349,12 @@ public class UserEditor extends Block implements IWPageEventListener {
 				e3.printStackTrace();
 			}
 		}
-		if (user != null)
-			userID = (Integer) user.getPrimaryKey();
-		else
+		if (this.user != null) {
+			userID = (Integer) this.user.getPrimaryKey();
+		}
+		else {
 			userID = null;
+		}
 
 		if (userID != null) {
 			try {
@@ -1337,9 +1362,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 				if (isRemovedValue(iwc, prm_mainaddress_street)) {
 					Address address = null;
 					try {
-						address = userService.getUsersMainAddress(user);
+						address = userService.getUsersMainAddress(this.user);
 						if (address != null) {
-							user.removeAddress(address);
+							this.user.removeAddress(address);
 						}
 					}
 					catch (IDORemoveRelationshipException e1) {
@@ -1381,9 +1406,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 								catch (FinderException e2) {
 								}
-								if (warnIfPostalExists && postalExists && (isNewValue(iwc, prm_mainaddress_postal_code) || isNewValue(iwc, prm_mainaddress_postal_name))) {
+								if (this.warnIfPostalExists && postalExists && (isNewValue(iwc, prm_mainaddress_postal_code) || isNewValue(iwc, prm_mainaddress_postal_name))) {
 
-									String mainPostalExists = iwrb.getLocalizedString("mbe.warning.zip_code_and_city_already_exist", "Zip code and city already exist in database");
+									String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.zip_code_and_city_already_exist", "Zip code and city already exist in database");
 									this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
 								}
 								if (postalExists && isNewValue(iwc, prm_mainaddress_postal_name) && !isNewValue(iwc, prm_mainaddress_postal_code)) {
@@ -1400,8 +1425,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 								if (iwc.isParameterSet(prm_maincommune_id)) {
 									communeID = Integer.valueOf(iwc.getParameter(prm_maincommune_id));
-									if (communeID.intValue() <= 0)
+									if (communeID.intValue() <= 0) {
 										communeID = null;
+									}
 								}
 
 							}
@@ -1418,7 +1444,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 							}
 
-							userService.updateUsersMainAddressOrCreateIfDoesNotExist(user, street, postalCode, country, null, null, null, communeID);
+							userService.updateUsersMainAddressOrCreateIfDoesNotExist(this.user, street, postalCode, country, null, null, null, communeID);
 
 						}
 					}
@@ -1427,9 +1453,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 				if (isRemovedValue(iwc, prm_coaddress_street)) {
 					Address address = null;
 					try {
-						address = userService.getUsersCoAddress(user);
+						address = userService.getUsersCoAddress(this.user);
 						if (address != null) {
-							user.removeAddress(address);
+							this.user.removeAddress(address);
 						}
 					}
 					catch (Exception e1) {
@@ -1467,8 +1493,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 								catch (FinderException e2) {
 								}
-								if (warnIfPostalExists && postalExists && (isNewValue(iwc, prm_coaddress_postal_code) || isNewValue(iwc, prm_coaddress_postal_name))) {
-									String mainPostalExists = iwrb.getLocalizedString("mbe.warning.zip_code_and_city_already_exist", "Zipl code and city already exist in database");
+								if (this.warnIfPostalExists && postalExists && (isNewValue(iwc, prm_coaddress_postal_code) || isNewValue(iwc, prm_coaddress_postal_name))) {
+									String mainPostalExists = this.iwrb.getLocalizedString("mbe.warning.zip_code_and_city_already_exist", "Zipl code and city already exist in database");
 									this.getParentPage().setOnLoad("alert('" + mainPostalExists + "');");
 								}
 								if (postalExists && isNewValue(iwc, prm_coaddress_postal_name) && !isNewValue(iwc, prm_coaddress_postal_code)) {
@@ -1484,8 +1510,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 								if (iwc.isParameterSet(prm_maincommune_id)) {
 									communeID = Integer.valueOf(iwc.getParameter(prm_cocommune_id));
-									if (communeID.intValue() <= 0)
+									if (communeID.intValue() <= 0) {
 										communeID = null;
+									}
 								}
 							}
 							else if (iwc.isParameterSet(prm_coaddress_postal_id)) {
@@ -1500,7 +1527,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 								}
 							}
 
-							userService.updateUsersCoAddressOrCreateIfDoesNotExist(user, street, postalCode, country, null, null, null, communeID);
+							userService.updateUsersCoAddressOrCreateIfDoesNotExist(this.user, street, postalCode, country, null, null, null, communeID);
 						}
 					}
 				}
@@ -1512,9 +1539,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 				else if (isRemovedValue(iwc, prm_main_phone)) {
 					Phone phone = null;
 					try {
-						phone = userService.getUsersHomePhone(user);
+						phone = userService.getUsersHomePhone(this.user);
 						if (phone != null) {
-							user.removePhone(phone);
+							this.user.removePhone(phone);
 						}
 					}
 					catch (Exception e1) {
@@ -1528,9 +1555,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 				else if (isRemovedValue(iwc, prm_email_address)) {
 					Email email = null;
 					try {
-						email = userService.getUserMail(user);
+						email = userService.getUserMail(this.user);
 						if (email != null) {
-							user.removeEmail(email);
+							this.user.removeEmail(email);
 						}
 					}
 					catch (Exception e1) {
@@ -1544,7 +1571,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 					// about a deceased user
 				}
 				
-				getUserSession(iwc).setUser(user);
+				getUserSession(iwc).setUser(this.user);
 			}
 			catch (NumberFormatException e) {
 				e.printStackTrace();
@@ -1560,7 +1587,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 			}
 		}
 		
-		iAction = ACTION_VIEW;
+		this.iAction = ACTION_VIEW;
 	}
 
 	/**
@@ -1575,7 +1602,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		if (iwc.isParameterSet(PRM_USER_ID)) {
 			Integer uid = Integer.valueOf(iwc.getParameter(PRM_USER_ID));
 			try {
-				user = getUserService(iwc).getUser(uid);
+				this.user = getUserService(iwc).getUser(uid);
 			}
 			catch (RemoteException e) {
 				e.printStackTrace();
@@ -1583,7 +1610,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		}
 		else {
 			try {
-				user = getUserSession(iwc).getUser();
+				this.user = getUserSession(iwc).getUser();
 			}
 			catch (RemoteException re) {
 				re.printStackTrace();
@@ -1609,7 +1636,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param integer
 	 */
 	public void setUserID(Integer integer) {
-		userID = integer;
+		this.userID = integer;
 	}
 
 	public void addDeceasedListener(IWPageEventListener listener) {
@@ -1617,8 +1644,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 	protected Map getRelations(User user) throws FinderException, RemoteException {
 		Map map = new Hashtable();
-		if (relationTypes == null)
-			relationTypes = new Vector();
+		if (this.relationTypes == null) {
+			this.relationTypes = new Vector();
+		}
 		Collection relations = getRelationHome().findGroupsRelationshipsUnder(user);
 		String type;
 		for (Iterator iter = relations.iterator(); iter.hasNext();) {
@@ -1626,8 +1654,8 @@ public class UserEditor extends Block implements IWPageEventListener {
 			type = relation.getRelationshipType();
 			// only show nonpassive relations
 			if (!relation.isPassive()) {
-				if (showAllRelationTypes && !relationTypes.contains(type)) {
-					relationTypes.add(type);
+				if (this.showAllRelationTypes && !this.relationTypes.contains(type)) {
+					this.relationTypes.add(type);
 				}
 				if (map.containsKey(type)) {
 					((List) map.get(type)).add(relation);
@@ -1653,11 +1681,11 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 */
 	public Map getStyleNames() {
 		HashMap map = new HashMap();
-		map.put(STYLENAME_HEADER, headerFontStyle);
-		map.put(STYLENAME_TEXT, textFontStyle);
-		map.put(STYLENAME_DECEASED, deceasedFontStyle);
-		map.put(STYLENAME_BUTTON, buttonStyle);
-		map.put(STYLENAME_INTERFACE, interfaceStyle);
+		map.put(STYLENAME_HEADER, this.headerFontStyle);
+		map.put(STYLENAME_TEXT, this.textFontStyle);
+		map.put(STYLENAME_DECEASED, this.deceasedFontStyle);
+		map.put(STYLENAME_BUTTON, this.buttonStyle);
+		map.put(STYLENAME_INTERFACE, this.interfaceStyle);
 		return map;
 	}
 
@@ -1681,8 +1709,9 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 	private boolean isRemovedValue(IWContext iwc, String pName) {
 		String value = iwc.getParameter(pName);
-		if (iwc.isParameterSet(pName + prm_old_value_suffix) && value != null && value.length() == 0)
+		if (iwc.isParameterSet(pName + prm_old_value_suffix) && value != null && value.length() == 0) {
 			return true;
+		}
 		return false;
 	}
 
@@ -1693,7 +1722,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param windowClass
 	 */
 	public void setGroupRelationConnectorWindow(Class windowClass) {
-		connectorWindowClass = windowClass;
+		this.connectorWindowClass = windowClass;
 	}
 
 	public UserBusiness getUserService(IWApplicationContext iwac) throws RemoteException {
@@ -1726,7 +1755,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public Class getConnectorWindowClass() {
-		return connectorWindowClass;
+		return this.connectorWindowClass;
 	}
 
 	/**
@@ -1735,7 +1764,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public String getHeaderFontStyle() {
-		return headerFontStyle;
+		return this.headerFontStyle;
 	}
 
 	/**
@@ -1753,7 +1782,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public boolean isShowAllRelationTypes() {
-		return showAllRelationTypes;
+		return this.showAllRelationTypes;
 	}
 
 	/**
@@ -1762,7 +1791,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public boolean isShowUserRelations() {
-		return showUserRelations;
+		return this.showUserRelations;
 	}
 
 	/**
@@ -1771,7 +1800,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public String getTextFontStyle() {
-		return textFontStyle;
+		return this.textFontStyle;
 	}
 
 	/**
@@ -1780,7 +1809,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param class1
 	 */
 	public void setConnectorWindowClass(Class class1) {
-		connectorWindowClass = class1;
+		this.connectorWindowClass = class1;
 	}
 
 	/**
@@ -1789,7 +1818,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param string
 	 */
 	public void setHeaderFontStyle(String style) {
-		headerFontStyle = style;
+		this.headerFontStyle = style;
 	}
 
 	/**
@@ -1798,7 +1827,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param flag
 	 */
 	public void setShowAllRelationTypes(boolean flag) {
-		showAllRelationTypes = flag;
+		this.showAllRelationTypes = flag;
 	}
 
 	/**
@@ -1807,7 +1836,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param flag
 	 */
 	public void setShowUserRelations(boolean flag) {
-		showUserRelations = flag;
+		this.showUserRelations = flag;
 	}
 
 	/**
@@ -1816,7 +1845,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param string
 	 */
 	public void setTextFontStyle(String string) {
-		textFontStyle = string;
+		this.textFontStyle = string;
 	}
 
 	public Object clone() {
@@ -1830,7 +1859,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public String getDeceasedFontStyle() {
-		return deceasedFontStyle;
+		return this.deceasedFontStyle;
 	}
 
 	/**
@@ -1839,7 +1868,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param style
 	 */
 	public void setDeceasedFontStyle(String style) {
-		deceasedFontStyle = style;
+		this.deceasedFontStyle = style;
 	}
 
 	/**
@@ -1848,7 +1877,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param object
 	 */
 	public void addToMainPart(PresentationObject object) {
-		mainTable.add(object, 2, mainRow++);
+		this.mainTable.add(object, 2, this.mainRow++);
 	}
 
 	/**
@@ -1883,7 +1912,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return style
 	 */
 	public String getButtonStyle() {
-		return buttonStyle;
+		return this.buttonStyle;
 	}
 
 	/**
@@ -1892,7 +1921,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return style
 	 */
 	public String getInterfaceStyle() {
-		return interfaceStyle;
+		return this.interfaceStyle;
 	}
 
 	/**
@@ -1901,7 +1930,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param style
 	 */
 	public void setButtonStyle(String style) {
-		buttonStyle = style;
+		this.buttonStyle = style;
 	}
 
 	/**
@@ -1910,7 +1939,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param style
 	 */
 	public void setInterfaceStyle(String style) {
-		interfaceStyle = style;
+		this.interfaceStyle = style;
 	}
 
 	/**
@@ -1919,7 +1948,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public boolean isShowCloseButton() {
-		return showCloseButton;
+		return this.showCloseButton;
 	}
 
 	/**
@@ -1928,7 +1957,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param flag
 	 */
 	public void setShowCloseButton(boolean flag) {
-		showCloseButton = flag;
+		this.showCloseButton = flag;
 	}
 
 	public String getInfoCheckScript() {
@@ -1938,18 +1967,18 @@ public class UserEditor extends Block implements IWPageEventListener {
 		s.append("\n\t var mainPostalCode = ").append("findObj('").append(prm_mainaddress_postal_code).append("');");
 		s.append("\n\t var mainPostalName = ").append("findObj('").append(prm_mainaddress_postal_name).append("');");
 		s.append("\n\t if( mainStreetAddress.value != '' || mainPostalCode.value != '' || mainPostalName.value !='' ){ ");
-		s.append("\n\t\t var msg = '").append(iwrb.getLocalizedString("mbe.warning.main_address_item_missing", "Please provide the following items for the address")).append("' ");
+		s.append("\n\t\t var msg = '").append(this.iwrb.getLocalizedString("mbe.warning.main_address_item_missing", "Please provide the following items for the address")).append("' ");
 		s.append("\n\t\t var isAlert = false;");
 		s.append("\n\t\t if(mainStreetAddress.value == '' ) {");
-		s.append("\n\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_main_streetaddress", "Street address")).append("' ");
+		s.append("\n\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_main_streetaddress", "Street address")).append("' ");
 		s.append("\n\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(mainPostalCode.value == '' ) {");
-		s.append("\n\t\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_main_postalcode", "Zip code")).append(",' ");
+		s.append("\n\t\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_main_postalcode", "Zip code")).append(",' ");
 		s.append("\n\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(mainPostalName.value == '' ) {");
-		s.append("\n\t\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_main_postalname", "City")).append(",' \n\t");
+		s.append("\n\t\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_main_postalname", "City")).append(",' \n\t");
 		s.append("\n\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(isAlert){");
@@ -1961,17 +1990,17 @@ public class UserEditor extends Block implements IWPageEventListener {
 		s.append("\n\t var coPostalCode = ").append("findObj('").append(prm_coaddress_postal_code).append("');");
 		s.append("\n\t var coPostalName = ").append("findObj('").append(prm_coaddress_postal_name).append("');");
 		s.append("\n\t if( coStreetAddress.value !='' || coPostalCode.value !='' || coPostalName.value !='' ){ \n\t");
-		s.append("\n\t\t var msg = '").append(iwrb.getLocalizedString("mbe.warning.co_address_item_missing", "Please provide the following items for the c/o address")).append("' ");
+		s.append("\n\t\t var msg = '").append(this.iwrb.getLocalizedString("mbe.warning.co_address_item_missing", "Please provide the following items for the c/o address")).append("' ");
 		s.append("\n\t\t if(coStreetAddress.value == '' ) {");
-		s.append("\n\t\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_co_streetaddress", "Street address")).append(",' ");
+		s.append("\n\t\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_co_streetaddress", "Street address")).append(",' ");
 		s.append("\n\t\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(coPostalCode.value == '' ) {");
-		s.append("\n\t\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_co_postalcode", "Zip code")).append(",' ");
+		s.append("\n\t\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_co_postalcode", "Zip code")).append(",' ");
 		s.append("\n\t\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(coPostalName.value == '' ) {");
-		s.append("\n\t\t\t msg += ' ").append(iwrb.getLocalizedString("mbe.warning.missing_co_postalname", "City")).append(",' ");
+		s.append("\n\t\t\t msg += ' ").append(this.iwrb.getLocalizedString("mbe.warning.missing_co_postalname", "City")).append(",' ");
 		s.append("\n\t\t\t isAlert = true");
 		s.append("\n\t\t }");
 		s.append("\n\t\t if(isAlert) {");
@@ -1996,26 +2025,26 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public boolean isAllowNewUserRegistration() {
-		return allowNewUserRegistration;
+		return this.allowNewUserRegistration;
 	}
 
 	/**
 	 * @param b
 	 */
 	public void setAllowNewUserRegistration(boolean b) {
-		allowNewUserRegistration = b;
+		this.allowNewUserRegistration = b;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isNewUserView() {
-		return newUserView;
+		return this.newUserView;
 	}
 
 	public boolean isNewUserView(IWContext iwc) {
 		if (iwc.isParameterSet(PRM_NEW_USER)) {
-			reqNewUser = true;
+			this.reqNewUser = true;
 			return true;
 		}
 		return false;
@@ -2026,70 +2055,70 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @param b
 	 */
 	public void setNewUserView(boolean b) {
-		newUserView = b;
+		this.newUserView = b;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isAllowPersonalIdEdit(User user) {
-		return allowPersonalIdEdit;
+		return this.allowPersonalIdEdit;
 	}
 
 	/**
 	 * @return
 	 */
 	public int getNameInputLength() {
-		return nameInputLength;
+		return this.nameInputLength;
 	}
 
 	/**
 	 * @return
 	 */
 	public int getPersonalIdInputLength() {
-		return personalIdInputLength;
+		return this.personalIdInputLength;
 	}
 
 	/**
 	 * @return
 	 */
 	public boolean isShowMiddleNameInput() {
-		return showMiddleNameInput;
+		return this.showMiddleNameInput;
 	}
 
 	/**
 	 * @param b
 	 */
 	public void setAllowPersonalIdEdit(boolean b) {
-		allowPersonalIdEdit = b;
+		this.allowPersonalIdEdit = b;
 	}
 
 	/**
 	 * @param i
 	 */
 	public void setNameInputLength(int i) {
-		nameInputLength = i;
+		this.nameInputLength = i;
 	}
 
 	/**
 	 * @param i
 	 */
 	public void setPersonalIdInputLength(int i) {
-		personalIdInputLength = i;
+		this.personalIdInputLength = i;
 	}
 
 	/**
 	 * @param b
 	 */
 	public void setShowMiddleNameInput(boolean b) {
-		showMiddleNameInput = b;
+		this.showMiddleNameInput = b;
 	}
 
 	/**
 	 * @return
 	 */
 	public int getEmailInputLength() {
-		return emailInputLength;
+		return this.emailInputLength;
 	}
 
 	/**
@@ -2103,7 +2132,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public int getStreetInputLength() {
-		return streetInputLength;
+		return this.streetInputLength;
 	}
 
 	/**
@@ -2117,7 +2146,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public int getPostalcodeInputLength() {
-		return postalcodeInputLength;
+		return this.postalcodeInputLength;
 	}
 
 	/**
@@ -2131,7 +2160,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public int getPostalnameInputLength() {
-		return postalnameInputLength;
+		return this.postalnameInputLength;
 	}
 
 	/**
@@ -2145,7 +2174,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * @return
 	 */
 	public int getPhoneInputLength() {
-		return phoneInputLength;
+		return this.phoneInputLength;
 	}
 
 	/**
@@ -2156,19 +2185,19 @@ public class UserEditor extends Block implements IWPageEventListener {
 	}
 
 	public void setWarnIfPostalExists(boolean flag) {
-		warnIfPostalExists = flag;
+		this.warnIfPostalExists = flag;
 	}
 
 	public boolean isWarnIfPostalExists() {
-		return warnIfPostalExists;
+		return this.warnIfPostalExists;
 	}
 
 	public void setShowSeperators(boolean flag) {
-		showSeperators = flag;
+		this.showSeperators = flag;
 	}
 
 	public boolean isShowSeperators() {
-		return showSeperators;
+		return this.showSeperators;
 	}
 
 	public void setWarnIfPersonalIDIsIllegal(boolean flag) {

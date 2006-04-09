@@ -28,7 +28,7 @@ public class Relative {
 	private String details;
 	
 	public String getEmail() {
-		return email;
+		return this.email;
 	}
 	
 	public void setEmail(String email) {
@@ -36,7 +36,7 @@ public class Relative {
 	}
 	
 	public String getHomePhone() {
-		return homePhone;
+		return this.homePhone;
 	}
 	
 	public void setHomePhone(String homePhone) {
@@ -44,7 +44,7 @@ public class Relative {
 	}
 	
 	public String getMobilePhone() {
-		return mobilePhone;
+		return this.mobilePhone;
 	}
 	
 	public void setMobilePhone(String mobilePhone) {
@@ -52,7 +52,7 @@ public class Relative {
 	}
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	public void setName(String name) {
@@ -60,7 +60,7 @@ public class Relative {
 	}
 	
 	public String getWorkPhone() {
-		return workPhone;
+		return this.workPhone;
 	}
 	
 	public void setWorkPhone(String workPhone) {
@@ -68,7 +68,7 @@ public class Relative {
 	}
 	
 	public String getRelation() {
-		return relation;
+		return this.relation;
 	}
 
 	public void setRelation(String relation) {
@@ -76,7 +76,7 @@ public class Relative {
 	}
 
 	public String getDetails() {
-		return details;
+		return this.details;
 	}
 
 	public void setDetails(String details) {
@@ -84,7 +84,7 @@ public class Relative {
 	}
 	
 	public String getPersonalID() {
-		return personalID;
+		return this.personalID;
 	}
 	
 	public void setPersonalID(String personalID) {

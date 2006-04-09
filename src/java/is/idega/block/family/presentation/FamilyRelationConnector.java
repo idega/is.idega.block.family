@@ -39,11 +39,11 @@ public class FamilyRelationConnector extends UserRelationConnector {
 	 */
 	public PresentationObject getRelationMenu(IWContext iwc) throws RemoteException {
 		if (hasSelectedType()) {
-			Text tType = new Text(iwrb.getLocalizedString(type, type));
+			Text tType = new Text(this.iwrb.getLocalizedString(this.type, this.type));
 			return tType;
 		}
 		else if(hasSelectedReverseType()){
-			Text tReverseType = new Text(iwrb.getLocalizedString(rtype,rtype));
+			Text tReverseType = new Text(this.iwrb.getLocalizedString(this.rtype,this.rtype));
 			return tReverseType;
 		}
 		else {
@@ -117,8 +117,9 @@ public class FamilyRelationConnector extends UserRelationConnector {
 						logic.setAsCustodianFor(relatedUser,user);
 					}
 				}
-				else
+				else {
 					logic.setAsChildFor(user,relatedUser);
+				}
 			}
 			else if (relationType.equals(logic.getParentRelationType())) {
 				logic.setAsParentFor(user,relatedUser);
@@ -139,8 +140,9 @@ public class FamilyRelationConnector extends UserRelationConnector {
 				logic.setAsParentFor(user,relatedUser);
 				logic.setAsCustodianFor(user,relatedUser);
 			}
-			else
+			else {
 				super.createRelation(iwc, userID, relatedUserID, relationType,reverseRelationType);
+			}
 		}
 		catch (FinderException e) {
 			e.printStackTrace();
@@ -223,7 +225,9 @@ public class FamilyRelationConnector extends UserRelationConnector {
 					return roleUser.hasRelationTo(victimUserID,mainType);
 				}
 			}
-			else return super.hasActiveRelations(iwc,roleUser,victimUser,mainType,reverseType);
+			else {
+				return super.hasActiveRelations(iwc,roleUser,victimUser,mainType,reverseType);
+			}
 		}
 		catch (RemoteException e) {
 			e.printStackTrace();

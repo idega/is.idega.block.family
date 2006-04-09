@@ -1,5 +1,5 @@
 /*
- * $Id: UserComments.java,v 1.1 2005/02/16 11:11:27 laddi Exp $
+ * $Id: UserComments.java,v 1.2 2006/04/09 11:57:04 laddi Exp $
  * Created on 31.1.2005
  *
  * Copyright (C) 2005 Idega Software hf. All Rights Reserved.
@@ -37,10 +37,10 @@ import com.idega.user.data.UserComment;
 
 
 /**
- * Last modified: $Date: 2005/02/16 11:11:27 $ by $Author: laddi $
+ * Last modified: $Date: 2006/04/09 11:57:04 $ by $Author: laddi $
  * 
  * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class UserComments extends Block {
 
@@ -52,8 +52,8 @@ public class UserComments extends Block {
 	protected IWResourceBundle iwrb;
 
 	public void main(IWContext iwc) {
-		iwb = getBundle(iwc);
-		iwrb = getResourceBundle(iwc);
+		this.iwb = getBundle(iwc);
+		this.iwrb = getResourceBundle(iwc);
 		parse(iwc);
 		
 		try {
@@ -89,14 +89,14 @@ public class UserComments extends Block {
 					//No comments found...
 				}
 				
-				table.add(iwrb.getLocalizedString("new_comment", "New comment") + ":", 1, 2);
+				table.add(this.iwrb.getLocalizedString("new_comment", "New comment") + ":", 1, 2);
 				table.add(new Break(), 1, 2);
 				TextArea area = new TextArea(PARAMETER_COMMENT);
 				area.setWidth(Table.HUNDRED_PERCENT);
 				area.setRows(10);
 				table.add(area, 1, 2);
 				
-				SubmitButton button = new SubmitButton(iwrb.getLocalizedString("save", "Save"));
+				SubmitButton button = new SubmitButton(this.iwrb.getLocalizedString("save", "Save"));
 				table.add(button, 1, 3);
 				
 				add(form);
