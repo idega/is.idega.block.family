@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.FinderException;
 
@@ -108,17 +109,28 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	}
 	
 	public Custodian getCustodian(String relation) {
-		Collection metadataValues = getMetaDataAttributes().values();
-		if (metadataValues != null) {
-			Iterator iter = metadataValues.iterator();
+		//Collection metadataValues = getMetaDataAttributes().values();
+		Map metadataAttributes = getMetaDataAttributes();
+		Collection keys = metadataAttributes.keySet();
+		//if (metadataValues != null) {
+		if(keys!=null){
+			//Iterator iter = metadataValues.iterator();
+			Iterator iter = keys.iterator();
 			while (iter.hasNext()) {
-				Object value = iter.next();
-				if (value.equals(relation)) {
-					try {
-						return getCustodianByPrimaryKey(value);
-					}
-					catch (FinderException fe) {
-						log(fe);
+				//Object value = iter.next();
+				String key = (String) iter.next();
+				if(key.startsWith(METADATA_RELATION)){
+					String value = (String) metadataAttributes.get(key);
+					if (value.equals(relation)) {
+						try {
+							String custPk = key.substring(METADATA_RELATION.length(),key.length());
+							Integer custId = new Integer(custPk);
+							
+							return getCustodianByPrimaryKey(custId);
+						}
+						catch (FinderException fe) {
+							log(fe);
+						}
 					}
 				}
 			}
