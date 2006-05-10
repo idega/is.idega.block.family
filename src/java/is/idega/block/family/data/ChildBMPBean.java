@@ -150,6 +150,12 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	public Custodian getExtraCustodian() {
 		String custodianPK = this.getMetaData(METADATA_OTHER_CUSTODIAN);
 		if (custodianPK != null) {
+			try {
+				return getCustodianByPrimaryKey(new Integer(custodianPK));
+			}
+			catch (FinderException fe) {
+				fe.printStackTrace();
+			}
 		}
 		return null;
 	}
