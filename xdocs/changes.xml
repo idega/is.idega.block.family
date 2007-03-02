@@ -1,21 +1,29 @@
 <document>
-  <properties>
-    <title>Family changes</title>
-    <author email="laddi@idega.com">Thorhallur "Laddi" Helgason</author>
-  </properties>
-  <body>
-  
-   <release version="1.0.2" date="2007-01-26">
-      <action dev="sigtryggur" type="update">
-        Added extra custodian info for the userapplication
-      </action>
-    </release>
-   
-   <release version="1.0.1" date="2006-07-11">
-      <action dev="laddi" type="update">
-        Declaring new version of block.
-      </action>
-    </release>
+	<properties>
+		<title>Family changes</title>
+		<author email="laddi@idega.com">
+			Thorhallur "Laddi" Helgason
+		</author>
+	</properties>
+	<body>
+		<release version="1.0.3" date="2007-03-02">
+			<action dev="palli" type="update">
+				Updated project file and dependencies and recreated
+				eclipse .project file.
+			</action>
+		</release>
 
-  </body>
+		<release version="1.0.2" date="2007-01-26">
+			<action dev="sigtryggur" type="update">
+				Added extra custodian info for the userapplication
+			</action>
+		</release>
+
+		<release version="1.0.1" date="2006-07-11">
+			<action dev="laddi" type="update">
+				Declaring new version of block.
+			</action>
+		</release>
+
+	</body>
 </document>
