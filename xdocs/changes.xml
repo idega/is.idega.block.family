@@ -6,6 +6,12 @@
 		</author>
 	</properties>
 	<body>
+		<release version="1.0.4" date="2007-04-30">
+			<action dev="laddi" type="update">
+				Added possibility to use prefixes when fetching children information.
+			</action>
+		</release>
+
 		<release version="1.0.3" date="2007-03-02">
 			<action dev="palli" type="update">
 				Updated project file and dependencies and recreated

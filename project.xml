@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>idegaWeb Family Block</name>
   <artifactId>is.idega.block.family</artifactId>
-  <currentVersion>1.0.3</currentVersion>
+  <currentVersion>1.0.4</currentVersion>
   <inceptionYear>2000</inceptionYear>
   <shortDescription>Application</shortDescription>
   <versions>
@@ -23,6 +23,11 @@
       <id>1.0.3</id>
       <name>1.0.3</name>
       <tag>FAMILY_1_0_3</tag>
+    </version>
+    <version>
+      <id>1.0.4</id>
+      <name>1.0.4</name>
+      <tag>FAMILY_1_0_4</tag>
     </version>
   </versions>
   <branches/>

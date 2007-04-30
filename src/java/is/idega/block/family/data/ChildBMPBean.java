@@ -1,11 +1,9 @@
 /*
- * $Id$
- * Created on Mar 29, 2006
- *
+ * $Id$ Created on Mar 29, 2006
+ * 
  * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
- *
- * This software is the proprietary information of Idega hf.
- * Use is subject to license terms.
+ * 
+ * This software is the proprietary information of Idega hf. Use is subject to license terms.
  */
 package is.idega.block.family.data;
 
@@ -33,12 +31,11 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
 
-
 public class ChildBMPBean extends UserBMPBean implements User, Child {
 
 	public static final String METADATA_GROWTH_DEVIATION = "growth_deviation";
 	public static final String METADATA_GROWTH_DEVIATION_DETAILS = "growth_deviation_details";
-	
+
 	public static final String METADATA_ALLERGIES = "allergies";
 	public static final String METADATA_ALLERGIES_DETAILS = "allergies_details";
 
@@ -48,12 +45,13 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	public static final String METADATA_OTHER_INFORMATION = "other_information";
 
 	public static final String METADATA_OTHER_CUSTODIAN = "other_custodian";
+	public static final String METADATA_RELATIVE_0 = "relative_0";
 	public static final String METADATA_RELATIVE_1 = "relative_1";
 	public static final String METADATA_RELATIVE_2 = "relative_2";
 	public static final String METADATA_RELATION = "relation_";
 
 	public static final String METADATA_FORBIDDEN_RELATIVE = "forbidden_relative";
-	
+
 	public Collection getSiblings() throws NoSiblingFound {
 		try {
 			return getFamilyLogic().getSiblingsFor(this);
@@ -62,7 +60,7 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
 	public Collection getCustodians() throws NoCustodianFound {
 		try {
 			return getFamilyLogic().getCustodiansFor(this);
@@ -71,7 +69,7 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
 	public Custodian getMother() {
 		Custodian custodian = getCustodian(FamilyConstants.RELATION_MOTHER);
 		if (custodian == null) {
@@ -86,10 +84,10 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 				throw new IBORuntimeException(ile);
 			}
 		}
-		
+
 		return custodian;
 	}
-	
+
 	public Custodian getFather() {
 		Custodian custodian = getCustodian(FamilyConstants.RELATION_FATHER);
 		if (custodian == null) {
@@ -104,28 +102,28 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 				throw new IBORuntimeException(ile);
 			}
 		}
-		
+
 		return custodian;
 	}
-	
+
 	public Custodian getCustodian(String relation) {
-		//Collection metadataValues = getMetaDataAttributes().values();
+		// Collection metadataValues = getMetaDataAttributes().values();
 		Map metadataAttributes = getMetaDataAttributes();
 		Collection keys = metadataAttributes.keySet();
-		//if (metadataValues != null) {
-		if(keys!=null){
-			//Iterator iter = metadataValues.iterator();
+		// if (metadataValues != null) {
+		if (keys != null) {
+			// Iterator iter = metadataValues.iterator();
 			Iterator iter = keys.iterator();
 			while (iter.hasNext()) {
-				//Object value = iter.next();
+				// Object value = iter.next();
 				String key = (String) iter.next();
-				if(key.startsWith(METADATA_RELATION)){
+				if (key.startsWith(METADATA_RELATION)) {
 					String value = (String) metadataAttributes.get(key);
 					if (value.equals(relation)) {
 						try {
-							String custPk = key.substring(METADATA_RELATION.length(),key.length());
+							String custPk = key.substring(METADATA_RELATION.length(), key.length());
 							Integer custId = new Integer(custPk);
-							
+
 							return getCustodianByPrimaryKey(custId);
 						}
 						catch (FinderException fe) {
@@ -135,14 +133,14 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public void setRelation(Custodian custodian, String relation) {
 		setMetaData(METADATA_RELATION + custodian.getPrimaryKey().toString(), relation, "java.lang.String");
 	}
-	
+
 	public String getRelation(Custodian custodian) {
 		return getMetaData(METADATA_RELATION + custodian.getPrimaryKey().toString());
 	}
@@ -159,29 +157,33 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		}
 		return null;
 	}
-	
+
 	public void setExtraCustodian(Custodian custodian) {
 		setExtraCustodian(custodian, null);
 	}
-	
+
 	public void setExtraCustodian(Custodian custodian, String relation) {
 		setMetaData(METADATA_OTHER_CUSTODIAN, custodian.getPrimaryKey().toString(), "com.idega.user.data.User");
 		if (relation != null && relation.length() > 0) {
 			setRelation(custodian, relation);
 		}
 	}
-	
+
 	public List getRelatives() {
+		return getRelatives("");
+	}
+
+	public List getRelatives(String prefix) {
 		List relatives = new ArrayList();
 
 		for (int a = 1; a <= 2; a++) {
-			String name = getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
-			String relation = getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
-			String homePhone = getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone");
-			String workPhone = 	getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
-			String mobilePhone = getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
-			String email = getMetaData((a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
-			
+			String name = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
+			String relation = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+			String homePhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone");
+			String workPhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+			String mobilePhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
+			String email = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
+
 			if (name != null) {
 				Relative relative = new Relative();
 				relative.setName(name);
@@ -190,25 +192,62 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 				relative.setWorkPhone(workPhone);
 				relative.setMobilePhone(mobilePhone);
 				relative.setEmail(email);
-				
+
 				relatives.add(relative);
 			}
 		}
-		
+
 		return relatives;
 	}
-	
+
+	public void storeMainRelative(String prefix, String name, String relation, String homePhone, String workPhone, String mobilePhone, String email) {
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_name", name, "java.lang.String");
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_relation", relation, "java.lang.String");
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_homePhone", homePhone, "java.lang.String");
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_workPhone", workPhone, "java.lang.String");
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_mobilePhone", mobilePhone, "java.lang.String");
+		setMetaData(prefix + METADATA_RELATIVE_0 + "_email", email, "java.lang.String");
+		store();
+	}
+
+	public Relative getMainRelative(String prefix) {
+		String name = getMetaData(prefix + METADATA_RELATIVE_0 + "_name");
+		String relation = getMetaData(prefix + METADATA_RELATIVE_0 + "_relation");
+		String homePhone = getMetaData(prefix + METADATA_RELATIVE_0 + "_homePhone");
+		String workPhone = getMetaData(prefix + METADATA_RELATIVE_0 + "_workPhone");
+		String mobilePhone = getMetaData(prefix + METADATA_RELATIVE_0 + "_mobilePhone");
+		String email = getMetaData(prefix + METADATA_RELATIVE_0 + "_email");
+
+		if (name != null) {
+			Relative relative = new Relative();
+			relative.setName(name);
+			relative.setRelation(relation);
+			relative.setHomePhone(homePhone);
+			relative.setWorkPhone(workPhone);
+			relative.setMobilePhone(mobilePhone);
+			relative.setEmail(email);
+
+			return relative;
+		}
+
+		return null;
+	}
+
 	public void storeRelative(String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
+		storeRelative("", name, relation, number, homePhone, workPhone, mobilePhone, email);
+	}
+
+	public void storeRelative(String prefix, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
 		if (number > 2 || number < 1) {
 			return;
 		}
-		
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", name, "java.lang.String");
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", relation, "java.lang.String");
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone", homePhone, "java.lang.String");
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
-		setMetaData((number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
+
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", name, "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", relation, "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone", homePhone, "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
 		store();
 	}
 
@@ -218,84 +257,116 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		setMetaData(METADATA_FORBIDDEN_RELATIVE + "_details", details, "java.lang.String");
 		store();
 	}
-	
+
 	public Relative getForbiddenRelative() {
 		String name = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_name");
 		String personalID = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_personalID");
 		String details = getMetaData(METADATA_FORBIDDEN_RELATIVE + "_details");
-		
+
 		if (name != null && name.length() > 0) {
 			Relative relative = new Relative();
 			relative.setName(name);
 			relative.setPersonalID(personalID);
 			relative.setDetails(details);
-			
+
 			return relative;
 		}
-		
+
 		return null;
 	}
-		
+
 	public Boolean hasGrowthDeviation() {
-		String meta = getMetaData(METADATA_GROWTH_DEVIATION);
+		return hasGrowthDeviation("");
+	}
+
+	public Boolean hasGrowthDeviation(String prefix) {
+		String meta = getMetaData(prefix + METADATA_GROWTH_DEVIATION);
 		if (meta != null && meta.length() > 0) {
 			return new Boolean(meta);
 		}
 		return null;
 	}
-	
+
 	public void setHasGrowthDeviation(Boolean hasGrowthDeviation) {
+		setHasGrowthDeviation("", hasGrowthDeviation);
+	}
+
+	public void setHasGrowthDeviation(String prefix, Boolean hasGrowthDeviation) {
 		if (hasGrowthDeviation != null) {
-			setMetaData(METADATA_GROWTH_DEVIATION, hasGrowthDeviation.toString());
+			setMetaData(prefix + METADATA_GROWTH_DEVIATION, hasGrowthDeviation.toString());
 		}
 		else {
-			removeMetaData(METADATA_GROWTH_DEVIATION);
+			removeMetaData(prefix + METADATA_GROWTH_DEVIATION);
 		}
 	}
 
 	public String getGrowthDeviationDetails() {
-		return getMetaData(METADATA_GROWTH_DEVIATION_DETAILS);
+		return getGrowthDeviationDetails("");
 	}
-	
+
+	public String getGrowthDeviationDetails(String prefix) {
+		return getMetaData(prefix + METADATA_GROWTH_DEVIATION_DETAILS);
+	}
+
 	public void setGrowthDeviationDetails(String details) {
+		setGrowthDeviationDetails("", details);
+	}
+
+	public void setGrowthDeviationDetails(String prefix, String details) {
 		if (details != null && details.length() > 0) {
-			setMetaData(METADATA_GROWTH_DEVIATION_DETAILS, details);
+			setMetaData(prefix + METADATA_GROWTH_DEVIATION_DETAILS, details);
 		}
 		else {
-			removeMetaData(METADATA_GROWTH_DEVIATION_DETAILS);
+			removeMetaData(prefix + METADATA_GROWTH_DEVIATION_DETAILS);
 		}
 	}
 
 	public Boolean hasAllergies() {
-		String meta = getMetaData(METADATA_ALLERGIES);
+		return hasAllergies("");
+	}
+
+	public Boolean hasAllergies(String prefix) {
+		String meta = getMetaData(prefix + METADATA_ALLERGIES);
 		if (meta != null && meta.length() > 0) {
 			return new Boolean(meta);
 		}
 		return null;
 	}
-	
+
 	public void setHasAllergies(Boolean hasAllergies) {
+		setHasAllergies("", hasAllergies);
+	}
+
+	public void setHasAllergies(String prefix, Boolean hasAllergies) {
 		if (hasAllergies != null) {
-			setMetaData(METADATA_ALLERGIES, hasAllergies.toString());
+			setMetaData(prefix + METADATA_ALLERGIES, hasAllergies.toString());
 		}
 		else {
-			removeMetaData(METADATA_ALLERGIES);
+			removeMetaData(prefix + METADATA_ALLERGIES);
 		}
 	}
 
 	public String getAllergiesDetails() {
-		return getMetaData(METADATA_ALLERGIES_DETAILS);
+		return getAllergiesDetails("");
 	}
-	
+
+	public String getAllergiesDetails(String prefix) {
+		return getMetaData(prefix + METADATA_ALLERGIES_DETAILS);
+	}
+
 	public void setAllergiesDetails(String details) {
+		setAllergiesDetails("", details);
+	}
+
+	public void setAllergiesDetails(String prefix, String details) {
 		if (details != null && details.length() > 0) {
-			setMetaData(METADATA_ALLERGIES_DETAILS, details);
+			setMetaData(prefix + METADATA_ALLERGIES_DETAILS, details);
 		}
 		else {
-			removeMetaData(METADATA_ALLERGIES_DETAILS);
+			removeMetaData(prefix + METADATA_ALLERGIES_DETAILS);
 		}
 	}
-	
+
 	public boolean hasMultiLanguageHome() {
 		String meta = getMetaData(METADATA_MULTI_LANGUAGE_HOME);
 		if (meta != null) {
@@ -303,15 +374,15 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		}
 		return false;
 	}
-	
+
 	public void setHasMultiLanguageHome(boolean hasMultiLanguageHome) {
 		setMetaData(METADATA_MULTI_LANGUAGE_HOME, String.valueOf(hasMultiLanguageHome), "java.lang.Boolean");
 	}
-	
+
 	public String getLanguage() {
 		return getMetaData(METADATA_LANGUAGE);
 	}
-	
+
 	public void setLanguage(String language) {
 		if (language != null && language.length() > 0) {
 			setMetaData(METADATA_LANGUAGE, language, "java.lang.String");
@@ -322,15 +393,23 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	}
 
 	public String getOtherInformation() {
-		return getMetaData(METADATA_OTHER_INFORMATION);
+		return getOtherInformation("");
 	}
-	
+
+	public String getOtherInformation(String prefix) {
+		return getMetaData(prefix + METADATA_OTHER_INFORMATION);
+	}
+
 	public void setOtherInformation(String otherInformation) {
+		setOtherInformation("", otherInformation);
+	}
+
+	public void setOtherInformation(String prefix, String otherInformation) {
 		if (otherInformation != null && otherInformation.length() > 0) {
-			setMetaData(METADATA_OTHER_INFORMATION, otherInformation);
+			setMetaData(prefix + METADATA_OTHER_INFORMATION, otherInformation);
 		}
 		else {
-			removeMetaData(METADATA_OTHER_INFORMATION);
+			removeMetaData(prefix + METADATA_OTHER_INFORMATION);
 		}
 	}
 
@@ -356,17 +435,17 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			}
 		}
 		catch (NoCustodianFound ncf) {
-			//No custodians found;
+			// No custodians found;
 		}
-		
+
 		Custodian extraCustodian = getExtraCustodian();
 		if (extraCustodian != null && extraCustodian.getGender().equals(gender)) {
 			return extraCustodian;
 		}
-		
+
 		return null;
 	}
-	
+
 	private FamilyLogic getFamilyLogic() {
 		try {
 			return (FamilyLogic) IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), FamilyLogic.class);
