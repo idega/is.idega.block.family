@@ -6,6 +6,15 @@
 		</author>
 	</properties>
 	<body>
+		<release version="1.0.5" date="2007-07-27">
+			<action dev="alexis" type="update">
+				Added 3 new attributes to the Child entity: 
+					- needsRegularMedication
+					- regularMedicationDetails
+					- briefDisabilitiesDescription
+			</action>
+		</release>
+		
 		<release version="1.0.4" date="2007-04-30">
 			<action dev="laddi" type="update">
 				Added possibility to use prefixes when fetching children information.
