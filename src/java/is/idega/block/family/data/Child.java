@@ -9,7 +9,6 @@ import com.idega.user.data.User;
 import com.idega.data.IDOEntity;
 
 public interface Child extends IDOEntity, User {
-
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getSiblings
 	 */
@@ -139,6 +138,66 @@ public interface Child extends IDOEntity, User {
 	 * @see is.idega.block.family.data.ChildBMPBean#setGrowthDeviationDetails
 	 */
 	public void setGrowthDeviationDetails(String prefix, String details);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#hasRegularMedicationRequirement
+	 */
+	public Boolean hasRegularMedicationRequirement();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#hasRegularMedicationRequirement
+	 */
+	public Boolean hasRegularMedicationRequirement(String prefix);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setHasRegularMedicationRequirement
+	 */
+	public void setHasRegularMedicationRequirement(Boolean medication);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setHasRegularMedicationRequirement
+	 */
+	public void setHasRegularMedicationRequirement(String prefix, Boolean medication);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getDisabilitiesDescription
+	 */
+	public String getDisabilitiesDescription();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getDisabilitiesDescription
+	 */
+	public String getDisabilitiesDescription(String prefix);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setDisabilitiesDescription
+	 */
+	public void setDisabilitiesDescription(String details);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setDisabilitiesDescription
+	 */
+	public void setDisabilitiesDescription(String prefix, String details);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getRegularMedicationDetails
+	 */
+	public String getRegularMedicationDetails();
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#getRegularMedicationDetails
+	 */
+	public String getRegularMedicationDetails(String prefix);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setRegularMedicationDetails
+	 */
+	public void setRegularMedicationDetails(String details);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#setRegularMedicationDetails
+	 */
+	public void setRegularMedicationDetails(String prefix, String details);
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#hasAllergies

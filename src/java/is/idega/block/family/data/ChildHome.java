@@ -7,7 +7,6 @@ import com.idega.data.IDOHome;
 import javax.ejb.FinderException;
 
 public interface ChildHome extends IDOHome {
-
 	public Child create() throws CreateException;
 
 	public Child findByPrimaryKey(Object pk) throws FinderException;

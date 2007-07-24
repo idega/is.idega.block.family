@@ -32,6 +32,11 @@ import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
 
 public class ChildBMPBean extends UserBMPBean implements User, Child {
+	
+	public static final String METADATA_BRIEF_DISABILITIES_DESCRIPTION = "disabilities_description";
+	
+	public static final String METADATA_REGULAR_MEDICATION = "regular_medication";
+	public static final String METADATA_REGULAR_MEDICATION_DETAILS = "regular_medication_details";
 
 	public static final String METADATA_GROWTH_DEVIATION = "growth_deviation";
 	public static final String METADATA_GROWTH_DEVIATION_DETAILS = "growth_deviation_details";
@@ -318,6 +323,73 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		}
 		else {
 			removeMetaData(prefix + METADATA_GROWTH_DEVIATION_DETAILS);
+		}
+	}
+	
+	public Boolean hasRegularMedicationRequirement() {
+		return hasRegularMedicationRequirement("");
+	}
+	
+	public Boolean hasRegularMedicationRequirement(String prefix) {
+		String meta = getMetaData(prefix + METADATA_REGULAR_MEDICATION);
+		if (meta != null && meta.length() > 0) {
+			return new Boolean(meta);
+		}
+		return null;
+	}
+	
+	public void setHasRegularMedicationRequirement(Boolean medication) {
+		setHasRegularMedicationRequirement("", medication);
+	}
+	
+	public void setHasRegularMedicationRequirement(String prefix, Boolean medication) {
+		if (medication != null) {
+			setMetaData(prefix + METADATA_REGULAR_MEDICATION, medication.toString());
+		}
+		else {
+			removeMetaData(prefix + METADATA_REGULAR_MEDICATION);
+		}
+	}
+	
+	public String getDisabilitiesDescription() {
+		return getDisabilitiesDescription("");
+	}
+
+	public String getDisabilitiesDescription(String prefix) {
+		return getMetaData(prefix + METADATA_BRIEF_DISABILITIES_DESCRIPTION);
+	}
+
+	public void setDisabilitiesDescription(String details) {
+		setDisabilitiesDescription("", details);
+	}
+
+	public void setDisabilitiesDescription(String prefix, String details) {
+		if (details != null && details.length() > 0) {
+			setMetaData(prefix + METADATA_BRIEF_DISABILITIES_DESCRIPTION, details);
+		}
+		else {
+			removeMetaData(prefix + METADATA_BRIEF_DISABILITIES_DESCRIPTION);
+		}
+	}
+	
+	public String getRegularMedicationDetails() {
+		return getRegularMedicationDetails("");
+	}
+
+	public String getRegularMedicationDetails(String prefix) {
+		return getMetaData(prefix + METADATA_REGULAR_MEDICATION_DETAILS);
+	}
+
+	public void setRegularMedicationDetails(String details) {
+		setRegularMedicationDetails("", details);
+	}
+
+	public void setRegularMedicationDetails(String prefix, String details) {
+		if (details != null && details.length() > 0) {
+			setMetaData(prefix + METADATA_REGULAR_MEDICATION_DETAILS, details);
+		}
+		else {
+			removeMetaData(prefix + METADATA_REGULAR_MEDICATION_DETAILS);
 		}
 	}
 

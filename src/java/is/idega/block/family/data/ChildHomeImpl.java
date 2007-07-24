@@ -8,7 +8,6 @@ import com.idega.data.IDOEntity;
 import com.idega.data.IDOFactory;
 
 public class ChildHomeImpl extends IDOFactory implements ChildHome {
-
 	public Class getEntityInterfaceClass() {
 		return Child.class;
 	}
