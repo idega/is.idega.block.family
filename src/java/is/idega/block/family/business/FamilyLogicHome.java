@@ -1,31 +1,11 @@
-/*
- * $Id: FamilyLogicHome.java,v 1.5 2006/03/30 07:27:06 laddi Exp $
- * Created on Mar 29, 2006
- *
- * Copyright (C) 2006 Idega Software hf. All Rights Reserved.
- *
- * This software is the proprietary information of Idega hf.
- * Use is subject to license terms.
- */
 package is.idega.block.family.business;
 
 
-
-
+import javax.ejb.CreateException;
 import com.idega.business.IBOHome;
+import java.rmi.RemoteException;
 
-
-/**
- * <p>
- * TODO laddi Describe Type FamilyLogicHome
- * </p>
- *  Last modified: $Date: 2006/03/30 07:27:06 $ by $Author: laddi $
- * 
- * @author <a href="mailto:laddi@idega.com">laddi</a>
- * @version $Revision: 1.5 $
- */
 public interface FamilyLogicHome extends IBOHome {
 
-	public FamilyLogic create() throws javax.ejb.CreateException, java.rmi.RemoteException;
-
+	public FamilyLogic create() throws CreateException, RemoteException;
 }

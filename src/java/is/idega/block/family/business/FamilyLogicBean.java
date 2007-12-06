@@ -168,7 +168,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			throw new EJBException("User " + user + " has no a UserGroup");
 		}
 	}
-	
+
 	public Child getChild(User child) {
 		if (child instanceof Child) {
 			return (Child) child;
@@ -181,7 +181,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 				fe.printStackTrace();
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -197,7 +197,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 				fe.printStackTrace();
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -960,6 +960,10 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		catch (FinderException f) {
 			setFamilyForUser(familyNr, user);
 		}
+	}
+
+	public FamilyMember getFamilyMember(User user) throws FinderException {
+		return getFamilyMemberHome().findForUser(user);
 	}
 
 	public FamilyData getFamily(String familyNr) throws FinderException {
