@@ -188,9 +188,11 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			String workPhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
 			String mobilePhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
 			String email = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
+			String personalID = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
 
 			if (name != null) {
 				Relative relative = new Relative();
+				relative.setPersonalID(personalID);
 				relative.setName(name);
 				relative.setRelation(relation);
 				relative.setHomePhone(homePhone);
@@ -239,14 +241,21 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 	}
 
 	public void storeRelative(String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
-		storeRelative("", name, relation, number, homePhone, workPhone, mobilePhone, email);
+		storeRelative("", null, name, relation, number, homePhone, workPhone, mobilePhone, email);
 	}
 
-	public void storeRelative(String prefix, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
+	public void storeRelative(String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
+		storeRelative("", personalID, name, relation, number, homePhone, workPhone, mobilePhone, email);
+	}
+
+	public void storeRelative(String prefix, String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
 		if (number > 2 || number < 1) {
 			return;
 		}
 
+		if (personalID != null) {
+			setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID", personalID, "java.lang.String");
+		}
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", name, "java.lang.String");
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", relation, "java.lang.String");
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone", homePhone, "java.lang.String");

@@ -87,7 +87,12 @@ public interface Child extends IDOEntity, User {
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#storeRelative
 	 */
-	public void storeRelative(String prefix, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
+	public void storeRelative(String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#storeRelative
+	 */
+	public void storeRelative(String prefix, String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#storeForbiddenRelative
