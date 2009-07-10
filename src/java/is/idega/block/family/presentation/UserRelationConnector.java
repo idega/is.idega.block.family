@@ -351,7 +351,7 @@ public class UserRelationConnector extends Window {
 	
 	protected String  getIllegalRelationMessage(IWContext iwc,User roleUser, User victimUser, String relationType) {
 		String pattern = (this.iwrb.getLocalizedString("illegal_relationship_msg","Illegal to add relation of type {0} between  {1} and {2}"));
-		String[] objs = {relationType,roleUser.getFirstName(),victimUser.getFirstName()};
+		Object[] objs = {relationType,roleUser.getFirstName(),victimUser.getFirstName()};
 		return MessageFormat.format(pattern,objs);
 	}
 	
