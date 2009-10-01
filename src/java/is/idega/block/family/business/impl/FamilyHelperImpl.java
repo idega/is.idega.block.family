@@ -1,0 +1,111 @@
+package is.idega.block.family.business.impl;
+
+import is.idega.block.family.business.FamilyHelper;
+import is.idega.block.family.business.FamilyLogic;
+import is.idega.block.family.business.NoChildrenFound;
+import is.idega.block.family.data.Child;
+
+import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
+import com.idega.business.IBOLookup;
+import com.idega.business.IBOLookupException;
+import com.idega.core.accesscontrol.business.LoginSession;
+import com.idega.idegaweb.IWApplicationContext;
+import com.idega.idegaweb.IWMainApplication;
+import com.idega.user.data.User;
+import com.idega.util.ListUtil;
+import com.idega.util.expression.ELUtil;
+
+/**
+ * Implementation for {@link FamilyHelper}
+ * 
+ * @author <a href="mailto:valdas@idega.com">Valdas Žemaitis</a>
+ * @version $Revision: 1.0 $
+ *
+ * Last modified: $Date: 2009.09.30 18:43:56 $ by: $Author: valdas $
+ */
+@Scope(BeanDefinition.SCOPE_SINGLETON)
+@Service(FamilyHelper.BEAN_IDENTIFIER)
+public class FamilyHelperImpl implements FamilyHelper {
+
+	private static final Logger LOGGER = Logger.getLogger(FamilyHelperImpl.class.getName());
+	
+	public Map<Locale, Map<String, String>> getTeenagesOfCurrentUser() {
+		Map<Locale, Map<String, String>> teenagers = new HashMap<Locale, Map<String,String>>();
+		
+		User currentUser = getCurrentUser();
+		if (currentUser == null) {
+			LOGGER.info("User must be logged in!");
+			return teenagers;
+		}
+		
+		FamilyLogic familyLogic = getFamilyLogic(IWMainApplication.getDefaultIWApplicationContext());
+		if (familyLogic == null) {
+			return teenagers;
+		}
+		
+		Collection<Child> teenagersOfCurrentUser = null;
+		try {
+			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(currentUser, 16);
+		} catch (NoChildrenFound e) {
+			LOGGER.info(currentUser + " doesn't have children");
+		} catch (RemoteException e) {
+			LOGGER.log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
+		}
+		if (ListUtil.isEmpty(teenagersOfCurrentUser)) {
+			return teenagers;
+		}
+		
+		Locale locale = getCurrentLocale();
+		Map<String, String> childrenInfo = new HashMap<String, String>();
+		teenagers.put(locale, childrenInfo);
+		
+		for (Child teenage: teenagersOfCurrentUser) {
+			childrenInfo.put(teenage.getId(), teenage.getName());
+		}
+		
+		return teenagers;
+	}
+	
+	private Locale getCurrentLocale() {
+		try {
+			LoginSession loginSession = ELUtil.getInstance().getBean(LoginSession.class);
+			return loginSession.getCurrentLocale();
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "Error getting current locale", e);
+		}
+		return null;
+	}
+	
+	private User getCurrentUser() {
+		try {
+			LoginSession loginSession = ELUtil.getInstance().getBean(LoginSession.class);
+			return loginSession.getUser();
+		} catch (Exception e) {
+			LOGGER.log(Level.WARNING, "Error getting current user", e);
+		}
+		return null;
+	}
+
+	private FamilyLogic getFamilyLogic(IWApplicationContext iwac) {
+		try {
+			return IBOLookup.getServiceInstance(iwac, FamilyLogic.class);
+		} catch (IBOLookupException e) {
+			LOGGER.log(Level.WARNING, "Error getting " + FamilyLogic.class, e);
+		}
+		return null;
+	}
+	
+}

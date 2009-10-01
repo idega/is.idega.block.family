@@ -31,6 +31,8 @@ public interface FamilyLogic extends IBOService {
 	 * @see is.idega.block.family.business.FamilyLogicBean#getChildrenFor
 	 */
 	public Collection getChildrenFor(User user) throws NoChildrenFound, RemoteException;
+	
+	public Collection<Child> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getChildrenInCustodyOf

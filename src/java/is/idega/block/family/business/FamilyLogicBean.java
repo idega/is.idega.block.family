@@ -9,6 +9,7 @@ import is.idega.block.family.data.FamilyMember;
 import is.idega.block.family.data.FamilyMemberHome;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -29,6 +30,8 @@ import com.idega.user.data.GroupHome;
 import com.idega.user.data.GroupRelation;
 import com.idega.user.data.GroupRelationHome;
 import com.idega.user.data.User;
+import com.idega.util.IWTimestamp;
+import com.idega.util.ListUtil;
 
 /**
  * Title: idegaWeb Member User Subsystem Description: idegaWeb Member User
@@ -41,6 +44,8 @@ import com.idega.user.data.User;
 
 public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
+	private static final long serialVersionUID = -8696169731242119560L;
+	
 	private static final String RELATION_TYPE_GROUP_PARENT = "FAM_PARENT";
 	private static final String RELATION_TYPE_GROUP_CUSTODIAN = "FAM_CUSTODIAN";
 	private static final String RELATION_TYPE_GROUP_CHILD = "FAM_CHILD";
@@ -714,6 +719,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @deprecated use registerAsDeceased(User user, Date deceasedDate, User
 	 *             performer)
 	 */
+	@Deprecated
 	public void registerAsDeceased(User user, Date deceasedDate) {
 		try {
 			removeAllFamilyRelationsForUser(user);
@@ -739,6 +745,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @deprecated use removeAllFamilyRelationsForUser(User user, User performer)
 	 */
+	@Deprecated
 	public void removeAllFamilyRelationsForUser(User user) {
 		try {
 			Collection children = getChildrenFor(user);
@@ -991,5 +998,31 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			}
 		}
 		return familyData;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Child> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException {
+		Collection<Child> allChildren = getChildrenFor(user);
+		if (ListUtil.isEmpty(allChildren)) {
+			return null;
+		}
+		
+		IWTimestamp dateBeforeXYears = new IWTimestamp(System.currentTimeMillis());
+		dateBeforeXYears.setYear(dateBeforeXYears.getYear() - age);
+		
+		Collection<Child> childrenUnderAge = new ArrayList<Child>();
+		for (Child child: allChildren) {
+			Date dateOfBirth = child.getDateOfBirth();
+			if (dateOfBirth == null) {
+				continue;
+			}
+			
+			IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
+			if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears)) {
+				childrenUnderAge.add(child);
+			}
+		}
+		
+		return childrenUnderAge;
 	}
 }
