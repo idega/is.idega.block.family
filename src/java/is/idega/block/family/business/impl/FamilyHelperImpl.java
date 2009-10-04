@@ -17,14 +17,9 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
-import com.idega.core.accesscontrol.business.LoginSession;
-import com.idega.idegaweb.IWApplicationContext;
-import com.idega.idegaweb.IWMainApplication;
+import com.idega.core.business.DefaultSpringBean;
 import com.idega.user.data.User;
 import com.idega.util.ListUtil;
-import com.idega.util.expression.ELUtil;
 
 /**
  * Implementation for {@link FamilyHelper}
@@ -36,7 +31,7 @@ import com.idega.util.expression.ELUtil;
  */
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Service(FamilyHelper.BEAN_IDENTIFIER)
-public class FamilyHelperImpl implements FamilyHelper {
+public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper {
 
 	private static final Logger LOGGER = Logger.getLogger(FamilyHelperImpl.class.getName());
 	
@@ -49,7 +44,7 @@ public class FamilyHelperImpl implements FamilyHelper {
 			return teenagers;
 		}
 		
-		FamilyLogic familyLogic = getFamilyLogic(IWMainApplication.getDefaultIWApplicationContext());
+		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 		if (familyLogic == null) {
 			return teenagers;
 		}
@@ -77,35 +72,6 @@ public class FamilyHelperImpl implements FamilyHelper {
 		}
 		
 		return teenagers;
-	}
-	
-	private Locale getCurrentLocale() {
-		try {
-			LoginSession loginSession = ELUtil.getInstance().getBean(LoginSession.class);
-			return loginSession.getCurrentLocale();
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Error getting current locale", e);
-		}
-		return null;
-	}
-	
-	private User getCurrentUser() {
-		try {
-			LoginSession loginSession = ELUtil.getInstance().getBean(LoginSession.class);
-			return loginSession.getUser();
-		} catch (Exception e) {
-			LOGGER.log(Level.WARNING, "Error getting current user", e);
-		}
-		return null;
-	}
-
-	private FamilyLogic getFamilyLogic(IWApplicationContext iwac) {
-		try {
-			return IBOLookup.getServiceInstance(iwac, FamilyLogic.class);
-		} catch (IBOLookupException e) {
-			LOGGER.log(Level.WARNING, "Error getting " + FamilyLogic.class, e);
-		}
-		return null;
 	}
 	
 }
