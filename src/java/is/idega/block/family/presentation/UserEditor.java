@@ -303,6 +303,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * 
 	 * @see com.idega.presentation.PresentationObject#main(com.idega.presentation.IWContext)
 	 */
+	@Override
 	public void main(IWContext iwc) {
 		// debugParameters(iwc);
 		// get bundles
@@ -340,6 +341,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * 
 	 * @see com.idega.presentation.PresentationObject#getBundleIdentifier()
 	 */
+	@Override
 	public String getBundleIdentifier() {
 		if (this.bundleIdentifer != null) {
 			return this.bundleIdentifer;
@@ -1616,6 +1618,10 @@ public class UserEditor extends Block implements IWPageEventListener {
 				re.printStackTrace();
 			}
 		}
+		
+		if (user == null) {
+			user = iwc.isLoggedOn() ? iwc.getCurrentUser() : null;
+		}
 	}
 
 	private void initRelationTypes(IWContext iwc) throws RemoteException {
@@ -1679,6 +1685,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 	 * 
 	 * @see com.idega.presentation.Block#getStyleNames()
 	 */
+	@Override
 	public Map getStyleNames() {
 		HashMap map = new HashMap();
 		map.put(STYLENAME_HEADER, this.headerFontStyle);
@@ -1848,6 +1855,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 		this.textFontStyle = string;
 	}
 
+	@Override
 	public Object clone() {
 		UserEditor obj = (UserEditor) super.clone();
 		return obj;
