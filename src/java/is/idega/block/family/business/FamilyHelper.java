@@ -17,4 +17,13 @@ public interface FamilyHelper {
 	
 	public  Map<Locale, Map<String, String>> getTeenagesOfCurrentUser();
 
+	public String getSpouseName();
+	
+	public String getSpousePersonalId();
+	
+	public String getSpouseTelephone();
+	
+	public String getSpouseMobile();
+	
+	public String getSpouseEmail();
 }
