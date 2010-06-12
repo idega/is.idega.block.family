@@ -3,8 +3,6 @@ package is.idega.block.family.business.impl;
 import is.idega.block.family.business.FamilyHelper;
 import is.idega.block.family.business.FamilyLogic;
 import is.idega.block.family.business.NoChildrenFound;
-import is.idega.block.family.data.Child;
-
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -49,7 +47,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return teenagers;
 		}
 		
-		Collection<Child> teenagersOfCurrentUser = null;
+		Collection<User> teenagersOfCurrentUser = null;
 		try {
 			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(currentUser, 16);
 		} catch (NoChildrenFound e) {
@@ -67,7 +65,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		Map<String, String> childrenInfo = new HashMap<String, String>();
 		teenagers.put(locale, childrenInfo);
 		
-		for (Child teenage: teenagersOfCurrentUser) {
+		for (User teenage: teenagersOfCurrentUser) {
 			childrenInfo.put(teenage.getId(), teenage.getName());
 		}
 		
