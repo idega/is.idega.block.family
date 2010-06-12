@@ -1002,7 +1002,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	@SuppressWarnings("unchecked")
 	public Collection<Child> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException {
-		Collection<Child> allChildren = getChildrenFor(user);
+		Collection<Object> allChildren = getChildrenFor(user);
 		if (ListUtil.isEmpty(allChildren)) {
 			return null;
 		}
@@ -1011,15 +1011,19 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		dateBeforeXYears.setYear(dateBeforeXYears.getYear() - age);
 		
 		Collection<Child> childrenUnderAge = new ArrayList<Child>();
-		for (Child child: allChildren) {
-			Date dateOfBirth = child.getDateOfBirth();
-			if (dateOfBirth == null) {
-				continue;
-			}
-			
-			IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
-			if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears)) {
-				childrenUnderAge.add(child);
+		for (Object object: allChildren) {
+			if (object instanceof Child) {
+				Child child = (Child) object;
+				
+				Date dateOfBirth = child.getDateOfBirth();
+				if (dateOfBirth == null) {
+					continue;
+				}
+				
+				IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
+				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears)) {
+					childrenUnderAge.add(child);
+				}
 			}
 		}
 		
