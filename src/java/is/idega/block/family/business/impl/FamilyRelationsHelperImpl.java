@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import is.idega.block.family.business.FamilyLogic;
 import is.idega.block.family.business.FamilyRelationsHelper;
+import is.idega.block.family.business.NoCohabitantFound;
 import is.idega.block.family.business.NoSpouseFound;
 
 import com.idega.core.business.DefaultSpringBean;
@@ -27,7 +28,7 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 	static final String BEAN_IDENTIFIER = "familyRelationsHelper";
 	
 	private User currentUser;
-	private User spouse;
+	private User spouseOrCohabitant;
 	
 	private User getUser() {
 		if (currentUser == null) {
@@ -36,22 +37,30 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 		return currentUser;
 	}
 	
-	private User getSpouse() {
-		if (spouse == null) {
+	private User getSpouseOrCohabitant() {
+		if (spouseOrCohabitant == null) {
+			FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 			try {
-				FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
-				spouse = familyLogic.getSpouseFor(getUser());
+				spouseOrCohabitant = familyLogic.getSpouseFor(getUser());
 			} catch (NoSpouseFound e) {
 			} catch (Exception e) {
 				getLogger().log(Level.WARNING, "Error getting a spouse for current user: " + getUser(), e);
 			}
+			if (spouseOrCohabitant == null) {
+				try {
+					spouseOrCohabitant = familyLogic.getCohabitantFor(getUser());
+				} catch (NoCohabitantFound e) {
+				} catch (Exception e) {
+					getLogger().log(Level.WARNING, "Error getting a cohabitant for current user: " + getUser(), e);
+				}
+			}
 		}
-		return spouse;
+		return spouseOrCohabitant;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public String getSpouseEmail() {
-		User spouse = getSpouse();
+		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {
 			return null;
 		}
@@ -78,7 +87,7 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 	}
 
 	public String getSpouseName() {
-		User spouse = getSpouse();
+		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {
 			return null;
 		}
@@ -87,7 +96,7 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 	}
 
 	public String getSpousePersonalId() {
-		User spouse = getSpouse();
+		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {
 			return null;
 		}
@@ -105,7 +114,7 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 
 	@SuppressWarnings("unchecked")
 	private String getPhoneByType(int phoneType) {
-		User spouse = getSpouse();
+		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {
 			return null;
 		}
