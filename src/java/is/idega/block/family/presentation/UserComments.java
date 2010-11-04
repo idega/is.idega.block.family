@@ -69,9 +69,9 @@ public class UserComments extends Block {
 				
 				Layer layer = new Layer(Layer.DIV);
 				layer.setWidth(Table.HUNDRED_PERCENT);
-				layer.setHeight(170);
-				layer.setOverflow("scroll");
-				layer.setPadding(4);
+				layer.setStyleAttribute("height", "170px");
+				layer.setStyleAttribute("overflow", "scroll");
+				layer.setStyleAttribute("padding", "4px");
 				table.add(layer, 1, 1);
 				
 				try {
