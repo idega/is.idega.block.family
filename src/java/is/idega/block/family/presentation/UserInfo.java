@@ -24,9 +24,11 @@ import com.idega.presentation.IWContext;
 import com.idega.presentation.Image;
 import com.idega.presentation.Table;
 import com.idega.presentation.text.Text;
+import com.idega.user.business.UserBusiness;
 import com.idega.user.business.UserSession;
 import com.idega.user.data.User;
 import com.idega.util.PersonalIDFormatter;
+import com.idega.util.StringUtil;
 
 
 /**
@@ -44,12 +46,20 @@ public class UserInfo extends Block {
 	
 	private Image iAccountImage;
 
+	@Override
 	public void main(IWContext iwc) {
 		this.iwb = getBundle(iwc);
 		this.iwrb = getResourceBundle(iwc);
 		
 		try {
-			User user = getUserSession(iwc).getUser();
+			User user = null;
+			String userId = iwc.getParameter(UserEditor.PRM_USER_ID);
+			if (StringUtil.isEmpty(userId)) {
+				user = getUserSession(iwc).getUser();
+			} else {
+				UserBusiness userBusiness = IBOLookup.getServiceInstance(iwc, UserBusiness.class);
+				user = userBusiness.getUser(Integer.valueOf(userId));
+			}
 			if (user != null) {
 				Table table = new Table(3, 1);
 				table.setCellpadding(4);
@@ -89,6 +99,7 @@ public class UserInfo extends Block {
 		}
 	}
 
+	@Override
 	public String getBundleIdentifier() {
 		return BUNDLE_IDENTIFIER;
 	}

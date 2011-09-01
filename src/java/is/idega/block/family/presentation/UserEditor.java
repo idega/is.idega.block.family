@@ -144,7 +144,7 @@ public class UserEditor extends Block implements IWPageEventListener {
 
 	protected static final String PRM_NEW_USER = "mbe_newuser";
 
-	protected static final String PRM_USER_ID = "mbe_userid";
+	public static final String PRM_USER_ID = "mbe_userid";
 
 	protected static final int ACTION_VIEW = 1;
 
