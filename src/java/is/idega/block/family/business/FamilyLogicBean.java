@@ -11,6 +11,7 @@ import is.idega.block.family.data.FamilyMemberHome;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
@@ -23,6 +24,7 @@ import javax.ejb.RemoveException;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.idegaweb.IWResourceBundle;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.business.UserStatusBusiness;
 import com.idega.user.data.Group;
@@ -30,6 +32,7 @@ import com.idega.user.data.GroupHome;
 import com.idega.user.data.GroupRelation;
 import com.idega.user.data.GroupRelationHome;
 import com.idega.user.data.User;
+import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
 
@@ -174,6 +177,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public Child getChild(User child) {
 		if (child instanceof Child) {
 			return (Child) child;
@@ -190,6 +194,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return null;
 	}
 
+	@Override
 	public Custodian getCustodian(User custodian) {
 		if (custodian instanceof Custodian) {
 			return (Custodian) custodian;
@@ -212,6 +217,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoChildrenFound
 	 *           if no children are found
 	 */
+	@Override
 	public Collection getChildrenFor(User user) throws NoChildrenFound {
 		String userName = null;
 		try {
@@ -236,6 +242,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoChildrenFound
 	 *           if no children are found
 	 */
+	@Override
 	public Collection getChildrenInCustodyOf(User user) throws NoChildrenFound {
 		String userName = null;
 		try {
@@ -260,6 +267,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoSiblingFound
 	 *           if no siblings are found
 	 */
+	@Override
 	public Collection getSiblingsFor(User user) throws NoSiblingFound {
 		String userName = null;
 		try {
@@ -281,6 +289,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoSpouseFound
 	 *           if no spouse is found
 	 */
+	@Override
 	public User getSpouseFor(User user) throws NoSpouseFound {
 		String userName = null;
 		try {
@@ -305,6 +314,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoSpouseFound
 	 *           if no spouse is found
 	 */
+	@Override
 	public User getCohabitantFor(User user) throws NoCohabitantFound {
 		String userName = null;
 		try {
@@ -325,6 +335,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoCustodianFound
 	 *           if no custodians are found
 	 */
+	@Override
 	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound {
 		String userName = null;
 		try {
@@ -351,6 +362,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public Collection getCustodiansFor(User user) throws NoCustodianFound {
 		return getCustodiansFor(user, true);
 	}
@@ -361,6 +373,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @throws NoCustodianFound
 	 *           if no custodians are found
 	 */
+	@Override
 	public Collection getParentsFor(User user) throws NoParentFound {
 		String userName = null;
 		try {
@@ -376,6 +389,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public boolean hasPersonGotChildren(User person) {
 		/**
 		 * @todo Implement better
@@ -389,6 +403,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public boolean hasPersonGotSpouse(User person) {
 		/**
 		 * @todo Implement better
@@ -402,6 +417,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public boolean hasPersonGotCohabitant(User person) {
 		/**
 		 * @todo Implement better
@@ -415,6 +431,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public boolean hasPersonGotSiblings(User person) {
 		/**
 		 * @todo Implement better
@@ -431,6 +448,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @returns True if the childToCheck is a child of parent else false
 	 */
+	@Override
 	public boolean isChildOf(User childToCheck, User parent) {
 		try {
 			Collection coll = getChildrenFor(parent);
@@ -445,6 +463,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @returns True if the childToCheck is a child in custody of parent else
 	 *          false
 	 */
+	@Override
 	public boolean isChildInCustodyOf(User childToCheck, User parent) {
 		try {
 			Collection coll = getChildrenInCustodyOf(parent);
@@ -455,6 +474,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return false;
 	}
 
+	@Override
 	public boolean isRelatedTo(User user, User userToCheck) {
 		if (isParentOf(user, userToCheck)) {
 			return true;
@@ -474,6 +494,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @return True if the parentToCheck is the parent of childToCheck else false
 	 */
+	@Override
 	public boolean isParentOf(User parentToCheck, User child) {
 		try {
 			Collection coll = getParentsFor(child);
@@ -488,6 +509,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @return True if the custodianToCheck is the custodian of childToCheck else
 	 *         false
 	 */
+	@Override
 	public boolean isCustodianOf(User custodianToCheck, User child) {
 		try {
 			Collection coll = getChildrenInCustodyOf(custodianToCheck);
@@ -502,6 +524,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @return True if the personToCheck is a spouse of relatedPerson else false
 	 */
+	@Override
 	public boolean isSpouseOf(User personToCheck, User relatedPerson) {
 		if (this.hasPersonGotSpouse(personToCheck)) {
 			try {
@@ -519,6 +542,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @return True if the personToCheck is a spouse of relatedPerson else false
 	 */
+	@Override
 	public boolean isCohabitantOf(User personToCheck, User relatedPerson) {
 		if (this.hasPersonGotCohabitant(personToCheck)) {
 			try {
@@ -536,6 +560,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @return True if the personToCheck is a sibling of relatedPerson else false
 	 */
+	@Override
 	public boolean isSiblingOf(User personToCheck, User relatedPerson) {
 		try {
 			Collection coll = getSiblingsFor(relatedPerson);
@@ -546,6 +571,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsChildFor(User personToSet, User parent) throws CreateException {
 		if (!this.isChildOf(personToSet, parent)) {
 			personToSet.addUniqueRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD);
@@ -553,6 +579,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsParentFor(User parent, User child) throws CreateException {
 		if (!this.isParentOf(parent, child)) {
 			child.addUniqueRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD);
@@ -560,6 +587,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsCustodianFor(User custodian, User child) throws CreateException {
 		if (!this.isCustodianOf(custodian, child)) {
 			child.addUniqueRelation(convertUserToGroup(custodian), RELATION_TYPE_GROUP_CHILD);
@@ -567,6 +595,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsSpouseFor(User personToSet, User relatedPerson) throws CreateException {
 		if (!this.isSpouseOf(personToSet, relatedPerson)) {
 			personToSet.addUniqueRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SPOUSE);
@@ -574,6 +603,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsCohabitantFor(User personToSet, User relatedPerson) throws CreateException {
 		if (!this.isCohabitantOf(personToSet, relatedPerson)) {
 			personToSet.addUniqueRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_COHABITANT);
@@ -581,6 +611,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void setAsSiblingFor(User personToSet, User relatedPerson) throws CreateException {
 		if (!this.isSiblingOf(personToSet, relatedPerson)) {
 			personToSet.addUniqueRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SIBLING);
@@ -592,61 +623,73 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void removeAsChildFor(User personToSet, User parent) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD);
 		parent.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_PARENT);
 	}
 
+	@Override
 	public void removeAsParentFor(User parent, User child) throws RemoveException {
 		child.removeRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD);
 		parent.removeRelation(convertUserToGroup(child), RELATION_TYPE_GROUP_PARENT);
 	}
 
+	@Override
 	public void removeAsCustodianFor(User custodian, User child) throws RemoveException {
 		child.removeRelation(convertUserToGroup(custodian), RELATION_TYPE_GROUP_CHILD);
 		custodian.removeRelation(convertUserToGroup(child), RELATION_TYPE_GROUP_CUSTODIAN);
 	}
 
+	@Override
 	public void removeAsSpouseFor(User personToSet, User relatedPerson) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SPOUSE);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_SPOUSE);
 	}
 
+	@Override
 	public void removeAsCohabitantFor(User personToSet, User relatedPerson) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_COHABITANT);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_COHABITANT);
 	}
 
+	@Override
 	public void removeAsSiblingFor(User personToSet, User relatedPerson) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SIBLING);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_SIBLING);
 	}
 
+	@Override
 	public void removeAsChildFor(User personToSet, User parent, User performer) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD, performer);
 		parent.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_PARENT, performer);
 	}
 
+	@Override
 	public void removeAsParentFor(User parent, User child, User performer) throws RemoveException {
 		child.removeRelation(convertUserToGroup(parent), RELATION_TYPE_GROUP_CHILD, performer);
 		parent.removeRelation(convertUserToGroup(child), RELATION_TYPE_GROUP_PARENT, performer);
 	}
 
+	@Override
 	public void removeAsCustodianFor(User custodian, User child, User performer) throws RemoveException {
 		child.removeRelation(convertUserToGroup(custodian), RELATION_TYPE_GROUP_CHILD, performer);
 		custodian.removeRelation(convertUserToGroup(child), RELATION_TYPE_GROUP_CUSTODIAN, performer);
 	}
 
+	@Override
 	public void removeAsSpouseFor(User personToSet, User relatedPerson, User performer) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SPOUSE, performer);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_SPOUSE, performer);
 	}
 
+	@Override
 	public void removeAsCohabitantFor(User personToSet, User relatedPerson, User performer) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_COHABITANT, performer);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_COHABITANT, performer);
 	}
 
+	@Override
 	public void removeAsSiblingFor(User personToSet, User relatedPerson, User performer) throws RemoveException {
 		personToSet.removeRelation(convertUserToGroup(relatedPerson), RELATION_TYPE_GROUP_SIBLING, performer);
 		relatedPerson.removeRelation(convertUserToGroup(personToSet), RELATION_TYPE_GROUP_SIBLING, performer);
@@ -657,6 +700,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getChildRelationType() {
 		return RELATION_TYPE_GROUP_CHILD;
 	}
@@ -666,6 +710,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getParentRelationType() {
 		return RELATION_TYPE_GROUP_PARENT;
 	}
@@ -675,6 +720,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getSiblingRelationType() {
 		return RELATION_TYPE_GROUP_SIBLING;
 	}
@@ -684,6 +730,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getSpouseRelationType() {
 		return RELATION_TYPE_GROUP_SPOUSE;
 	}
@@ -693,6 +740,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getCohabitantRelationType() {
 		return RELATION_TYPE_GROUP_COHABITANT;
 	}
@@ -702,10 +750,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String getCustodianRelationType() {
 		return RELATION_TYPE_GROUP_CUSTODIAN;
 	}
 
+	@Override
 	public UserBusiness getUserBusiness() {
 		try {
 			return (UserBusiness) this.getServiceInstance(UserBusiness.class);
@@ -719,6 +769,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 * @deprecated use registerAsDeceased(User user, Date deceasedDate, User
 	 *             performer)
 	 */
+	@Override
 	@Deprecated
 	public void registerAsDeceased(User user, Date deceasedDate) {
 		try {
@@ -731,6 +782,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public void registerAsDeceased(User user, Date deceasedDate, User performer) {
 		try {
 			removeAllFamilyRelationsForUser(user, performer);
@@ -745,6 +797,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	/**
 	 * @deprecated use removeAllFamilyRelationsForUser(User user, User performer)
 	 */
+	@Override
 	@Deprecated
 	public void removeAllFamilyRelationsForUser(User user) {
 		try {
@@ -847,6 +900,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	}
 
+	@Override
 	public void removeAllFamilyRelationsForUser(User user, User performer) {
 		try {
 			Collection children = getChildrenFor(user);
@@ -948,6 +1002,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	}
 
+	@Override
 	public void setFamilyForUser(String familyiNr, User user) throws CreateException {
 		FamilyMemberHome familyMemberHome = getFamilyMemberHome();
 		FamilyMember familyMember = familyMemberHome.create();
@@ -956,6 +1011,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		familyMember.store();
 	}
 
+	@Override
 	public void updateFamilyForUser(String familyNr, User user) throws CreateException {
 		FamilyMemberHome familyMemberHome = getFamilyMemberHome();
 		FamilyMember fMember = null;
@@ -969,10 +1025,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
 	public FamilyMember getFamilyMember(User user) throws FinderException {
 		return getFamilyMemberHome().findForUser(user);
 	}
 
+	@Override
 	public FamilyData getFamily(String familyNr) throws FinderException {
 		FamilyData familyData = new FamilyData();
 		FamilyMemberHome familyMemberHome = getFamilyMemberHome();
@@ -1000,6 +1058,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return familyData;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked")
 	public Collection<User> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException {
 		Collection<Object> allChildren = getChildrenFor(user);
@@ -1029,4 +1088,79 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		
 		return childrenUnderAge;
 	}
+
+	@Override
+	public String getRelationName(IWResourceBundle iwrb, String type) {
+		if(type.equals(RELATION_TYPE_GROUP_PARENT)) return iwrb.getLocalizedString("parent", "Parent");
+		if(type.equals(RELATION_TYPE_GROUP_CUSTODIAN)) return iwrb.getLocalizedString("custodian", "Custodian");
+		if(type.equals(RELATION_TYPE_GROUP_CHILD)) return iwrb.getLocalizedString("child", "Child");
+		if(type.equals(RELATION_TYPE_GROUP_SPOUSE)) return iwrb.getLocalizedString("spouse", "Spouse");
+		if(type.equals(RELATION_TYPE_GROUP_SIBLING)) return iwrb.getLocalizedString("sibling", "Sibling");
+		if(type.equals(RELATION_TYPE_GROUP_COHABITANT)) return iwrb.getLocalizedString("cohabitant", "Cohabitant");
+		return CoreConstants.EMPTY;
+	}
+
+	@Override
+	public void setRelation(User user, User relatedUser, String relationType)
+			throws CreateException, RemoteException {
+		if(relationType.equals(getChildRelationType())){
+			setAsChildFor(relatedUser, user);
+		}else if(relationType.equals(getParentRelationType())){
+			setAsParentFor(relatedUser, user);
+		}else if(relationType.equals(getCustodianRelationType())){
+			setAsCustodianFor(relatedUser, user);
+		}else if(relationType.equals(getSiblingRelationType())){
+			setAsSiblingFor(user, relatedUser);
+		}else if(relationType.equals(getSpouseRelationType())){
+			setAsSpouseFor(user, relatedUser);
+		}else if(relationType.equals(getCohabitantRelationType())){
+			setAsCohabitantFor(user, relatedUser);
+		}
+	}
+
+	@Override
+	public void removeRelation(User user, User relatedUser, String relationType)
+			throws RemoveException, RemoteException {
+		if(relationType.equals(getChildRelationType())){
+			removeAsChildFor(relatedUser, user);
+		}else if(relationType.equals(getParentRelationType())){
+			removeAsParentFor(relatedUser, user);
+		}else if(relationType.equals(getCustodianRelationType())){
+			removeAsCustodianFor(relatedUser, user);
+		}else if(relationType.equals(getSiblingRelationType())){
+			removeAsSiblingFor(user, relatedUser);
+		}else if(relationType.equals(getSpouseRelationType())){
+			removeAsSpouseFor(user, relatedUser);
+		}else if(relationType.equals(getCohabitantRelationType())){
+			removeAsCohabitantFor(user, relatedUser);
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public Collection<User> getRelatedUsers(User user, String relationType)
+			throws RemoteException, FinderException {
+		if(relationType.equals(getChildRelationType())){
+			return getChildrenFor(user);
+		}else if(relationType.equals(getParentRelationType())){
+			return getParentsFor(user);
+		}else if(relationType.equals(getCustodianRelationType())){
+			return getCustodiansFor(user,false);
+		}else if(relationType.equals(getSiblingRelationType())){
+			return getSiblingsFor(user);
+		}else if(relationType.equals(getSpouseRelationType())){
+			User spouse = getSpouseFor(user);
+			ArrayList<User> spouses = new ArrayList<User>();
+			spouses.add(spouse);
+			return spouses;
+		}else if(relationType.equals(getCohabitantRelationType())){
+			User cohabitant = getCohabitantFor(user);
+			ArrayList<User> cohabitants = new ArrayList<User>();
+			cohabitants.add(cohabitant);
+			return cohabitants;
+		}
+		return Collections.emptyList();
+	}
+	
+	
 }

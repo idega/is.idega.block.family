@@ -1,19 +1,23 @@
 package is.idega.block.family.business;
 
 
-import javax.ejb.CreateException;
-import java.util.Date;
-import com.idega.user.data.User;
-import is.idega.block.family.data.FamilyMember;
-import java.rmi.RemoteException;
-import is.idega.block.family.data.Custodian;
 import is.idega.block.family.data.Child;
+import is.idega.block.family.data.Custodian;
 import is.idega.block.family.data.FamilyData;
+import is.idega.block.family.data.FamilyMember;
+
+import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Date;
+
+import javax.ejb.CreateException;
 import javax.ejb.FinderException;
-import com.idega.business.IBOService;
-import com.idega.user.business.UserBusiness;
 import javax.ejb.RemoveException;
+
+import com.idega.business.IBOService;
+import com.idega.idegaweb.IWResourceBundle;
+import com.idega.user.business.UserBusiness;
+import com.idega.user.data.User;
 
 public interface FamilyLogic extends IBOService {
 
@@ -293,4 +297,34 @@ public interface FamilyLogic extends IBOService {
 	 * @see is.idega.block.family.business.FamilyLogicBean#getFamily
 	 */
 	public FamilyData getFamily(String familyNr) throws FinderException, RemoteException;
+	
+	/**
+	 * Gets localized relation name from relation type 
+	 * @param iwrb
+	 * @param type
+	 * @return
+	 */
+	public String getRelationName(IWResourceBundle iwrb, String type);
+	
+	/**
+	 * @param user User to set relation to
+	 * @param relatedUser user that will be set related to user
+	 * @param relationType 
+	 */
+	public void setRelation(User user, User relatedUser, String relationType) throws CreateException, RemoteException;
+	
+	/** Removes relation from users
+	 * @param user
+	 * @param relatedUser
+	 * @param relationType 
+	 */
+	public void removeRelation(User user, User relatedUser, String relationType)  throws RemoveException, RemoteException;
+	
+	/** Gets users that are related to user
+	 * @param user
+	 * @param relatedUser
+	 * @param relationType 
+	 * @return
+	 */
+	public Collection<User> getRelatedUsers(User user, String relationType) throws RemoteException, FinderException;
 }
