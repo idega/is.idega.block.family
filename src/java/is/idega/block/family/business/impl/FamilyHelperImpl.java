@@ -94,7 +94,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		try {
 			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(
-					currentUser, 98);
+					currentUser, 16);
 		} catch (NoChildrenFound e) {
 			getLogger().info(currentUser + " doesn't have children");
 		} catch (RemoteException e) {
