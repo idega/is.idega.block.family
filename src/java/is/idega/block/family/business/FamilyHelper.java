@@ -21,7 +21,15 @@ import com.idega.util.CoreConstants;
 public interface FamilyHelper {
 
 	public static final String BEAN_IDENTIFIER = "familyLogicServicesProvider";
-
+	
+	/**
+	 * 
+	 * @return 	{@link Map} of ({@link User#getID()},
+	 * 			{@link User#getName()}) with {@link CoreConstants.EMPTY}, Select..." choice,
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			choice, if records were not found or not read,
+	 * 			{@link Collections#emptyMap()} if failed.
+	 */
 	public Map<Locale, Map<String, String>> getTeenagesOfCurrentUser();
 
 	public String getSpouseName();
@@ -136,8 +144,10 @@ public interface FamilyHelper {
 	 * Method for getting relations from {@link FamilyConstants}.
 	 * </p>
 	 * 
-	 * @return Possible relations from {@link FamilyConstants} or
-	 *         {@link Collections#emptyMap()} if does not exist.
+	 * @return	Relation {@link Map} from {@link FamilyConstants},
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			choice, if records were not found or read.
+	 * 			{@link Collections#emptyMap()} if failed.
 	 */
 	public Map<Locale, Map<String, String>> getRelationNames();
 
@@ -146,37 +156,40 @@ public interface FamilyHelper {
 	 * Method, for getting relation type from {@link FamilyConstants}.
 	 * </p>
 	 * 
-	 * @param userId
+	 * @param childId
 	 *            Child, smaller brother or other user
 	 *            {@link com.idega.user.data.User#getId()}.
 	 * @param relatedUserId
 	 *            Parent, sibling etc. {@link com.idega.user.data.User#getId()}.
 	 * @return Relation from {@link FamilyConstants}, -1 if not found.
 	 */
-	public String getRelation(String userId, String relatedUserId);
+	public String getRelation(String childId, String relatedUserId);
 
 	/**
 	 * <p>
 	 * Method for getting all languages exits in database.
 	 * </p>
 	 * 
-	 * @return Map of languages, or {@link Collections#emptyMap()} if does not
-	 *         exist.
+	 * @return 	{@link Map} of ({@link ICLanguage#getIsoAbbreviation()}, 
+	 * 			{@link ICLanguage#getName()}).
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			choice, if records were not found or not read,
+	 * 			{@link Collections#emptyMap()} if failed.
 	 */
 	public Map<Locale, Map<String, String>> getLanguages();
 
 	/**
 	 * <p>
-	 * Method for getting {@link String} representation of
-	 * {@link User#getLanguages()}.
+	 * Method for getting {@link ICLanguage#getIsoAbbreviation()} 
+	 * of {@link User#getLanguages()}.
 	 * </p>
 	 * 
 	 * @param numberOfLanguage
 	 *            Language number in {@link User#getLanguages()}.
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
-	 * @return Language from user info, {@link CoreConstants#EMPTY} if does not
-	 *         exist.
+	 * @return 	Language from {@link User#getLanguages()}, 
+	 * 			{@link CoreConstants#EMPTY} if does not exist.
 	 */
 	public String getLanguage(int numberOfLanguage, String userId);
 
@@ -199,7 +212,7 @@ public interface FamilyHelper {
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @see is.idega.block.family.business.FamilyHelper#getLanguage(int, String)
 	 * @return Language from {@link FamilyHelper#getLanguage(int, String)} with
-	 *         number 1, {@link CoreConstants#EMPTY} if country does not found.
+	 *         number 1.
 	 */
 	public String getSecondLanguage(String userId);
 
@@ -208,7 +221,7 @@ public interface FamilyHelper {
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @see is.idega.block.family.business.FamilyHelper#getLanguage(int, String)
 	 * @return Language from {@link FamilyHelper#getLanguage(int, String)} with
-	 *         number 2, {@link CoreConstants#EMPTY} if country does not found.
+	 *         number 2.
 	 */
 	public String getThirdLanguage(String userId);
 
@@ -217,7 +230,7 @@ public interface FamilyHelper {
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @see is.idega.block.family.business.FamilyHelper#getLanguage(int, String)
 	 * @return Language from {@link FamilyHelper#getLanguage(int, String)}. with
-	 *         number 3, {@link CoreConstants#EMPTY} if country does not found.
+	 *         number 3.
 	 */
 	public String getFourthLanguage(String userId);
 
@@ -238,7 +251,11 @@ public interface FamilyHelper {
 	 * Method for getting all countries, which exits in database.
 	 * </p>
 	 * 
-	 * @return Map of countries, or empty Map if does not exist.
+	 * @return 	{@link Map} of ({@link Country#getIsoAbbreviation()}, 
+	 * 			{@link Country#getName()}).
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			choice, if records were not found or not read,
+	 * 			{@link Collections#emptyMap()} if failed.
 	 */
 	public Map<Locale, Map<String, String>> getCountries();
 
@@ -278,6 +295,4 @@ public interface FamilyHelper {
 	 *         {@link com.idega.user.data.User#getId()}.
 	 */
 	public String getAnotherParent(String childId);
-
-	public String getMinusOne();
 }
