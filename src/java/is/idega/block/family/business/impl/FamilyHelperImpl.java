@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.core.business.DefaultSpringBean;
+import com.idega.core.contact.data.Email;
+import com.idega.core.contact.data.Phone;
 import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.core.localisation.data.ICLanguage;
 import com.idega.core.localisation.data.ICLanguageHome;
@@ -334,7 +336,14 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		}
 
 		try {
-			return user.getUsersHomePhone().getNumber();
+			Phone phone = user.getUsersHomePhone();
+			
+			if (phone == null) {
+				return CoreConstants.EMPTY;
+			}
+			
+			return phone.getNumber();
+			
 		} catch (Exception e) {
 			getLogger().log(Level.WARNING, "Phone number not found.", e);
 			return CoreConstants.EMPTY;
@@ -354,9 +363,15 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (user == null) {
 			return CoreConstants.EMPTY;
 		}
-	
+
 		try {
-			return user.getUsersMobilePhone().getNumber();
+			Phone phone = user.getUsersMobilePhone();
+			
+			if (phone == null) {
+				return CoreConstants.EMPTY;
+			}
+			
+			return phone.getNumber();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Phone number not found.");
 			return CoreConstants.EMPTY;
@@ -382,7 +397,13 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		}
 
 		try {
-			return user.getUsersWorkPhone().getNumber();
+			Phone phone = user.getUsersWorkPhone();
+			
+			if (phone == null) {
+				return CoreConstants.EMPTY;
+			}
+			
+			return phone.getNumber();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Phone number not found.");
 			return CoreConstants.EMPTY;
@@ -408,7 +429,13 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		}
 
 		try {
-			return user.getUsersEmail().getEmailAddress();
+			Email email = user.getUsersEmail();
+			
+			if (email == null) {
+				return CoreConstants.EMPTY;
+			}
+			
+			return email.getEmailAddress();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "e-mail address not found.");
 			return CoreConstants.EMPTY;
@@ -816,6 +843,12 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public String getMaritalStatus(String userId) {
+		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
+		
+		if (iwrb == null) {
+			return CoreConstants.EMPTY; 
+		}
+		
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 		User user = getUser(userId);
 		boolean childHasOtherParent = false;
@@ -834,17 +867,17 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		try {
 			if (familyLogic.hasPersonGotSpouse(user)) {
-				return FamilyConstants.MARITAL_STATUS_MARRIED;
+				return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_MARRIED, "Married");
 			}
 
 			if (familyLogic.hasPersonGotCohabitant(user)) {
-				return FamilyConstants.MARITAL_STATUS_COHABITANT;
+				return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_COHABITANT, "Cohabitant");
 			}
 
 			childrenOfCurrentUser = familyLogic.getChildrenFor(user);
 
 			if (ListUtil.isEmpty(childrenOfCurrentUser)) {
-				return FamilyConstants.MARITAL_STATUS_SINGLE;
+				return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_SINGLE, "Single");
 			}
 
 			List<User> childList = new ArrayList<User>(childrenOfCurrentUser);
@@ -857,9 +890,9 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			getLogger().log(Level.SEVERE, "Something went very wrong.", e);
 			return CoreConstants.EMPTY;
 		} catch (NoChildrenFound e) {
-			return FamilyConstants.MARITAL_STATUS_SINGLE;
+			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_SINGLE, "Single");
 		}
-		
+
 		for (User parent : parentsOfChild) {
 			if (!parent.equals(user)) {
 				childHasOtherParent = true;
@@ -867,9 +900,9 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		}
 
 		if (childHasOtherParent) {
-			return FamilyConstants.MARITAL_STATUS_DIVORCED;
+			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_DIVORCED, "Divorced");
 		} else {
-			return FamilyConstants.MARITAL_STATUS_WIDOWED;
+			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_WIDOWED, "Widowed");
 		}
 	}
 
