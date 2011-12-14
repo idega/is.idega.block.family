@@ -1,5 +1,6 @@
 package is.idega.block.family.business;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
@@ -258,6 +259,15 @@ public interface FamilyHelper {
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
 	public Map<Locale, Map<String, String>> getCountries();
+
+	/**
+	 * <p>
+	 * Method for getting all countries, which exits in database.
+	 * </p>
+	 * 
+	 * @return {@link Collection} of {@link Country}, null if failed.
+	 */
+	public Collection<Country> getCountriesList();
 
 	/**
 	 * <p>
