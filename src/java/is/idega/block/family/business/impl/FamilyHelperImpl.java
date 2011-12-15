@@ -74,60 +74,46 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public Map<Locale, Map<String, String>> getTeenagesOfCurrentUser() {
-		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants
-				.IW_BUNDLE_IDENTIFIER));
-
-		if (iwrb == null) {
+		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
+		if (iwrb == null)
 			return Collections.emptyMap();
-		}
 
-		Map<Locale, Map<String, String>> teenagers = 
-				new TreeMap<Locale, Map<String, String>>();
+		Map<Locale, Map<String, String>> teenagers = new TreeMap<Locale, Map<String, String>>();
 		
 		Map<String, String> childrenInfo = new TreeMap<String, String>();
 		
-		childrenInfo.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_child", 
-				"Select your child"));
+		childrenInfo.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_child", "Select your child"));
 		
 		Locale locale = getCurrentLocale();
 		teenagers.put(locale, childrenInfo);
 
 		User currentUser = getCurrentUser();
-
 		if (currentUser == null) {
 			getLogger().info("User must be logged in!");
 			return teenagers;
 		}
 
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
-
-		if (familyLogic == null) {
+		if (familyLogic == null)
 			return teenagers;
-		}
 
+		int maxAge = Integer.valueOf(getApplication().getSettings().getProperty("max_music_student_age", String.valueOf(16)));
 		Collection<User> teenagersOfCurrentUser = null;
-
 		try {
-			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(
-					currentUser, 16);
+			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(currentUser, maxAge);
 		} catch (NoChildrenFound e) {
-			getLogger().info(currentUser + " doesn't have children");
+			getLogger().info(currentUser + " doesn't have children younger than " + maxAge + " years");
 			return teenagers;
 		} catch (RemoteException e) {
-			getLogger().log(
-					Level.WARNING,
-					"Some error occurred while getting teenagers for: "
-							+ currentUser, e);
+			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
 			return teenagers;
 		} catch (Exception e) {
-			getLogger().log(
-					Level.WARNING,
-					"Some error occurred while getting teenagers for: "
-							+ currentUser, e);
+			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
 			return teenagers;
 		}
 
 		if (ListUtil.isEmpty(teenagersOfCurrentUser)) {
+			getLogger().warning(currentUser + " doesn't have children younger than " + maxAge + " years");
 			return teenagers;
 		}
 
@@ -450,6 +436,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getLanguageSelectionMapOfCurrentUser()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Locale, Map<String, String>> getLanguages() {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants
@@ -653,6 +640,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * (non-Javadoc)
 	 * @see is.idega.block.family.business.FamilyHelper#getCountriesList()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Country> getCountriesList() {
 		if (this.countryHome == null) {
@@ -854,6 +842,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * is.idega.block.family.business.FamilyHelper#getMaritalStatusOfCurrentUser
 	 * ()
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public String getMaritalStatus(String userId) {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
@@ -1005,6 +994,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @param userId some {@link User#getPrimaryKey()}, who's parents yout want to get.
 	 * @return parents in {@link User} form.
 	 */
+	@SuppressWarnings("unchecked")
 	private Collection<User> getParents(String userId) {
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 		User user = getUser(userId);

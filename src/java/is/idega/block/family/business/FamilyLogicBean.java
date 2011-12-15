@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.logging.Level;
 
 import javax.ejb.CreateException;
 import javax.ejb.EJBException;
@@ -24,6 +25,7 @@ import javax.ejb.RemoveException;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.business.IBOServiceBean;
+import com.idega.data.IDOLookup;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.business.UserStatusBusiness;
@@ -32,6 +34,7 @@ import com.idega.user.data.GroupHome;
 import com.idega.user.data.GroupRelation;
 import com.idega.user.data.GroupRelationHome;
 import com.idega.user.data.User;
+import com.idega.user.data.UserHome;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
@@ -1071,18 +1074,24 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		
 		Collection<User> childrenUnderAge = new ArrayList<User>();
 		for (Object object: allChildren) {
+			if (object instanceof Custodian) {
+				try {
+					object = ((UserHome) IDOLookup.getHome(User.class)).findByPrimaryKey(((Custodian) object).getId());
+				} catch (Exception e) {
+					getLogger().log(Level.WARNING, "Error getting user", e);
+				}
+			}
+			
 			if (object instanceof User) {
 				User child = (User) object;
 				
 				Date dateOfBirth = child.getDateOfBirth();
-				if (dateOfBirth == null) {
+				if (dateOfBirth == null)
 					continue;
-				}
 				
 				IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
-				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears)) {
+				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears))
 					childrenUnderAge.add(child);
-				}
 			}
 		}
 		
