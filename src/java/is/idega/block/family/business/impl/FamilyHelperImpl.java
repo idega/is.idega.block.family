@@ -73,7 +73,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @see is.idega.block.family.business.FamilyHelper#getTeenagesOfCurrentUser()
 	 */
 	@Override
-	public Map<Locale, Map<String, String>> getTeenagesOfCurrentUser() {
+	public Map<Locale, Map<String, String>> getTeenagersOfCurrentUser() {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
 		if (iwrb == null)
 			return Collections.emptyMap();

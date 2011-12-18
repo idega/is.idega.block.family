@@ -31,7 +31,7 @@ public interface FamilyHelper {
 	 * 			choice, if records were not found or not read,
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
-	public Map<Locale, Map<String, String>> getTeenagesOfCurrentUser();
+	public Map<Locale, Map<String, String>> getTeenagersOfCurrentUser();
 
 	public String getSpouseName();
 
