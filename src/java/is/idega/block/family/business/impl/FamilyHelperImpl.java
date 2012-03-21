@@ -680,25 +680,47 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * is.idega.block.family.business.FamilyHelper#getCountry(java.lang.String)
 	 */
 	@Override
-	public String getCountry(String userId) {
+	public Country getCountry(String userId) {
 		try {
 			Address address = getAddressByUserId(userId);
 
 			if (address == null) {
-				return CoreConstants.EMPTY;
+				return null;
 			}
-
-			Country country = address.getCountry();
-
-			if (country == null) {
-				return CoreConstants.EMPTY;
-			}
-
-			return country.getIsoAbbreviation();
+			
+			return address.getCountry();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Unable to get country of user");
+			return null;
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyHelper#getCountryName(java.lang.String)
+	 */
+	@Override
+	public String getCountryName(String userId) {
+		Country country = getCountry(userId);
+		if (country == null) {
 			return CoreConstants.EMPTY;
 		}
+	
+		return country.getName();
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyHelper#getCountryISOgetIsoAbbreviation(java.lang.String)
+	 */
+	@Override
+	public String getCountryISOgetIsoAbbreviation(String userId) {
+		Country country = getCountry(userId);
+		if (country == null) {
+			return CoreConstants.EMPTY;
+		}
+
+		return country.getIsoAbbreviation();
 	}
 	
 	/*
@@ -924,7 +946,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public String getCurrentParent(String childId) {
-		if (childId == null || childId.isEmpty()) {
+		if (isWrongId(childId)) {
 			return CoreConstants.EMPTY;
 		}
 
@@ -1047,7 +1069,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @return {@link User} by id.
 	 */
 	private User getUser(String id) {
-		if (com.idega.util.StringUtil.isEmpty(id)) {
+		if (isWrongId(id)) {
 			return null;
 		}
 
@@ -1062,5 +1084,29 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			getLogger().log(Level.WARNING, "No such user.");
 			return null;
 		}
+	}
+	
+	/**
+	 * <p>Helping method, checks for wrong id.</p>
+	 * @param id of something.
+	 * @return <code>true</code> if id does not contain {, }, CoreConstants#EMPTY, -1. 
+	 * <code>false</code> otherwise.
+	 * @author <a href="mailto:martynas@idega.com">Martynas Stakė</a>
+	 */
+	private boolean isWrongId(String id){
+		if (com.idega.util.StringUtil.isEmpty(id)) {
+			return Boolean.TRUE;
+		}
+		
+		if (id.contains(CoreConstants.CURLY_BRACKET_LEFT)
+				|| id.contains(CoreConstants.CURLY_BRACKET_RIGHT)) {
+			return Boolean.TRUE;
+		}
+		
+		if (id.equals("-1")) {
+			return Boolean.TRUE;
+		}
+		
+		return Boolean.FALSE;
 	}
 }

@@ -264,10 +264,33 @@ public interface FamilyHelper {
 	 * 
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
+	 * @return {@link Country} or <code>null</code> on failure.
+	 */
+	public Country getCountry(String userId);
+	
+	/**
+	 * <p>
+	 * Find a country, where user lives in.
+	 * </p>
+	 * 
+	 * @param userId
+	 *            Id of user {@link com.idega.user.data.User#getId()}.
+	 * @return {@link Country#getName()} or
+	 *         {@link CoreConstants#EMPTY} if country does not found.
+	 */
+	public String getCountryName(String userId);
+	
+	/**
+	 * <p>
+	 * Find a country, where user lives in.
+	 * </p>
+	 * 
+	 * @param userId
+	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link Country#getIsoAbbreviation()} or
 	 *         {@link CoreConstants#EMPTY} if country does not found.
 	 */
-	public String getCountry(String userId);
+	public String getCountryISOgetIsoAbbreviation(String userId);
 
 	/**
 	 * <p>
