@@ -212,23 +212,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public String getAddress(String userId) {
-		User user = getUser(userId);
-
-		if (user == null) {
-			return CoreConstants.EMPTY;
-		}
-
-		Address address = null;
-
-		try {
-			address = user.getUsersMainAddress();
-		} catch (EJBException e) {
-			getLogger().log(Level.WARNING, "Adress not found.");
-			return CoreConstants.EMPTY;
-		} catch (RemoteException e) {
-			getLogger().log(Level.WARNING, "Adress not found.", e);
-			return CoreConstants.EMPTY;
-		}
+		Address address = getAddressByUserId(userId);
 
 		if (address == null) {
 			return CoreConstants.EMPTY;
@@ -248,18 +232,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			addressString = addressString + tmpString + CoreConstants.SPACE;
 			tmpString = null;
 		}
-
-		tmpString = address.getCity();
-		if (tmpString != null) {
-			addressString = addressString + tmpString + CoreConstants.SPACE;
-			tmpString = null;
-		}
-
-		Country country = address.getCountry();
-
-		if (country != null) {
-			tmpString = country.getName();
-		}
+		
+		tmpString = address.getPOBox();
 
 		if (tmpString != null) {
 			addressString = addressString + tmpString + CoreConstants.SPACE;
@@ -267,6 +241,34 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		return addressString;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyHelper#getAddressByUserId(java.lang.String)
+	 */
+	@Override
+	public Address getAddressByUserId(String userId) {
+		User user = getUser(userId);
+
+		if (user == null) {
+			return null;
+		}
+
+		Address address = null;
+
+		try {
+			address = user.getUsersMainAddress();
+		} catch (EJBException e) {
+			getLogger().log(Level.WARNING, "Adress not found.");
+			return null;
+		} catch (RemoteException e) {
+			getLogger().log(Level.WARNING, "Adress not found.", e);
+			return null;
+		}
+
+		return address;
+	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -679,13 +681,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public String getCountry(String userId) {
-		User user = getUser(userId);
-		if (user == null) {
-			return CoreConstants.EMPTY;
-		}
-
 		try {
-			Address address = user.getUsersMainAddress();
+			Address address = getAddressByUserId(userId);
 
 			if (address == null) {
 				return CoreConstants.EMPTY;
@@ -701,10 +698,22 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Unable to get country of user");
 			return CoreConstants.EMPTY;
-		} catch (RemoteException e) {
-			getLogger().log(Level.WARNING, "Unable to get country of user", e);
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyHelper#getCity(java.lang.String)
+	 */
+	@Override
+	public String getCity(String userId) {
+		Address address = getAddressByUserId(userId);
+		
+		if (address == null) {
 			return CoreConstants.EMPTY;
 		}
+		
+		return address.getCity();
 	}
 
 	/*

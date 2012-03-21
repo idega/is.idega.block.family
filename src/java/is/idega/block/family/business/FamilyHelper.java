@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.idega.core.localisation.data.ICLanguage;
+import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.PostalCode;
 import com.idega.core.user.data.User;
@@ -75,10 +76,31 @@ public interface FamilyHelper {
 	 * 
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
-	 * @return Address of child of current user, {@link CoreConstants#EMPTY} if
+	 * @return Address of {@link User}, {@link CoreConstants#EMPTY} if
 	 *         does not exist.
 	 */
 	public String getAddress(String userId);
+
+	/**
+	 * <p>
+	 * Method for getting main address of {@link User}. {@link Address} is made of room
+	 * number, house number, street, city or village, region, country and so on...
+	 * </p>
+	 * 
+	 * @param userId
+	 *            Id of user {@link com.idega.user.data.User#getId()}.
+	 * @return {@link Address} of {@link User}, <code>null</code> if
+	 *         does not exist.
+	 */
+	public Address getAddressByUserId(String userId);
+	
+	/**
+	 * <p>Gets name of city {@link User} live in.</p>
+	 * @param userId {@link User#getPrimaryKey()}.
+	 * @return {@link Address#getCity()} or <code>null</code> on failure.
+	 * @author <a href="mailto:martynas@idega.com">Martynas Stakė</a>
+	 */
+	public String getCity(String userId);
 
 	/**
 	 * <p>
