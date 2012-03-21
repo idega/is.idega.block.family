@@ -24,8 +24,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import com.idega.business.IBOLookup;
-import com.idega.business.IBOLookupException;
 import com.idega.core.business.DefaultSpringBean;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
@@ -41,19 +39,19 @@ import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.data.IDORelationshipException;
 import com.idega.idegaweb.IWResourceBundle;
-import com.idega.presentation.IWContext;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.User;
 import com.idega.util.CoreConstants;
 import com.idega.util.ListUtil;
+import com.idega.util.StringUtil;
 import com.idega.util.expression.ELUtil;
 
 /**
  * Implementation for {@link FamilyHelper}
- * 
+ *
  * @author <a href="mailto:valdas@idega.com">Valdas Žemaitis</a>
  * @version $Revision: 1.0 $
- * 
+ *
  *          Last modified: $Date: 2009.09.30 18:43:56 $ by: $Author: valdas $
  */
 @Scope(BeanDefinition.SCOPE_SINGLETON)
@@ -79,11 +77,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return Collections.emptyMap();
 
 		Map<Locale, Map<String, String>> teenagers = new TreeMap<Locale, Map<String, String>>();
-		
+
 		Map<String, String> childrenInfo = new TreeMap<String, String>();
-		
+
 		childrenInfo.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_child", "Select your child"));
-		
+
 		Locale locale = getCurrentLocale();
 		teenagers.put(locale, childrenInfo);
 
@@ -124,6 +122,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		return teenagers;
 	}
 
+	@Override
 	public String getSpouseEmail() {
 		try {
 			return getApplicantServices().getSpouseEmail();
@@ -133,6 +132,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		return CoreConstants.EMPTY;
 	}
 
+	@Override
 	public String getSpouseMobile() {
 		try {
 			return getApplicantServices().getSpouseMobile();
@@ -142,6 +142,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		return CoreConstants.EMPTY;
 	}
 
+	@Override
 	public String getSpouseName() {
 		try {
 			return getApplicantServices().getSpouseName();
@@ -151,6 +152,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		return CoreConstants.EMPTY;
 	}
 
+	@Override
 	public String getSpousePersonalId() {
 		try {
 			return getApplicantServices().getSpousePersonalId();
@@ -161,6 +163,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		return CoreConstants.EMPTY;
 	}
 
+	@Override
 	public String getSpouseTelephone() {
 		try {
 			return getApplicantServices().getSpouseTelephone();
@@ -172,7 +175,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getNameOfChild(
 	 * java.lang.String)
 	 */
@@ -189,24 +192,24 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getSocialCodeOfChild(
 	 * java.lang.String)
 	 */
 	@Override
 	public String getSocialSecurityCode(String userId) {
 		User user = getUser(userId);
-	
+
 		if (user == null) {
 			return CoreConstants.EMPTY;
 		}
-	
+
 		return user.getPersonalID();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getMainAddressOfChild(
 	 * java.lang.String)
 	 */
@@ -217,7 +220,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (address == null) {
 			return CoreConstants.EMPTY;
 		}
-		
+
 		String tmpString = null;
 		String addressString = null;
 
@@ -232,7 +235,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			addressString = addressString + tmpString + CoreConstants.SPACE;
 			tmpString = null;
 		}
-		
+
 		tmpString = address.getPOBox();
 
 		if (tmpString != null) {
@@ -268,11 +271,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		return address;
 	}
-	
+
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getPostalCodeOfChild(
 	 * java.lang.String)
 	 */
@@ -311,7 +314,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getHomeTelephoneOfChild(
 	 * java.lang.String)
 	 */
@@ -325,13 +328,13 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		try {
 			Phone phone = user.getUsersHomePhone();
-			
+
 			if (phone == null) {
 				return CoreConstants.EMPTY;
 			}
-			
+
 			return phone.getNumber();
-			
+
 		} catch (Exception e) {
 			getLogger().log(Level.WARNING, "Phone number not found.", e);
 			return CoreConstants.EMPTY;
@@ -340,25 +343,25 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getMobileTelephoneOfChild(java.lang.String)
 	 */
 	@Override
 	public String getCellPhoneNumber(String userId) {
 		User user = getUser(userId);
-	
+
 		if (user == null) {
 			return CoreConstants.EMPTY;
 		}
 
 		try {
 			Phone phone = user.getUsersMobilePhone();
-			
+
 			if (phone == null) {
 				return CoreConstants.EMPTY;
 			}
-			
+
 			return phone.getNumber();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Phone number not found.");
@@ -371,7 +374,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * is.idega.block.family.business.FamilyHelper#getWorkPhoneNumber(java.lang
 	 * .String)
@@ -386,11 +389,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		try {
 			Phone phone = user.getUsersWorkPhone();
-			
+
 			if (phone == null) {
 				return CoreConstants.EMPTY;
 			}
-			
+
 			return phone.getNumber();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Phone number not found.");
@@ -403,7 +406,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getEMailOfChild(
 	 * java.lang.String)
 	 */
@@ -417,11 +420,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		try {
 			Email email = user.getUsersEmail();
-			
+
 			if (email == null) {
 				return CoreConstants.EMPTY;
 			}
-			
+
 			return email.getEmailAddress();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "e-mail address not found.");
@@ -434,37 +437,29 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getLanguageSelectionMapOfCurrentUser()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Locale, Map<String, String>> getLanguages() {
-		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants
-				.IW_BUNDLE_IDENTIFIER));
-		
-		if (iwrb == null) {
-			return Collections.emptyMap(); 
-		}
+		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
+		if (iwrb == null)
+			return Collections.emptyMap();
 
 		Map<String, String> languagesMap = new TreeMap<String, String>();
+		Map<Locale, Map<String, String>> languageSelection = new TreeMap<Locale, Map<String, String>>();
 
-		Map<Locale, Map<String, String>> languageSelection = new TreeMap<Locale, 
-				Map<String, String>>();
-		
-		languagesMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_language", 
-		"Select your language"));
-		
+		languagesMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_language", "Select your language"));
+
 		languageSelection.put(getCurrentLocale(), languagesMap);
 
 		Collection<ICLanguage> languageList = null;
 
 		try {
-			if (this.icLanguageHome == null) {
-				this.icLanguageHome = (ICLanguageHome) IDOLookup
-						.getHome(ICLanguage.class);
-			}
+			if (this.icLanguageHome == null)
+				this.icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
 
 			languageList = this.icLanguageHome.findAll();
 		} catch (FinderException e) {
@@ -484,7 +479,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getLanguageOfCurrentUser(int)
 	 */
@@ -497,63 +492,49 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		}
 
 		List<ICLanguage> languageList = null;
-
 		try {
 			languageList = new ArrayList<ICLanguage>(user.getLanguages());
 		} catch (IDORelationshipException e) {
 			return CoreConstants.EMPTY;
 		}
 
-		if (ListUtil.isEmpty(languageList)) {
+		if (ListUtil.isEmpty(languageList))
 			return CoreConstants.EMPTY;
-		}
 
 		ICLanguage icl = languageList.get(numberOfLanguage);
-
-		if (icl == null) {
+		if (icl == null)
 			return CoreConstants.EMPTY;
-		}
 
 		return icl.getIsoAbbreviation();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getMotherLanguageSelectionMapOfCurrentUser()
 	 */
 	@Override
 	public String getMotherLanguage(String userId) {
 		User user = getUser(userId);
-
-		if (user == null) {
+		if (user == null)
 			return CoreConstants.EMPTY;
-		}
 
 		String prefferedLocale = user.getPreferredLocale();
 
-		if (com.idega.util.StringUtil.isEmpty(prefferedLocale)) {
+		if (StringUtil.isEmpty(prefferedLocale))
 			return getLanguage(0, userId);
-		}
 
-		Locale locale = ICLocaleBusiness
-				.getLocaleFromLocaleString(prefferedLocale);
-
-		if (locale == null) {
+		Locale locale = ICLocaleBusiness.getLocaleFromLocaleString(prefferedLocale);
+		if (locale == null)
 			return CoreConstants.EMPTY;
-		}
 
 		ICLanguage icl = null;
-
 		try {
-			if (this.icLanguageHome == null) {
-				this.icLanguageHome = (ICLanguageHome) IDOLookup
-						.getHome(ICLanguage.class);
-			}
+			if (this.icLanguageHome == null)
+				this.icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
 
-			icl = this.icLanguageHome.findByISOAbbreviation(locale
-					.getLanguage());
+			icl = this.icLanguageHome.findByISOAbbreviation(locale.getLanguage());
 		} catch (IDOLookupException e) {
 			getLogger().log(Level.WARNING, "Unable to get languages service.");
 			return CoreConstants.EMPTY;
@@ -562,16 +543,15 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return CoreConstants.EMPTY;
 		}
 
-		if (icl == null) {
+		if (icl == null)
 			return CoreConstants.EMPTY;
-		}
 
 		return icl.getIsoAbbreviation();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getSecondLanguageOfCurrentUser()
 	 */
@@ -582,7 +562,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getThirdLanguageOfCurrentUser()
 	 */
@@ -593,7 +573,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getFourthLanguageOfCurrentUser()
 	 */
@@ -604,23 +584,20 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getCountrySelectionMapOfCurrentUser()
 	 */
 	@Override
 	public Map<Locale, Map<String, String>> getCountries() {
-		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.
-				IW_BUNDLE_IDENTIFIER));
+		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
 
-		if (iwrb == null) {
-			return Collections.emptyMap(); 
-		}
+		if (iwrb == null)
+			return Collections.emptyMap();
 
 		Map<String, String> countryMap = new TreeMap<String, String>();
 
-		countryMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_country", 
-				"Select your country"));
+		countryMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_country", "Select your country"));
 
 		Map<Locale, Map<String, String>> countrySelection = new TreeMap<Locale, Map<String, String>>();
 		countrySelection.put(getCurrentLocale(), countryMap);
@@ -631,8 +608,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return countrySelection;
 		}
 
-		for (Country ch : countryCollection) {
-			countryMap.put(ch.getIsoAbbreviation(), ch.getName());
+		for (Country country : countryCollection) {
+			countryMap.put(country.getIsoAbbreviation(), country.getName());
 		}
 
 		return countrySelection;
@@ -647,26 +624,21 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	public Collection<Country> getCountriesList() {
 		if (this.countryHome == null) {
 			try {
-				this.countryHome = (CountryHome) IDOLookup
-						.getHome(Country.class);
+				this.countryHome = (CountryHome) IDOLookup.getHome(Country.class);
 			} catch (IDOLookupException e) {
-				getLogger().log(Level.WARNING,
-						"Unable to get list of countries", e);
+				getLogger().log(Level.WARNING, "Unable to get list of countries", e);
 				return null;
 			}
 		}
 
-		if (this.countryHome == null) {
+		if (this.countryHome == null)
 			return null;
-		}
 
 		Collection<Country> countryCollection = null;
-
 		try {
 			countryCollection = this.countryHome.findAll();
 		} catch (FinderException e) {
-			getLogger().log(Level.WARNING, "Unable to get list of countries.",
-					e);
+			getLogger().log(Level.WARNING, "Unable to get list of countries.", e);
 			return null;
 		}
 
@@ -675,7 +647,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * is.idega.block.family.business.FamilyHelper#getCountry(java.lang.String)
 	 */
@@ -700,7 +672,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return CoreConstants.EMPTY;
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see is.idega.block.family.business.FamilyHelper#getCity(java.lang.String)
@@ -708,11 +680,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	@Override
 	public String getCity(String userId) {
 		Address address = getAddressByUserId(userId);
-		
+
 		if (address == null) {
 			return CoreConstants.EMPTY;
 		}
-		
+
 		return address.getCity();
 	}
 
@@ -724,19 +696,19 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	public String getRelation(String childId, String relatedUserId) {
 		User user = getUser(childId);
 		User userRelation = getUser(relatedUserId);
-		
+
 		if (user == null || userRelation == null) {
 			return CoreConstants.EMPTY;
 		}
-		
+
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
-		
+
 		if (familyLogic == null) {
 			return CoreConstants.EMPTY;
 		}
-		
+
 		com.idega.user.data.Gender gender = userRelation.getGender();
-		
+
 		try {
 			if (familyLogic.isChildOf(user, userRelation)) {
 				if (gender == null) {
@@ -781,7 +753,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getRelationOfCurrentUser()
 	 */
@@ -790,53 +762,53 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
 
 		if (iwrb == null) {
-			return Collections.emptyMap(); 
+			return Collections.emptyMap();
 		}
 
 		Map <String, String> selection = new TreeMap<String, String>();
 
 		selection.put(CoreConstants.EMPTY, iwrb
-				.getLocalizedString("select_your_relation", 
+				.getLocalizedString("select_your_relation",
 				"Select your relation")
 				);
 		selection.put(FamilyConstants.RELATION_MOTHER, iwrb
-				.getLocalizedString("mother", 
+				.getLocalizedString("mother",
 				"Mother")
 				);
 		selection.put(FamilyConstants.RELATION_FATHER, iwrb
-				.getLocalizedString("father", 
+				.getLocalizedString("father",
 				"Father")
 				);
 		selection.put(FamilyConstants.RELATION_STEPMOTHER, iwrb
-				.getLocalizedString("stepmother", 
+				.getLocalizedString("stepmother",
 				"Stepmother")
 				);
 		selection.put(FamilyConstants.RELATION_STEPFATHER, iwrb
-				.getLocalizedString("stepfather", 
+				.getLocalizedString("stepfather",
 				"Stepfather")
 				);
 		selection.put(FamilyConstants.RELATION_GRANDMOTHER, iwrb
-				.getLocalizedString("grandmother", 
+				.getLocalizedString("grandmother",
 				"Grandmother")
 				);
 		selection.put(FamilyConstants.RELATION_GRANDFATHER, iwrb
-				.getLocalizedString("grandfather", 
+				.getLocalizedString("grandfather",
 				"Grandfather")
 				);
 		selection.put(FamilyConstants.RELATION_SIBLING, iwrb
-				.getLocalizedString("sibling", 
+				.getLocalizedString("sibling",
 				"Sibling")
 				);
 		selection.put(FamilyConstants.RELATION_GUARDIAN, iwrb
-				.getLocalizedString("guardian", 
+				.getLocalizedString("guardian",
 				"Guardian")
 				);
 		selection.put(FamilyConstants.RELATION_OTHER, iwrb
-				.getLocalizedString("other", 
+				.getLocalizedString("other",
 				"Other")
 				);
 
-		Map<Locale, Map<String, String>> relationsWithLocale = 
+		Map<Locale, Map<String, String>> relationsWithLocale =
 			new TreeMap<Locale, Map<String,String>>();
 
 		relationsWithLocale.put(getCurrentLocale(), selection);
@@ -846,7 +818,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * is.idega.block.family.business.FamilyHelper#getMaritalStatusOfCurrentUser
 	 * ()
@@ -857,7 +829,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
 
 		if (iwrb == null) {
-			return CoreConstants.EMPTY; 
+			return CoreConstants.EMPTY;
 		}
 
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
@@ -892,7 +864,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			}
 
 			List<User> childList = new ArrayList<User>(childrenOfCurrentUser);
-			parentsOfChild = familyLogic.getParentsFor(childList.get(0));	
+			parentsOfChild = familyLogic.getParentsFor(childList.get(0));
 		} catch (RemoteException e) {
 			getLogger().log(Level.WARNING, "Unable to get info about spouse.",
 					e);
@@ -919,7 +891,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see is.idega.block.family.business.FamilyHelper#getCurrentParent()
 	 */
 	@Override
@@ -951,7 +923,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * is.idega.block.family.business.FamilyHelper#getAnotherParent(java.lang
 	 * .String)
@@ -1030,14 +1002,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @return {@link com.idega.user.business.UserBusinessBean}
 	 */
 	private UserBusiness getUserBusiness() {
-		if (this.userBussiness == null) {
-			try {
-				this.userBussiness = IBOLookup.getServiceInstance(
-						IWContext.getCurrentInstance(), UserBusiness.class);
-			} catch (IBOLookupException e) {
-				getLogger().log(Level.WARNING, "Unable to get bean.", e);
-			}
-		}
+		if (this.userBussiness == null)
+			this.userBussiness = getServiceInstance(UserBusiness.class);
 
 		return this.userBussiness;
 	}
@@ -1056,10 +1022,10 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		try {
 			return this.userBussiness.getUser(Integer.valueOf(id));
 		} catch (RemoteException e) {
-			getLogger().log(Level.WARNING, "Unable to get user.");
+			getLogger().log(Level.WARNING, "Unable to get user by ID: " + id);
 			return null;
 		} catch (NumberFormatException e) {
-			getLogger().log(Level.WARNING, "No such user.");
+			getLogger().log(Level.WARNING, "No such user. ID: " + id);
 			return null;
 		}
 	}
