@@ -226,17 +226,14 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		tmpString = address.getName();
 		if (tmpString != null) {
-			addressString = tmpString + CoreConstants.SPACE;
+			addressString = tmpString + CoreConstants.COMMA + CoreConstants.SPACE;
 			tmpString = null;
 		}
 
-		tmpString = address.getProvince();
-		if (tmpString != null) {
-			addressString = addressString + tmpString + CoreConstants.SPACE;
-			tmpString = null;
+		PostalCode postalCode = address.getPostalCode();
+		if (postalCode != null) {
+			tmpString = postalCode.getPostalCode();
 		}
-
-		tmpString = address.getPOBox();
 
 		if (tmpString != null) {
 			addressString = addressString + tmpString + CoreConstants.SPACE;
