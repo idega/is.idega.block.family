@@ -30,7 +30,6 @@ import com.idega.core.contact.data.Phone;
 import com.idega.core.localisation.business.ICLocaleBusiness;
 import com.idega.core.localisation.data.ICLanguage;
 import com.idega.core.localisation.data.ICLanguageHome;
-import com.idega.core.localisation.data.ICLocaleHome;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
 import com.idega.core.location.data.CountryHome;
@@ -57,14 +56,6 @@ import com.idega.util.expression.ELUtil;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 @Service(FamilyHelper.BEAN_IDENTIFIER)
 public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper {
-
-	ICLanguageHome icLanguageHome = null;
-
-	ICLocaleHome icLocaleHome = null;
-
-	CountryHome countryHome = null;
-
-	UserBusiness userBussiness = null;
 
 	/*
 	 * (non-Javadoc)
@@ -455,10 +446,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		Collection<ICLanguage> languageList = null;
 
 		try {
-			if (this.icLanguageHome == null)
-				this.icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
-
-			languageList = this.icLanguageHome.findAll();
+			ICLanguageHome icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
+			languageList = icLanguageHome.findAll();
 		} catch (FinderException e) {
 			getLogger().log(Level.WARNING, "Languages not found.");
 			return languageSelection;
@@ -528,10 +517,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		ICLanguage icl = null;
 		try {
-			if (this.icLanguageHome == null)
-				this.icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
-
-			icl = this.icLanguageHome.findByISOAbbreviation(locale.getLanguage());
+			ICLanguageHome icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
+			icl = icLanguageHome.findByISOAbbreviation(locale.getLanguage());
 		} catch (IDOLookupException e) {
 			getLogger().log(Level.WARNING, "Unable to get languages service.");
 			return CoreConstants.EMPTY;
@@ -619,22 +606,11 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Collection<Country> getCountriesList() {
-		if (this.countryHome == null) {
-			try {
-				this.countryHome = (CountryHome) IDOLookup.getHome(Country.class);
-			} catch (IDOLookupException e) {
-				getLogger().log(Level.WARNING, "Unable to get list of countries", e);
-				return null;
-			}
-		}
-
-		if (this.countryHome == null)
-			return null;
-
 		Collection<Country> countryCollection = null;
 		try {
-			countryCollection = this.countryHome.findAll();
-		} catch (FinderException e) {
+			CountryHome countryHome = (CountryHome) IDOLookup.getHome(Country.class);
+			countryCollection = countryHome.findAll();
+		} catch (Exception e) {
 			getLogger().log(Level.WARNING, "Unable to get list of countries.", e);
 			return null;
 		}
@@ -656,14 +632,14 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			if (address == null) {
 				return null;
 			}
-			
+
 			return address.getCountry();
 		} catch (EJBException e) {
 			getLogger().log(Level.WARNING, "Unable to get country of user");
 			return null;
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see is.idega.block.family.business.FamilyHelper#getCountryName(java.lang.String)
@@ -674,10 +650,10 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (country == null) {
 			return CoreConstants.EMPTY;
 		}
-	
+
 		return country.getName();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see is.idega.block.family.business.FamilyHelper#getCountryISOgetIsoAbbreviation(java.lang.String)
@@ -1021,10 +997,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @return {@link com.idega.user.business.UserBusinessBean}
 	 */
 	private UserBusiness getUserBusiness() {
-		if (this.userBussiness == null)
-			this.userBussiness = getServiceInstance(UserBusiness.class);
-
-		return this.userBussiness;
+		return getServiceInstance(UserBusiness.class);
 	}
 
 	/**
@@ -1036,10 +1009,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return null;
 		}
 
-		this.userBussiness = getUserBusiness();
-
 		try {
-			return this.userBussiness.getUser(Integer.valueOf(id));
+			return getUserBusiness().getUser(Integer.valueOf(id));
 		} catch (RemoteException e) {
 			getLogger().log(Level.WARNING, "Unable to get user by ID: " + id);
 			return null;
@@ -1048,28 +1019,28 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return null;
 		}
 	}
-	
+
 	/**
 	 * <p>Helping method, checks for wrong id.</p>
 	 * @param id of something.
-	 * @return <code>true</code> if id does not contain {, }, CoreConstants#EMPTY, -1. 
+	 * @return <code>true</code> if id does not contain {, }, CoreConstants#EMPTY, -1.
 	 * <code>false</code> otherwise.
 	 * @author <a href="mailto:martynas@idega.com">Martynas Stakė</a>
 	 */
 	private boolean isWrongId(String id){
-		if (com.idega.util.StringUtil.isEmpty(id)) {
+		if (StringUtil.isEmpty(id)) {
 			return Boolean.TRUE;
 		}
-		
+
 		if (id.contains(CoreConstants.CURLY_BRACKET_LEFT)
 				|| id.contains(CoreConstants.CURLY_BRACKET_RIGHT)) {
 			return Boolean.TRUE;
 		}
-		
+
 		if (id.equals("-1")) {
 			return Boolean.TRUE;
 		}
-		
+
 		return Boolean.FALSE;
 	}
 }
