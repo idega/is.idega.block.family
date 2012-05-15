@@ -40,6 +40,7 @@ import com.idega.data.IDORelationshipException;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.User;
+import com.idega.util.ArrayUtil;
 import com.idega.util.CoreConstants;
 import com.idega.util.ListUtil;
 import com.idega.util.StringUtil;
@@ -429,7 +430,6 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @see is.idega.block.family.business.FamilyHelper#
 	 * getLanguageSelectionMapOfCurrentUser()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public Map<Locale, Map<String, String>> getLanguages() {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
@@ -443,22 +443,12 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 
 		languageSelection.put(getCurrentLocale(), languagesMap);
 
-		Collection<ICLanguage> languageList = null;
-
-		try {
-			ICLanguageHome icLanguageHome = (ICLanguageHome) IDOLookup.getHome(ICLanguage.class);
-			languageList = icLanguageHome.findAll();
-		} catch (FinderException e) {
-			getLogger().log(Level.WARNING, "Languages not found.");
+		Locale[] locales = Locale.getAvailableLocales();
+		if (ArrayUtil.isEmpty(locales))
 			return languageSelection;
-		} catch (IDOLookupException e) {
-			getLogger().log(Level.WARNING, "Languages service not found.");
-			return languageSelection;
-		}
 
-		for (ICLanguage language : languageList) {
-			languagesMap.put(language.getIsoAbbreviation(), language.getName());
-		}
+		for (Locale locale: locales)
+			languagesMap.put(locale.getLanguage(), locale.getDisplayLanguage(locale));
 
 		return languageSelection;
 	}
@@ -586,14 +576,16 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		Map<Locale, Map<String, String>> countrySelection = new TreeMap<Locale, Map<String, String>>();
 		countrySelection.put(getCurrentLocale(), countryMap);
 
-		Collection<Country> countryCollection = getCountriesList();
-
-		if (ListUtil.isEmpty(countryCollection)) {
+		Locale[] locales = Locale.getAvailableLocales();
+		if (ArrayUtil.isEmpty(locales))
 			return countrySelection;
-		}
 
-		for (Country country : countryCollection) {
-			countryMap.put(country.getIsoAbbreviation(), country.getName());
+		for (Locale locale: locales) {
+			String country = locale.getCountry();
+			if (StringUtil.isEmpty(country))
+				continue;
+
+			countryMap.put(country, locale.getDisplayCountry(locale));
 		}
 
 		return countrySelection;
