@@ -11,10 +11,11 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.logging.Level;
 
 import javax.ejb.EJBException;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import com.idega.builder.bean.AdvancedProperty;
 import com.idega.core.business.DefaultSpringBean;
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
@@ -68,9 +70,9 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (iwrb == null)
 			return Collections.emptyMap();
 
-		Map<Locale, Map<String, String>> teenagers = new TreeMap<Locale, Map<String, String>>();
+		Map<Locale, Map<String, String>> teenagers = new HashMap<Locale, Map<String, String>>();
 
-		Map<String, String> childrenInfo = new TreeMap<String, String>();
+		Map<String, String> childrenInfo = new LinkedHashMap<String, String>();
 
 		childrenInfo.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_child", "Select your child"));
 
@@ -107,9 +109,10 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return teenagers;
 		}
 
-		for (User teenage : teenagersOfCurrentUser) {
-			childrenInfo.put(teenage.getId(), teenage.getName());
-		}
+		List<AdvancedProperty> children = new ArrayList<AdvancedProperty>();
+		for (User teenage : teenagersOfCurrentUser)
+			children.add(new AdvancedProperty(teenage.getId(), teenage.getName()));
+		doSortValues(children, childrenInfo, locale);
 
 		return teenagers;
 	}
@@ -436,19 +439,21 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (iwrb == null)
 			return Collections.emptyMap();
 
-		Map<String, String> languagesMap = new TreeMap<String, String>();
-		Map<Locale, Map<String, String>> languageSelection = new TreeMap<Locale, Map<String, String>>();
+		Map<String, String> languagesMap = new LinkedHashMap<String, String>();
+		Map<Locale, Map<String, String>> languageSelection = new HashMap<Locale, Map<String, String>>();
 
 		languagesMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_language", "Select your language"));
-
-		languageSelection.put(getCurrentLocale(), languagesMap);
+		Locale currentLocale = getCurrentLocale();
+		languageSelection.put(currentLocale, languagesMap);
 
 		Locale[] locales = Locale.getAvailableLocales();
 		if (ArrayUtil.isEmpty(locales))
 			return languageSelection;
 
+		List<AdvancedProperty> languages = new ArrayList<AdvancedProperty>();
 		for (Locale locale: locales)
-			languagesMap.put(locale.getLanguage(), locale.getDisplayLanguage(locale));
+			languages.add(new AdvancedProperty(locale.getLanguage(), locale.getDisplayLanguage(locale)));
+		doSortValues(languages, languagesMap, currentLocale);
 
 		return languageSelection;
 	}
@@ -569,24 +574,27 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (iwrb == null)
 			return Collections.emptyMap();
 
-		Map<String, String> countryMap = new TreeMap<String, String>();
+		Map<String, String> countryMap = new LinkedHashMap<String, String>();
 
 		countryMap.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_country", "Select your country"));
 
-		Map<Locale, Map<String, String>> countrySelection = new TreeMap<Locale, Map<String, String>>();
-		countrySelection.put(getCurrentLocale(), countryMap);
+		Map<Locale, Map<String, String>> countrySelection = new HashMap<Locale, Map<String, String>>();
+		Locale currentLocale = getCurrentLocale();
+		countrySelection.put(currentLocale, countryMap);
 
 		Locale[] locales = Locale.getAvailableLocales();
 		if (ArrayUtil.isEmpty(locales))
 			return countrySelection;
 
+		List<AdvancedProperty> countries = new ArrayList<AdvancedProperty>();
 		for (Locale locale: locales) {
 			String country = locale.getCountry();
 			if (StringUtil.isEmpty(country))
 				continue;
 
-			countryMap.put(country, locale.getDisplayCountry(locale));
+			countries.add(new AdvancedProperty(country, locale.getDisplayCountry(locale)));
 		}
+		doSortValues(countries, countryMap, currentLocale);
 
 		return countrySelection;
 	}
@@ -748,57 +756,28 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	public Map<Locale, Map<String, String>> getRelationNames() {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
 
-		if (iwrb == null) {
+		if (iwrb == null)
 			return Collections.emptyMap();
-		}
 
-		Map <String, String> selection = new TreeMap<String, String>();
+		Map<String, String> availableRelations = new LinkedHashMap<String, String>();
+		availableRelations.put(CoreConstants.EMPTY, iwrb.getLocalizedString("select_your_relation",	"Select your relation"));
 
-		selection.put(CoreConstants.EMPTY, iwrb
-				.getLocalizedString("select_your_relation",
-				"Select your relation")
-				);
-		selection.put(FamilyConstants.RELATION_MOTHER, iwrb
-				.getLocalizedString("mother",
-				"Mother")
-				);
-		selection.put(FamilyConstants.RELATION_FATHER, iwrb
-				.getLocalizedString("father",
-				"Father")
-				);
-		selection.put(FamilyConstants.RELATION_STEPMOTHER, iwrb
-				.getLocalizedString("stepmother",
-				"Stepmother")
-				);
-		selection.put(FamilyConstants.RELATION_STEPFATHER, iwrb
-				.getLocalizedString("stepfather",
-				"Stepfather")
-				);
-		selection.put(FamilyConstants.RELATION_GRANDMOTHER, iwrb
-				.getLocalizedString("grandmother",
-				"Grandmother")
-				);
-		selection.put(FamilyConstants.RELATION_GRANDFATHER, iwrb
-				.getLocalizedString("grandfather",
-				"Grandfather")
-				);
-		selection.put(FamilyConstants.RELATION_SIBLING, iwrb
-				.getLocalizedString("sibling",
-				"Sibling")
-				);
-		selection.put(FamilyConstants.RELATION_GUARDIAN, iwrb
-				.getLocalizedString("guardian",
-				"Guardian")
-				);
-		selection.put(FamilyConstants.RELATION_OTHER, iwrb
-				.getLocalizedString("other",
-				"Other")
-				);
+		List<AdvancedProperty> relations = new ArrayList<AdvancedProperty>();
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_MOTHER, iwrb.getLocalizedString("mother", "Mother")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_FATHER, iwrb.getLocalizedString("father", "Father")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_STEPMOTHER, iwrb.getLocalizedString("stepmother", "Stepmother")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_STEPFATHER, iwrb.getLocalizedString("stepfather", "Stepfather")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_GRANDMOTHER, iwrb.getLocalizedString("grandmother",	"Grandmother")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_GRANDFATHER, iwrb.getLocalizedString("grandfather",	"Grandfather")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_SIBLING, iwrb.getLocalizedString("sibling",	"Sibling")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_GUARDIAN, iwrb.getLocalizedString("guardian", "Guardian")));
+		relations.add(new AdvancedProperty(FamilyConstants.RELATION_OTHER, iwrb.getLocalizedString("other", "Other")));
 
-		Map<Locale, Map<String, String>> relationsWithLocale =
-			new TreeMap<Locale, Map<String,String>>();
+		Map<Locale, Map<String, String>> relationsWithLocale = new HashMap<Locale, Map<String,String>>();
+		Locale locale = getCurrentLocale();
+		relationsWithLocale.put(locale, availableRelations);
 
-		relationsWithLocale.put(getCurrentLocale(), selection);
+		doSortValues(relations, availableRelations, locale);
 
 		return relationsWithLocale;
 	}
