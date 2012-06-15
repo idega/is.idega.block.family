@@ -851,7 +851,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (childHasOtherParent) {
 			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_DIVORCED, "Divorced");
 		} else {
-			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_WIDOWED, "Widowed");
+			return iwrb.getLocalizedString(FamilyConstants.MARITAL_STATUS_SINGLE, "Single");
 		}
 	}
 
