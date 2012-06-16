@@ -85,36 +85,56 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return teenagers;
 		}
 
+		List<AdvancedProperty> children = getTeenagersForUser(currentUser);
+		doSortValues(children, childrenInfo, locale);
+		return teenagers;
+	}
+
+	@Override
+	public List<AdvancedProperty> getTeenagersForParentByPersonalId(String personalId) {
+		if (StringUtil.isEmpty(personalId)) {
+			getLogger().warning("Personal ID is not provided");
+			return Collections.emptyList();
+		}
+
+		return getTeenagersForUser(getUser(personalId));
+	}
+
+	private List<AdvancedProperty> getTeenagersForUser(User user) {
+		if (user == null) {
+			getLogger().warning("User is not provided");
+			return Collections.emptyList();
+		}
+
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 		if (familyLogic == null)
-			return teenagers;
+			return Collections.emptyList();
 
 		int maxAge = Integer.valueOf(getApplication().getSettings().getProperty("max_music_student_age", String.valueOf(16)));
 		Collection<User> teenagersOfCurrentUser = null;
 		try {
-			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(currentUser, maxAge);
+			teenagersOfCurrentUser = familyLogic.getChildrenForUserUnderAge(user, maxAge);
 		} catch (NoChildrenFound e) {
-			getLogger().info(currentUser + " doesn't have children younger than " + maxAge + " years");
-			return teenagers;
+			getLogger().info(user + " doesn't have children younger than " + maxAge + " years");
+			return Collections.emptyList();
 		} catch (RemoteException e) {
-			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
-			return teenagers;
+			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + user, e);
+			return Collections.emptyList();
 		} catch (Exception e) {
-			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + currentUser, e);
-			return teenagers;
+			getLogger().log(Level.WARNING, "Some error occurred while getting teenagers for: " + user, e);
+			return Collections.emptyList();
 		}
 
 		if (ListUtil.isEmpty(teenagersOfCurrentUser)) {
-			getLogger().warning(currentUser + " doesn't have children younger than " + maxAge + " years");
-			return teenagers;
+			getLogger().warning(user + " doesn't have children younger than " + maxAge + " years");
+			return Collections.emptyList();
 		}
 
 		List<AdvancedProperty> children = new ArrayList<AdvancedProperty>();
 		for (User teenage : teenagersOfCurrentUser)
 			children.add(new AdvancedProperty(teenage.getId(), teenage.getName()));
-		doSortValues(children, childrenInfo, locale);
 
-		return teenagers;
+		return children;
 	}
 
 	@Override
@@ -862,29 +882,34 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 */
 	@Override
 	public String getCurrentParent(String childId) {
-		if (isWrongId(childId)) {
+		if (isWrongId(childId))
 			return CoreConstants.EMPTY;
-		}
 
-		User currentUser = getCurrentUser();
+		return getParent(childId, getCurrentUser());
+	}
 
-		if (currentUser == null) {
-			currentUser = getCurrentUser();
-		}
-
-		if (currentUser == null) {
+	private String getParent(String childId, User parent) {
+		if (parent == null)
 			return CoreConstants.EMPTY;
-		}
 
 		Collection<User> parents = getParents(childId);
+		if (ListUtil.isEmpty(parents))
+			return CoreConstants.EMPTY;
 
-		for (User parent : parents) {
-			if (currentUser.equals(parent)) {
-				return currentUser.getId();
+		for (User p : parents) {
+			if (parent.equals(p)) {
+				return p.getPersonalID();
 			}
 		}
 
 		return null;
+	}
+
+	public String getParentByChildIdAndParentPersonalId(String childId, String parentPersonalId) {
+		if (isWrongId(childId) || isWrongId(parentPersonalId))
+			return CoreConstants.EMPTY;
+
+		return getParent(childId, getUser(parentPersonalId));
 	}
 
 	/*
@@ -895,26 +920,24 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * .String)
 	 */
 	@Override
-	public String getAnotherParent(String childId) {
-		User user = getUser(childId);
+	public String getAnotherParent(String childId, String currentParentPersonalId) {
+		User child = getUser(childId);
 
-		if (user == null) {
+		if (child == null)
 			return CoreConstants.EMPTY;
-		}
+
+		if (isWrongId(currentParentPersonalId))
+			return CoreConstants.EMPTY;
 
 		Collection<User> parents = getParents(childId);
-
-		if (parents == null) {
+		if (ListUtil.isEmpty(parents))
 			return CoreConstants.EMPTY;
-		}
 
-		User currentParent = getUser(getCurrentParent(childId));
-
-		if (currentParent == null) {
+		User currentParent = getUser(currentParentPersonalId);
+		if (currentParent == null)
 			return CoreConstants.EMPTY;
-		}
 
-		for (User parent : parents) {
+		for (User parent: parents) {
 			if (!currentParent.equals(parent)) {
 				return parent.getId();
 			}
@@ -976,12 +999,19 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @return {@link User} by id.
 	 */
 	private User getUser(String id) {
-		if (isWrongId(id)) {
+		if (isWrongId(id))
 			return null;
-		}
+
+		UserBusiness userBusiness = getUserBusiness();
+		User user = null;
+		try {
+			user = userBusiness.getUser(id);
+		} catch (Exception e) {}
+		if (user != null)
+			return user;
 
 		try {
-			return getUserBusiness().getUser(Integer.valueOf(id));
+			return userBusiness.getUser(Integer.valueOf(id));
 		} catch (RemoteException e) {
 			getLogger().log(Level.WARNING, "Unable to get user by ID: " + id);
 			return null;
@@ -999,18 +1029,14 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @author <a href="mailto:martynas@idega.com">Martynas Stakė</a>
 	 */
 	private boolean isWrongId(String id){
-		if (StringUtil.isEmpty(id)) {
+		if (StringUtil.isEmpty(id))
 			return Boolean.TRUE;
-		}
 
-		if (id.contains(CoreConstants.CURLY_BRACKET_LEFT)
-				|| id.contains(CoreConstants.CURLY_BRACKET_RIGHT)) {
+		if (id.contains(CoreConstants.CURLY_BRACKET_LEFT) || id.contains(CoreConstants.CURLY_BRACKET_RIGHT))
 			return Boolean.TRUE;
-		}
 
-		if (id.equals("-1")) {
+		if (id.equals("-1"))
 			return Boolean.TRUE;
-		}
 
 		return Boolean.FALSE;
 	}

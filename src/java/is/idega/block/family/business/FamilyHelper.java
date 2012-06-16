@@ -2,9 +2,11 @@ package is.idega.block.family.business;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.idega.builder.bean.AdvancedProperty;
 import com.idega.core.localisation.data.ICLanguage;
 import com.idega.core.location.data.Address;
 import com.idega.core.location.data.Country;
@@ -14,21 +16,21 @@ import com.idega.util.CoreConstants;
 
 /**
  * Spring bean to provide services from {@link FamilyLogic}
- * 
+ *
  * @author <a href="mailto:valdas@idega.com">Valdas Žemaitis</a>
  * @version $Revision: 1.0 $
- * 
+ *
  *          Last modified: $Date: 2009.09.29 16:25:26 $ by: $Author: valdas $
  */
 public interface FamilyHelper {
 
 	public static final String BEAN_IDENTIFIER = "familyLogicServicesProvider";
-	
+
 	/**
-	 * 
+	 *
 	 * @return 	{@link Map} of ({@link User#getID()},
 	 * 			{@link User#getName()}) with {@link CoreConstants.EMPTY}, Select..." choice,
-	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..."
 	 * 			choice, if records were not found or not read,
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
@@ -48,7 +50,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting name of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link User#getName()}, {@link CoreConstants#EMPTY} if does not
@@ -60,7 +62,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting social security code {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link User#getPersonalID()}, {@link CoreConstants#EMPTY} if does
@@ -73,7 +75,7 @@ public interface FamilyHelper {
 	 * Method for getting main address of {@link User}. Address is made of room
 	 * number, house number, street, city or village, region, country.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return Address of {@link User}, {@link CoreConstants#EMPTY} if
@@ -86,14 +88,14 @@ public interface FamilyHelper {
 	 * Method for getting main address of {@link User}. {@link Address} is made of room
 	 * number, house number, street, city or village, region, country and so on...
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link Address} of {@link User}, <code>null</code> if
 	 *         does not exist.
 	 */
 	public Address getAddressByUserId(String userId);
-	
+
 	/**
 	 * <p>Gets name of city {@link User} live in.</p>
 	 * @param userId {@link User#getPrimaryKey()}.
@@ -106,7 +108,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting postal code of child of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link PostalCode#getPostalCode} of user,
@@ -118,7 +120,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting main phone number of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link com.idega.user.data.User#getUsersHomePhone().getNumber()},
@@ -130,7 +132,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting cell phone number of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link com.idega.user.data.User#getUsersMobilePhone()
@@ -142,7 +144,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting work phone number of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link com.idega.user.data.User#getUsersWorkPhone().getNumber()},
@@ -154,7 +156,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting e-mail address of {@link User}.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link com.idega.user.data.User#getUsersEmail()
@@ -166,9 +168,9 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting relations from {@link FamilyConstants}.
 	 * </p>
-	 * 
+	 *
 	 * @return	Relation {@link Map} from {@link FamilyConstants},
-	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..."
 	 * 			choice, if records were not found or read.
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
@@ -178,7 +180,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method, for getting relation type from {@link FamilyConstants}.
 	 * </p>
-	 * 
+	 *
 	 * @param childId
 	 *            Child, smaller brother or other user
 	 *            {@link com.idega.user.data.User#getId()}.
@@ -192,10 +194,10 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting all languages exits in database.
 	 * </p>
-	 * 
-	 * @return 	{@link Map} of ({@link ICLanguage#getIsoAbbreviation()}, 
+	 *
+	 * @return 	{@link Map} of ({@link ICLanguage#getIsoAbbreviation()},
 	 * 			{@link ICLanguage#getName()}).
-	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..."
 	 * 			choice, if records were not found or not read,
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
@@ -203,15 +205,15 @@ public interface FamilyHelper {
 
 	/**
 	 * <p>
-	 * Method for getting {@link ICLanguage#getIsoAbbreviation()} 
+	 * Method for getting {@link ICLanguage#getIsoAbbreviation()}
 	 * of {@link User#getLanguages()}.
 	 * </p>
-	 * 
+	 *
 	 * @param numberOfLanguage
 	 *            Language number in {@link User#getLanguages()}.
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
-	 * @return 	Language from {@link User#getLanguages()}, 
+	 * @return 	Language from {@link User#getLanguages()},
 	 * 			{@link CoreConstants#EMPTY} if does not exist.
 	 */
 	public String getLanguage(int numberOfLanguage, String userId);
@@ -219,7 +221,7 @@ public interface FamilyHelper {
 	/**
 	 * <p>
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link ICLanguage} from {@link User#getPreferredLocale} or first
@@ -261,30 +263,30 @@ public interface FamilyHelper {
 	 * <p>
 	 * Find a country, where user lives in.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link Country} or <code>null</code> on failure.
 	 */
 	public Country getCountry(String userId);
-	
+
 	/**
 	 * <p>
 	 * Find a country, where user lives in.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link Country#getName()} or
 	 *         {@link CoreConstants#EMPTY} if country does not found.
 	 */
 	public String getCountryName(String userId);
-	
+
 	/**
 	 * <p>
 	 * Find a country, where user lives in.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return {@link Country#getIsoAbbreviation()} or
@@ -296,10 +298,10 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting all countries, which exits in database.
 	 * </p>
-	 * 
-	 * @return 	{@link Map} of ({@link Country#getIsoAbbreviation()}, 
+	 *
+	 * @return 	{@link Map} of ({@link Country#getIsoAbbreviation()},
 	 * 			{@link Country#getName()}).
-	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..." 
+	 * 			{@link Map} with {@link CoreConstants.EMPTY}, Select..."
 	 * 			choice, if records were not found or not read,
 	 * 			{@link Collections#emptyMap()} if failed.
 	 */
@@ -309,7 +311,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting all countries, which exits in database.
 	 * </p>
-	 * 
+	 *
 	 * @return {@link Collection} of {@link Country}, null if failed.
 	 */
 	public Collection<Country> getCountriesList();
@@ -318,7 +320,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting marital status.
 	 * </p>
-	 * 
+	 *
 	 * @param userId
 	 *            Id of user {@link com.idega.user.data.User#getId()}.
 	 * @return Possible marital statuses are detailed at {@link FamilyConstants}
@@ -330,7 +332,7 @@ public interface FamilyHelper {
 	 * <p>
 	 * Method for getting id of parent, who is connected now or is parent.
 	 * </p>
-	 * 
+	 *
 	 * @param childId
 	 *            Id of child user {@link com.idega.user.data.User#getId()}.
 	 * @return Id of father, mother or somebody, who is the parent of child:
@@ -343,11 +345,14 @@ public interface FamilyHelper {
 	 * Method for getting id of another parent. Not the one, who is connected
 	 * now, or already been chosen.
 	 * </p>
-	 * 
+	 *
 	 * @param childId
 	 *            Id of child user {@link com.idega.user.data.User#getId()}.
 	 * @return Id of father, mother or somebody, who is the parent of child:
 	 *         {@link com.idega.user.data.User#getId()}.
 	 */
-	public String getAnotherParent(String childId);
+	public String getAnotherParent(String childId, String currentParentPersonalId);
+
+	public List<AdvancedProperty> getTeenagersForParentByPersonalId(String personalId);
+
 }
