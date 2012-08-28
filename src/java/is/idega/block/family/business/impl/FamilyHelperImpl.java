@@ -1013,7 +1013,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		try {
 			return userBusiness.getUser(Integer.valueOf(id));
 		} catch (RemoteException e) {
-			getLogger().log(Level.WARNING, "Unable to get user by ID: " + id);
+			getLogger().log(Level.WARNING, "Unable to get user by ID: " + id, e);
 			return null;
 		} catch (NumberFormatException e) {
 			getLogger().log(Level.WARNING, "No such user. ID: " + id);
