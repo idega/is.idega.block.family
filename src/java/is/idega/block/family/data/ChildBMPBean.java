@@ -24,12 +24,14 @@ import javax.ejb.FinderException;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
+import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.user.data.Gender;
 import com.idega.user.data.GenderHome;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
+import com.idega.user.data.UserHome;
 
 public class ChildBMPBean extends UserBMPBean implements User, Child {
 	
@@ -190,8 +192,24 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			String email = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
 			String personalID = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
 
-			if (name != null) {
+			if (name != null && personalID != null) {
 				Relative relative = new Relative();
+				if (personalID.indexOf("_") != -1) {
+					String userPK = personalID.substring(personalID.indexOf("_") + 1);
+					try {
+						User user = ((UserHome) IDOLookup.getHome(User.class)).findByPrimaryKey(new Integer(userPK));
+						if (user != null) {
+							personalID = user.getPersonalID();
+						}
+					}
+					catch (FinderException fe) {
+						fe.printStackTrace();
+					}
+					catch (IDOLookupException ile) {
+						ile.printStackTrace();
+					}
+				}
+				
 				relative.setPersonalID(personalID);
 				relative.setName(name);
 				relative.setRelation(relation);
