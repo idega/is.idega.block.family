@@ -282,6 +282,25 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
 		store();
 	}
+	
+	public void removeRelative(int number) {
+		removeRelative("", number);
+	}
+	
+	public void removeRelative(String prefix, int number) {
+		if (number > 2 || number < 1) {
+			return;
+		}
+		
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		store();
+	}
 
 	public void storeForbiddenRelative(String name, String personalID, String details) {
 		setMetaData(METADATA_FORBIDDEN_RELATIVE + "_name", name, "java.lang.String");
