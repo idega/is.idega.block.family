@@ -95,6 +95,16 @@ public interface Child extends IDOEntity, User {
 	public void storeRelative(String prefix, String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
 
 	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#removeRelative
+	 */
+	public void removeRelative(int number);
+
+	/**
+	 * @see is.idega.block.family.data.ChildBMPBean#removeRelative
+	 */
+	public void removeRelative(String prefix, int number);
+
+	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#storeForbiddenRelative
 	 */
 	public void storeForbiddenRelative(String name, String personalID, String details);

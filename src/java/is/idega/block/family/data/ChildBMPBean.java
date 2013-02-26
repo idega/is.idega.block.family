@@ -24,12 +24,14 @@ import javax.ejb.FinderException;
 import com.idega.business.IBOLookup;
 import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
+import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
 import com.idega.user.data.Gender;
 import com.idega.user.data.GenderHome;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
+import com.idega.user.data.UserHome;
 
 public class ChildBMPBean extends UserBMPBean implements User, Child {
 	
@@ -190,8 +192,24 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			String email = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
 			String personalID = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
 
-			if (name != null) {
+			if (name != null && personalID != null) {
 				Relative relative = new Relative();
+				if (personalID.indexOf("_") != -1) {
+					String userPK = personalID.substring(personalID.indexOf("_") + 1);
+					try {
+						User user = ((UserHome) IDOLookup.getHome(User.class)).findByPrimaryKey(new Integer(userPK));
+						if (user != null) {
+							personalID = user.getPersonalID();
+						}
+					}
+					catch (FinderException fe) {
+						fe.printStackTrace();
+					}
+					catch (IDOLookupException ile) {
+						ile.printStackTrace();
+					}
+				}
+				
 				relative.setPersonalID(personalID);
 				relative.setName(name);
 				relative.setRelation(relation);
@@ -262,6 +280,25 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
+		store();
+	}
+	
+	public void removeRelative(int number) {
+		removeRelative("", number);
+	}
+	
+	public void removeRelative(String prefix, int number) {
+		if (number > 2 || number < 1) {
+			return;
+		}
+		
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
+		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
 		store();
 	}
 

@@ -182,16 +182,18 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	@Override
 	public Child getChild(User child) {
-		if (child instanceof Child) {
+		if (child instanceof Child)
 			return (Child) child;
+		
+		if (child == null) {
+			getLogger().warning("Provided user object (expected child as user) is null!");
+			return null;
 		}
-		else {
-			try {
-				return getChildHome().findByPrimaryKey(child.getPrimaryKey());
-			}
-			catch (FinderException fe) {
-				fe.printStackTrace();
-			}
+		
+		try {
+			return getChildHome().findByPrimaryKey(child.getPrimaryKey());
+		} catch (FinderException fe) {
+			fe.printStackTrace();
 		}
 
 		return null;
