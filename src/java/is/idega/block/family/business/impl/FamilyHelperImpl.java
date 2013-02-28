@@ -45,6 +45,7 @@ import com.idega.user.data.User;
 import com.idega.util.ArrayUtil;
 import com.idega.util.CoreConstants;
 import com.idega.util.ListUtil;
+import com.idega.util.LocaleUtil;
 import com.idega.util.StringUtil;
 import com.idega.util.expression.ELUtil;
 
@@ -671,7 +672,8 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 			return CoreConstants.EMPTY;
 		}
 
-		return country.getName();
+		Locale icelandic = new Locale(LocaleUtil.getIcelandicLocale().getCountry(), country.getIsoAbbreviation());
+		return icelandic.getDisplayCountry();
 	}
 
 	/*
