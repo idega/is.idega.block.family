@@ -32,7 +32,7 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 
 	private User getUser() {
 		if (currentUser == null) {
-			currentUser = getOldUser(getCurrentUser());
+			currentUser = getLegacyUser(getCurrentUser());
 		}
 		return currentUser;
 	}
@@ -59,7 +59,6 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public String getSpouseEmail() {
 		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {
@@ -117,7 +116,6 @@ public class FamilyRelationsHelperImpl extends DefaultSpringBean implements Fami
 		return getPhoneByType(PhoneType.HOME_PHONE_ID);
 	}
 
-	@SuppressWarnings("unchecked")
 	private String getPhoneByType(int phoneType) {
 		User spouse = getSpouseOrCohabitant();
 		if (spouse == null) {

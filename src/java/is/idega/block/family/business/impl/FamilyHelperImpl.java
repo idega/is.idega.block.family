@@ -80,7 +80,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		Locale locale = getCurrentLocale();
 		teenagers.put(locale, childrenInfo);
 
-		User currentUser = getOldUser(getCurrentUser());
+		User currentUser = getLegacyUser(getCurrentUser());
 		if (currentUser == null) {
 			getLogger().info("User must be logged in!");
 			return teenagers;
@@ -887,7 +887,7 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 		if (isWrongId(childId))
 			return CoreConstants.EMPTY;
 
-		return getParent(childId, getOldUser(getCurrentUser()));
+		return getParent(childId, getLegacyUser(getCurrentUser()));
 	}
 
 	private String getParent(String childId, User parent) {
