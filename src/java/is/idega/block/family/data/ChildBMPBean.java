@@ -175,6 +175,11 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			setRelation(custodian, relation);
 		}
 	}
+	
+	public void removeExtraCustodian() {
+		this.removeMetaData(METADATA_OTHER_CUSTODIAN);
+		this.store();
+	}
 
 	public List getRelatives() {
 		return getRelatives("");
