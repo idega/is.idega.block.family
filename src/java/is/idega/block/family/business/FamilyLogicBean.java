@@ -248,7 +248,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 *           if no children are found
 	 */
 	@Override
-	public Collection getChildrenInCustodyOf(User user) throws NoChildrenFound {
+	public Collection<User> getChildrenInCustodyOf(User user) throws NoChildrenFound {
 		String userName = null;
 		try {
 			userName = user.getName();
