@@ -8,6 +8,7 @@ import is.idega.block.family.data.FamilyMember;
 
 import java.rmi.RemoteException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 
 import javax.ejb.CreateException;
@@ -44,9 +45,11 @@ public interface FamilyLogic extends IBOService {
 	public Collection<User> getChildrenInCustodyOf(User user) throws NoChildrenFound, RemoteException;
 
 	/**
-	 * @see is.idega.block.family.business.FamilyLogicBean#getSiblingsFor
+	 * @param user to find siblings for, not <code>null</code>;
+	 * @return a {@link Collection} of {@link User}s who are siblings of a 
+	 * {@link User}. An {@link Collections#emptyList()} if no siblings found.
 	 */
-	public Collection getSiblingsFor(User user) throws NoSiblingFound, RemoteException;
+	public Collection<User> getSiblingsFor(User user);
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getSpouseFor
@@ -129,7 +132,12 @@ public interface FamilyLogic extends IBOService {
 	public boolean isCohabitantOf(User personToCheck, User relatedPerson) throws RemoteException;
 
 	/**
-	 * @see is.idega.block.family.business.FamilyLogicBean#isSiblingOf
+	 * @param personToCheck is {@link User} who is sibling, 
+	 * not <code>null</code>;
+	 * @param relatedPerson is {@link User} to search sibling for, 
+	 * not <code>null</code>;
+	 * @return <code>true</code> if the personToCheck is a sibling of 
+	 * relatedPerson, <code>false</code> otherwise;
 	 */
 	public boolean isSiblingOf(User personToCheck, User relatedPerson) throws RemoteException;
 

@@ -10,7 +10,6 @@ package is.idega.block.family.data;
 import is.idega.block.family.business.FamilyConstants;
 import is.idega.block.family.business.FamilyLogic;
 import is.idega.block.family.business.NoCustodianFound;
-import is.idega.block.family.business.NoSiblingFound;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -59,16 +58,15 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 
 	public static final String METADATA_FORBIDDEN_RELATIVE = "forbidden_relative";
 
-	public Collection getSiblings() throws NoSiblingFound {
-		try {
-			return getFamilyLogic().getSiblingsFor(this);
-		}
-		catch (RemoteException re) {
-			throw new IBORuntimeException(re);
-		}
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.data.Child#getSiblings()
+	 */
+	public Collection<User> getSiblings() {
+		return getFamilyLogic().getSiblingsFor(this);
 	}
 
-	public Collection getCustodians() throws NoCustodianFound {
+	public Collection<Custodian> getCustodians() throws NoCustodianFound {
 		try {
 			return getFamilyLogic().getCustodiansFor(this);
 		}
