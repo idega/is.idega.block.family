@@ -73,7 +73,7 @@ public interface Child extends IDOEntity, User {
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getRelatives
 	 */
-	public List getRelatives(String prefix);
+	public List<Relative> getRelatives(String prefix);
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#storeMainRelative
