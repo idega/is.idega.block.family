@@ -1,23 +1,29 @@
 package is.idega.block.family.data;
 
 
-import is.idega.block.family.business.NoSiblingFound;
 import is.idega.block.family.business.NoCustodianFound;
+
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import com.idega.user.data.User;
+
 import com.idega.data.IDOEntity;
+import com.idega.user.data.User;
 
 public interface Child extends IDOEntity, User {
+	
+	
 	/**
-	 * @see is.idega.block.family.data.ChildBMPBean#getSiblings
+	 * 
+	 * @return all siblings for this {@link Child} or 
+	 * {@link Collections#emptyList()} on failure;
 	 */
-	public Collection getSiblings() throws NoSiblingFound;
+	public Collection<User> getSiblings();
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getCustodians
 	 */
-	public Collection getCustodians() throws NoCustodianFound;
+	public Collection<Custodian> getCustodians() throws NoCustodianFound;
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getMother
@@ -67,7 +73,7 @@ public interface Child extends IDOEntity, User {
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getRelatives
 	 */
-	public List getRelatives(String prefix);
+	public List<Relative> getRelatives(String prefix);
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#storeMainRelative

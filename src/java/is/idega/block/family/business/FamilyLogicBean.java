@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.logging.Level;
 
 import javax.ejb.CreateException;
@@ -104,13 +103,17 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
-	protected Collection convertGroupCollectionToUserCollection(Collection coll, String relationType) {
-		Collection newColl = new Vector();
-		Iterator iter = coll.iterator();
-		while (iter.hasNext()) {
-			Group group = (Group) iter.next();
+	protected Collection<User> convertGroupCollectionToUserCollection(
+			Collection<Group> coll, String relationType) {
+		if (ListUtil.isEmpty(coll)) {
+			return Collections.emptyList();
+		}
+
+		Collection<User> newColl = new ArrayList<User>();
+		for (Group group : coll) {
 			newColl.add(convertGroupToUser(group, relationType));
 		}
+
 		return newColl;
 	}
 
@@ -248,7 +251,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 *           if no children are found
 	 */
 	@Override
-	public Collection getChildrenInCustodyOf(User user) throws NoChildrenFound {
+	public Collection<User> getChildrenInCustodyOf(User user) throws NoChildrenFound {
 		String userName = null;
 		try {
 			userName = user.getName();
@@ -266,27 +269,29 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
-	/**
-	 * @return A Collection of User object who are siblings of a user. Returns an
-	 *         empty Collection if no siblings found.
-	 * @throws NoSiblingFound
-	 *           if no siblings are found
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyLogic#getSiblingsFor(com.idega.user.data.User)
 	 */
 	@Override
-	public Collection getSiblingsFor(User user) throws NoSiblingFound {
-		String userName = null;
+	public Collection<User> getSiblingsFor(User user) {
+		if (user == null) {
+			return Collections.emptyList();
+		}
+
+		Collection<Group> coll = null;
 		try {
-			userName = user.getName();
-			Collection coll = user.getRelatedBy(RELATION_TYPE_GROUP_SIBLING);
-			if (coll == null || coll.isEmpty()) {
-				throw new NoSiblingFound(userName);
-			}
-			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_SIBLING);
-			// return coll;
+			coll = user.getRelatedBy(RELATION_TYPE_GROUP_SIBLING);
+		} catch (FinderException e) {
+			getLogger().log(Level.WARNING, "Failed to get siblings for: " + user.getName());
 		}
-		catch (FinderException e) {
-			throw new NoSiblingFound(userName);
+
+		if (ListUtil.isEmpty(coll)) {
+			return Collections.emptyList();
 		}
+
+		return convertGroupCollectionToUserCollection(coll, 
+				RELATION_TYPE_GROUP_SIBLING);
 	}
 
 	/**
@@ -562,18 +567,18 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return false;
 	}
 
-	/**
-	 * @return True if the personToCheck is a sibling of relatedPerson else false
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.business.FamilyLogic#isSiblingOf(com.idega.user.data.User, com.idega.user.data.User)
 	 */
 	@Override
 	public boolean isSiblingOf(User personToCheck, User relatedPerson) {
-		try {
-			Collection coll = getSiblingsFor(relatedPerson);
-			return coll.contains(personToCheck);
+		Collection<User> coll = getSiblingsFor(relatedPerson);
+		if (ListUtil.isEmpty(coll)) {
+			return Boolean.FALSE;
 		}
-		catch (NoSiblingFound ex) {
-			return false;
-		}
+
+		return coll.contains(personToCheck);
 	}
 
 	@Override
@@ -900,9 +905,6 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		catch (RemoveException ex) {
 			ex.printStackTrace();
 		}
-		catch (NoSiblingFound x) {
-		}
-
 	}
 
 	@Override
@@ -1002,9 +1004,6 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		catch (RemoveException ex) {
 			ex.printStackTrace();
 		}
-		catch (NoSiblingFound x) {
-		}
-
 	}
 
 	@Override

@@ -10,7 +10,6 @@ package is.idega.block.family.data;
 import is.idega.block.family.business.FamilyConstants;
 import is.idega.block.family.business.FamilyLogic;
 import is.idega.block.family.business.NoCustodianFound;
-import is.idega.block.family.business.NoSiblingFound;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -18,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.ejb.FinderException;
 
@@ -32,6 +32,7 @@ import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
 import com.idega.user.data.UserHome;
+import com.idega.util.StringUtil;
 
 public class ChildBMPBean extends UserBMPBean implements User, Child {
 	
@@ -59,16 +60,15 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 
 	public static final String METADATA_FORBIDDEN_RELATIVE = "forbidden_relative";
 
-	public Collection getSiblings() throws NoSiblingFound {
-		try {
-			return getFamilyLogic().getSiblingsFor(this);
-		}
-		catch (RemoteException re) {
-			throw new IBORuntimeException(re);
-		}
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.data.Child#getSiblings()
+	 */
+	public Collection<User> getSiblings() {
+		return getFamilyLogic().getSiblingsFor(this);
 	}
 
-	public Collection getCustodians() throws NoCustodianFound {
+	public Collection<Custodian> getCustodians() throws NoCustodianFound {
 		try {
 			return getFamilyLogic().getCustodiansFor(this);
 		}
@@ -185,33 +185,50 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		return getRelatives("");
 	}
 
-	public List getRelatives(String prefix) {
-		List relatives = new ArrayList();
+	/*
+	 * (non-Javadoc)
+	 * @see is.idega.block.family.data.Child#getRelatives(java.lang.String)
+	 */
+	public List<Relative> getRelatives(String prefix) {
+		List<Relative> relatives = new ArrayList<Relative>();
 
 		for (int a = 1; a <= 2; a++) {
-			String name = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
-			String relation = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
-			String homePhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone");
-			String workPhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
-			String mobilePhone = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
-			String email = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
-			String personalID = getMetaData(prefix + (a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
+			String name = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_name");
+			String relation = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_relation");
+			String homePhone = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_homePhone");
+			String workPhone = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_workPhone");
+			String mobilePhone = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_mobilePhone");
+			String email = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_email");
+			String personalID = getMetaData(prefix + 
+					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + 
+					"_personalID");
 
-			if (name != null && personalID != null) {
+			if (!StringUtil.isEmpty(name) && !StringUtil.isEmpty(personalID)) {
 				Relative relative = new Relative();
 				if (personalID.indexOf("_") != -1) {
 					String userPK = personalID.substring(personalID.indexOf("_") + 1);
 					try {
-						User user = ((UserHome) IDOLookup.getHome(User.class)).findByPrimaryKey(new Integer(userPK));
+						User user = ((UserHome) IDOLookup.getHome(User.class))
+								.findByPrimaryKey(new Integer(userPK));
 						if (user != null) {
 							personalID = user.getPersonalID();
 						}
-					}
-					catch (FinderException fe) {
-						fe.printStackTrace();
-					}
-					catch (IDOLookupException ile) {
-						ile.printStackTrace();
+					} catch (Exception ile) {
+						getLogger().log(Level.WARNING, 
+								"Failed to get " + User.class.getSimpleName() + 
+								" by primary key: " + userPK);
 					}
 				}
 				
