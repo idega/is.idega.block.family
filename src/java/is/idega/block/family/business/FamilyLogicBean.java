@@ -347,6 +347,10 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 */
 	@Override
 	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound {
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		
 		String userName = null;
 		try {
 			userName = user.getName();
