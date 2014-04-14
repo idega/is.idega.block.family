@@ -35,8 +35,8 @@ public interface FamilyLogic extends IBOService {
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getChildrenFor
 	 */
-	public Collection getChildrenFor(User user) throws NoChildrenFound, RemoteException;
-	
+	public Collection<User> getChildrenFor(User user) throws NoChildrenFound, RemoteException;
+
 	public Collection<User> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException;
 
 	/**
@@ -46,7 +46,7 @@ public interface FamilyLogic extends IBOService {
 
 	/**
 	 * @param user to find siblings for, not <code>null</code>;
-	 * @return a {@link Collection} of {@link User}s who are siblings of a 
+	 * @return a {@link Collection} of {@link User}s who are siblings of a
 	 * {@link User}. An {@link Collections#emptyList()} if no siblings found.
 	 */
 	public Collection<User> getSiblingsFor(User user);
@@ -64,17 +64,17 @@ public interface FamilyLogic extends IBOService {
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor
 	 */
-	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound, RemoteException;
+	public Collection<User> getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound, RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor
 	 */
-	public Collection getCustodiansFor(User user) throws NoCustodianFound, RemoteException;
+	public Collection<User> getCustodiansFor(User user) throws NoCustodianFound, RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getParentsFor
 	 */
-	public Collection getParentsFor(User user) throws NoParentFound, RemoteException;
+	public Collection<User> getParentsFor(User user) throws NoParentFound, RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#hasPersonGotChildren
@@ -132,11 +132,11 @@ public interface FamilyLogic extends IBOService {
 	public boolean isCohabitantOf(User personToCheck, User relatedPerson) throws RemoteException;
 
 	/**
-	 * @param personToCheck is {@link User} who is sibling, 
+	 * @param personToCheck is {@link User} who is sibling,
 	 * not <code>null</code>;
-	 * @param relatedPerson is {@link User} to search sibling for, 
+	 * @param relatedPerson is {@link User} to search sibling for,
 	 * not <code>null</code>;
-	 * @return <code>true</code> if the personToCheck is a sibling of 
+	 * @return <code>true</code> if the personToCheck is a sibling of
 	 * relatedPerson, <code>false</code> otherwise;
 	 */
 	public boolean isSiblingOf(User personToCheck, User relatedPerson) throws RemoteException;
@@ -305,34 +305,37 @@ public interface FamilyLogic extends IBOService {
 	 * @see is.idega.block.family.business.FamilyLogicBean#getFamily
 	 */
 	public FamilyData getFamily(String familyNr) throws FinderException, RemoteException;
-	
+
 	/**
-	 * Gets localized relation name from relation type 
+	 * Gets localized relation name from relation type
 	 * @param iwrb
 	 * @param type
 	 * @return
 	 */
 	public String getRelationName(IWResourceBundle iwrb, String type);
-	
+
 	/**
 	 * @param user User to set relation to
 	 * @param relatedUser user that will be set related to user
-	 * @param relationType 
+	 * @param relationType
 	 */
 	public void setRelation(User user, User relatedUser, String relationType) throws CreateException, RemoteException;
-	
+
 	/** Removes relation from users
 	 * @param user
 	 * @param relatedUser
-	 * @param relationType 
+	 * @param relationType
 	 */
 	public void removeRelation(User user, User relatedUser, String relationType)  throws RemoveException, RemoteException;
-	
+
 	/** Gets users that are related to user
 	 * @param user
 	 * @param relatedUser
-	 * @param relationType 
+	 * @param relationType
 	 * @return
 	 */
 	public Collection<User> getRelatedUsers(User user, String relationType) throws RemoteException, FinderException;
+
+	public Collection<Custodian> getConvertedUsersAsCustodians(Collection<User> custodians);
+
 }

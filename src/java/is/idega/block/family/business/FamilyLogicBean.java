@@ -1180,5 +1180,20 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return Collections.emptyList();
 	}
 
+	@Override
+	public Collection<Custodian> getConvertedUsersAsCustodians(Collection<User> custodians) {
+		if (ListUtil.isEmpty(custodians)) {
+			return Collections.emptyList();
+		}
+
+		Collection<Custodian> results = new ArrayList<Custodian>();
+		for (User custodian: custodians) {
+			Custodian result = castUserGroupToCustodian(custodian);
+			if (result != null) {
+				results.add(result);
+			}
+		}
+		return results;
+	}
 
 }

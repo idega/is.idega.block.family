@@ -37,6 +37,8 @@ import com.idega.util.IWTimestamp;
 
 public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 
+	private static final long serialVersionUID = 3875912690930541866L;
+
 	private static final String METADATA_HAS_STUDIES = "has_studies";
 	private static final String METADATA_STUDIES = "studies";
 	private static final String METADATA_STUDY_START = "study_start";
@@ -44,7 +46,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 	private static final String METADATA_NATIONALITY = "nationality";
 	private static final String METADATA_MARITAL_STATUS = "marital_status";
 
-	public Collection getChildrenInCustody() throws NoChildrenFound {
+	@Override
+	public Collection<User> getChildrenInCustody() throws NoChildrenFound {
 		try {
 			return getFamilyLogic().getChildrenInCustodyOf(this);
 		}
@@ -52,7 +55,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public boolean isCustodianOf(Child child) {
 		try {
 			return getFamilyLogic().isCustodianOf(this, child);
@@ -61,7 +65,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public User getSpouse() throws NoSpouseFound {
 		try {
 			return getFamilyLogic().getSpouseFor(this);
@@ -70,7 +75,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public User getCohabitant() throws NoCohabitantFound {
 		try {
 			return getFamilyLogic().getCohabitantFor(this);
@@ -79,7 +85,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public Phone getHomePhone() throws NoPhoneFoundException {
 		try {
 			return getUserBusiness().getUsersHomePhone(this);
@@ -88,7 +95,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public Phone getWorkPhone() throws NoPhoneFoundException {
 		try {
 			return getUserBusiness().getUsersWorkPhone(this);
@@ -97,7 +105,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public Phone getMobilePhone() throws NoPhoneFoundException {
 		try {
 			return getUserBusiness().getUsersMobilePhone(this);
@@ -106,7 +115,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public Email getEmail() throws NoEmailFoundException {
 		try {
 			return getUserBusiness().getUsersMainEmail(this);
@@ -115,7 +125,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public void setHomePhone(String homePhone) {
 		try {
 			getUserBusiness().updateUserHomePhone(this, homePhone);
@@ -125,6 +136,7 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 	}
 
+	@Override
 	public void setWorkPhone(String workPhone) {
 		try {
 			getUserBusiness().updateUserWorkPhone(this, workPhone);
@@ -134,6 +146,7 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 	}
 
+	@Override
 	public void setMobilePhone(String mobilePhone) {
 		try {
 			getUserBusiness().updateUserMobilePhone(this, mobilePhone);
@@ -143,6 +156,7 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 	}
 
+	@Override
 	public void setEmail(String email) {
 		try {
 			getUserBusiness().updateUserMail(this, email);
@@ -154,7 +168,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			throw new IBORuntimeException(re);
 		}
 	}
-	
+
+	@Override
 	public boolean hasStudies() {
 		String meta = getMetaData(METADATA_HAS_STUDIES);
 		if (meta != null) {
@@ -162,15 +177,18 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 		return false;
 	}
-	
+
+	@Override
 	public void setHasStudies(boolean hasStudies) {
 		setMetaData(METADATA_HAS_STUDIES, String.valueOf(hasStudies), "java.lang.Boolean");
 	}
-	
+
+	@Override
 	public String getStudies() {
 		return getMetaData(METADATA_STUDIES);
 	}
-	
+
+	@Override
 	public void setStudies(String studies) {
 		if (studies != null && studies.length() > 0) {
 			setMetaData(METADATA_STUDIES, studies, "java.lang.String");
@@ -179,7 +197,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			removeMetaData(METADATA_STUDIES);
 		}
 	}
-	
+
+	@Override
 	public Date getStudyStart() {
 		String meta = getMetaData(METADATA_STUDY_START);
 		if (meta != null) {
@@ -187,7 +206,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 		return null;
 	}
-	
+
+	@Override
 	public void setStudyStart(Date date) {
 		if (date != null) {
 			setMetaData(METADATA_STUDY_START, date.toString());
@@ -196,7 +216,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			removeMetaData(METADATA_STUDY_START);
 		}
 	}
-	
+
+	@Override
 	public Date getStudyEnd() {
 		String meta = getMetaData(METADATA_STUDY_END);
 		if (meta != null) {
@@ -204,7 +225,8 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 		return null;
 	}
-	
+
+	@Override
 	public void setStudyEnd(Date date) {
 		if (date != null) {
 			setMetaData(METADATA_STUDY_END, date.toString());
@@ -214,10 +236,12 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 		}
 	}
 
+	@Override
 	public String getNationality() {
 		return getMetaData(METADATA_NATIONALITY);
 	}
-	
+
+	@Override
 	public void setNationality(String nationality) {
 		if (nationality != null && nationality.length() > 0) {
 			setMetaData(METADATA_NATIONALITY, nationality, "java.lang.String");
@@ -226,11 +250,13 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			removeMetaData(METADATA_NATIONALITY);
 		}
 	}
-	
+
+	@Override
 	public String getMaritalStatus() {
 		return getMetaData(METADATA_MARITAL_STATUS);
 	}
-	
+
+	@Override
 	public void setMaritalStatus(String maritalStatus) {
 		if (maritalStatus != null && maritalStatus.length() > 0) {
 			setMetaData(METADATA_MARITAL_STATUS, maritalStatus, "java.lang.String");
@@ -239,10 +265,10 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 			removeMetaData(METADATA_MARITAL_STATUS);
 		}
 	}
-	
+
 	private UserBusiness getUserBusiness() {
 		try {
-			return (UserBusiness) IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), UserBusiness.class);
+			return IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), UserBusiness.class);
 		}
 		catch (IBOLookupException ile) {
 			throw new IBORuntimeException(ile);
@@ -251,13 +277,14 @@ public class CustodianBMPBean extends UserBMPBean implements User, Custodian {
 
 	private FamilyLogic getFamilyLogic() {
 		try {
-			return (FamilyLogic) IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), FamilyLogic.class);
+			return IBOLookup.getServiceInstance(getIWMainApplication().getIWApplicationContext(), FamilyLogic.class);
 		}
 		catch (IBOLookupException ile) {
 			throw new IBORuntimeException(ile);
 		}
 	}
 
+	@Override
 	public Integer ejbFindUserForUserGroup(Group group) throws FinderException {
 		return super.ejbFindUserForUserGroup(group);
 	}
