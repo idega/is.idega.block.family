@@ -10,7 +10,9 @@
 package is.idega.block.family.data;
 
 import java.util.Collection;
+
 import javax.ejb.FinderException;
+
 import com.idega.data.IDOHome;
 import com.idega.data.IDORelationshipException;
 import com.idega.user.data.User;
@@ -18,7 +20,7 @@ import com.idega.user.data.User;
 
 /**
  * Last modified: $Date: 2005/05/22 16:30:52 $ by $Author: laddi $
- * 
+ *
  * @author <a href="mailto:laddi@idega.com">laddi</a>
  * @version $Revision: 1.3 $
  */
@@ -31,12 +33,12 @@ public interface FamilyMemberHome extends IDOHome {
 	/**
 	 * @see is.idega.block.family.data.FamilyMemberBMPBean#ejbFindAll
 	 */
-	public Collection findAll() throws FinderException;
+	public Collection<FamilyMember> findAll() throws FinderException;
 
 	/**
 	 * @see is.idega.block.family.data.FamilyMemberBMPBean#ejbFindAllByFamilyNR
 	 */
-	public Collection findAllByFamilyNR(String familyNr) throws FinderException;
+	public Collection<FamilyMember> findAllByFamilyNR(String familyNr) throws FinderException;
 
 	/**
 	 * @see is.idega.block.family.data.FamilyMemberBMPBean#ejbFindForUser
