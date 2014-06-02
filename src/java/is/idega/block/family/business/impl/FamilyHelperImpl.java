@@ -811,7 +811,6 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * is.idega.block.family.business.FamilyHelper#getMaritalStatusOfCurrentUser
 	 * ()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public String getMaritalStatus(String userId) {
 		IWResourceBundle iwrb = getResourceBundle(getBundle(FamilyConstants.IW_BUNDLE_IDENTIFIER));
@@ -966,7 +965,6 @@ public class FamilyHelperImpl extends DefaultSpringBean implements FamilyHelper 
 	 * @param userId some {@link User#getPrimaryKey()}, who's parents yout want to get.
 	 * @return parents in {@link User} form.
 	 */
-	@SuppressWarnings("unchecked")
 	private Collection<User> getParents(String userId) {
 		FamilyLogic familyLogic = getServiceInstance(FamilyLogic.class);
 		User user = getUser(userId);
