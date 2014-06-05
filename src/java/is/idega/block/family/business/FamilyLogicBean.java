@@ -10,6 +10,7 @@ import is.idega.block.family.data.FamilyMemberHome;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -768,7 +769,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public UserBusiness getUserBusiness() {
 		try {
-			return (UserBusiness) this.getServiceInstance(UserBusiness.class);
+			return this.getServiceInstance(UserBusiness.class);
 		}
 		catch (IBOLookupException ile) {
 			throw new IBORuntimeException(ile);
@@ -784,7 +785,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	public void registerAsDeceased(User user, Date deceasedDate) {
 		try {
 			removeAllFamilyRelationsForUser(user);
-			UserStatusBusiness userStatusService = (UserStatusBusiness) getServiceInstance(UserStatusBusiness.class);
+			UserStatusBusiness userStatusService = getServiceInstance(UserStatusBusiness.class);
 			userStatusService.setUserAsDeceased((Integer) user.getPrimaryKey(), deceasedDate);
 		}
 		catch (RemoteException re) {
@@ -796,7 +797,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	public void registerAsDeceased(User user, Date deceasedDate, User performer) {
 		try {
 			removeAllFamilyRelationsForUser(user, performer);
-			UserStatusBusiness userStatusService = (UserStatusBusiness) getServiceInstance(UserStatusBusiness.class);
+			UserStatusBusiness userStatusService = getServiceInstance(UserStatusBusiness.class);
 			userStatusService.setUserAsDeceased((Integer) user.getPrimaryKey(), deceasedDate);
 		}
 		catch (RemoteException re) {
@@ -1172,5 +1173,19 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return Collections.emptyList();
 	}
 	
+	@Override
+	public Collection<User> getRelatedUsers(User user){
+		return user.getRelatedUsers(getAllRelations());
+	}
 	
+	private Collection<String> getAllRelations(){
+		return Arrays.asList(
+				RELATION_TYPE_GROUP_PARENT,
+				RELATION_TYPE_GROUP_CUSTODIAN,
+				RELATION_TYPE_GROUP_CHILD,
+				RELATION_TYPE_GROUP_SPOUSE,
+				RELATION_TYPE_GROUP_SIBLING,
+				RELATION_TYPE_GROUP_COHABITANT
+				);
+	}
 }
