@@ -43,7 +43,7 @@ import com.idega.util.ListUtil;
  * Title: idegaWeb Member User Subsystem Description: idegaWeb Member User
  * Subsystem is the base system for Membership management Copyright: Copyright
  * (c) 2002 Company: idega
- * 
+ *
  * @author <a href="mailto:tryggvi@idega.is">Tryggvi Larusson</a>
  * @version 1.0
  */
@@ -51,7 +51,7 @@ import com.idega.util.ListUtil;
 public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	private static final long serialVersionUID = -8696169731242119560L;
-	
+
 	private static final String RELATION_TYPE_GROUP_PARENT = "FAM_PARENT";
 	private static final String RELATION_TYPE_GROUP_CUSTODIAN = "FAM_CUSTODIAN";
 	private static final String RELATION_TYPE_GROUP_CHILD = "FAM_CHILD";
@@ -104,14 +104,13 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
-	protected Collection<User> convertGroupCollectionToUserCollection(
-			Collection<Group> coll, String relationType) {
+	protected Collection<User> convertGroupCollectionToUserCollection(Collection<Group> coll, String relationType) {
 		if (ListUtil.isEmpty(coll)) {
 			return Collections.emptyList();
 		}
 
 		Collection<User> newColl = new ArrayList<User>();
-		for (Group group : coll) {
+		for (Group group: coll) {
 			newColl.add(convertGroupToUser(group, relationType));
 		}
 
@@ -188,12 +187,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	public Child getChild(User child) {
 		if (child instanceof Child)
 			return (Child) child;
-		
+
 		if (child == null) {
 			getLogger().warning("Provided user object (expected child as user) is null!");
 			return null;
 		}
-		
+
 		try {
 			return getChildHome().findByPrimaryKey(child.getPrimaryKey());
 		} catch (FinderException fe) {
@@ -227,18 +226,22 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 *           if no children are found
 	 */
 	@Override
-	public Collection getChildrenFor(User user) throws NoChildrenFound {
+	public Collection<User> getChildrenFor(User user) throws NoChildrenFound {
+		if (user == null) {
+			getLogger().warning("User is not provided");
+			return Collections.emptyList();
+		}
+
 		String userName = null;
 		try {
 			userName = user.getName();
 
-			Collection coll = user.getRelatedBy(RELATION_TYPE_GROUP_PARENT);
+			Collection<Group> coll = user.getRelatedBy(RELATION_TYPE_GROUP_PARENT);
 
 			if (coll == null || coll.isEmpty()) {
 				throw new NoChildrenFound(userName);
 			}
 			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_PARENT);
-			// return coll;
 		}
 		catch (FinderException e) {
 			throw new NoChildrenFound(userName);
@@ -253,17 +256,21 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 */
 	@Override
 	public Collection<User> getChildrenInCustodyOf(User user) throws NoChildrenFound {
+		if (user == null) {
+			getLogger().warning("User is not provided");
+			return Collections.emptyList();
+		}
+
 		String userName = null;
 		try {
 			userName = user.getName();
 
-			Collection coll = user.getRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
+			Collection<Group> coll = user.getRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
 
 			if (coll == null || coll.isEmpty()) {
 				throw new NoChildrenFound(userName);
 			}
 			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_CUSTODIAN);
-			// return coll;
 		}
 		catch (FinderException e) {
 			throw new NoChildrenFound(userName);
@@ -291,7 +298,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return Collections.emptyList();
 		}
 
-		return convertGroupCollectionToUserCollection(coll, 
+		return convertGroupCollectionToUserCollection(coll,
 				RELATION_TYPE_GROUP_SIBLING);
 	}
 
@@ -305,10 +312,10 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		String userName = null;
 		try {
 			userName = user.getName();
-			Collection coll = user.getRelatedBy(RELATION_TYPE_GROUP_SPOUSE);
-			Iterator spouseIter = coll.iterator();
+			Collection<Group> coll = user.getRelatedBy(RELATION_TYPE_GROUP_SPOUSE);
+			Iterator<Group> spouseIter = coll.iterator();
 			if (spouseIter.hasNext()) {
-				Group group = (Group) spouseIter.next();
+				Group group = spouseIter.next();
 				return convertGroupToUser(group, RELATION_TYPE_GROUP_SPOUSE);
 			}
 			else {
@@ -330,8 +337,8 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		String userName = null;
 		try {
 			userName = user.getName();
-			Collection coll = user.getRelatedBy(RELATION_TYPE_GROUP_COHABITANT);
-			Group group = (Group) coll.iterator().next();
+			Collection<Group> coll = user.getRelatedBy(RELATION_TYPE_GROUP_COHABITANT);
+			Group group = coll.iterator().next();
 			return convertGroupToUser(group, RELATION_TYPE_GROUP_COHABITANT);
 		}
 		catch (Exception e) {
@@ -347,16 +354,19 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 *           if no custodians are found
 	 */
 	@Override
-	public Collection getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound {
+	public Collection<User> getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound {
+		if (user == null) {
+			return Collections.emptyList();
+		}
+
 		String userName = null;
 		try {
 			userName = user.getName();
-			Collection coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
+			Collection<Group> coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
 			if (coll == null || coll.isEmpty()) {
 				if (returnParentsIfNotFound) {
 					try {
-						coll = this.getParentsFor(user);// todo remove this when database is fixed
-						return coll;
+						return getParentsFor(user);// todo remove this when database is fixed
 					}
 					catch (NoParentFound ex) {
 						throw new NoCustodianFound(userName);
@@ -374,7 +384,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	}
 
 	@Override
-	public Collection getCustodiansFor(User user) throws NoCustodianFound {
+	public Collection<User> getCustodiansFor(User user) throws NoCustodianFound {
 		return getCustodiansFor(user, true);
 	}
 
@@ -385,11 +395,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 *           if no custodians are found
 	 */
 	@Override
-	public Collection getParentsFor(User user) throws NoParentFound {
+	public Collection<User> getParentsFor(User user) throws NoParentFound {
 		String userName = null;
 		try {
 			userName = user.getName();
-			Collection coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_PARENT);
+			Collection<Group> coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_PARENT);
 			if (coll == null || coll.isEmpty()) {
 				throw new NoParentFound(userName);
 			}
@@ -462,7 +472,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public boolean isChildOf(User childToCheck, User parent) {
 		try {
-			Collection coll = getChildrenFor(parent);
+			Collection<User> coll = getChildrenFor(parent);
 			return coll.contains(childToCheck);
 		}
 		catch (NoChildrenFound ex) {
@@ -477,7 +487,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public boolean isChildInCustodyOf(User childToCheck, User parent) {
 		try {
-			Collection coll = getChildrenInCustodyOf(parent);
+			Collection<User> coll = getChildrenInCustodyOf(parent);
 			return coll.contains(childToCheck);
 		}
 		catch (NoChildrenFound ex) {
@@ -508,7 +518,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public boolean isParentOf(User parentToCheck, User child) {
 		try {
-			Collection coll = getParentsFor(child);
+			Collection<User> coll = getParentsFor(child);
 			return coll.contains(parentToCheck);
 		}
 		catch (NoParentFound ex) {
@@ -523,7 +533,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public boolean isCustodianOf(User custodianToCheck, User child) {
 		try {
-			Collection coll = getChildrenInCustodyOf(custodianToCheck);
+			Collection<User> coll = getChildrenInCustodyOf(custodianToCheck);
 
 			return coll.contains(child);
 		}
@@ -708,7 +718,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_CHILD.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -718,7 +728,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_PARENT.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -728,7 +738,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_SIBLING.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -738,7 +748,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_SPOUSE.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -748,7 +758,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_COHABITANT.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -758,7 +768,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	/**
 	 * Returns the RELATION_TYPE_GROUP_CUSTODIAN.
-	 * 
+	 *
 	 * @return String
 	 */
 	@Override
@@ -812,11 +822,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Deprecated
 	public void removeAllFamilyRelationsForUser(User user) {
 		try {
-			Collection children = getChildrenFor(user);
+			Collection<User> children = getChildrenFor(user);
 			if (children != null) {
-				Iterator kids = children.iterator();
+				Iterator<User> kids = children.iterator();
 				while (kids.hasNext()) {
-					User child = (User) kids.next();
+					User child = kids.next();
 					removeAsChildFor(child, user);
 				}
 			}
@@ -829,11 +839,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection children = getChildrenInCustodyOf(user);
+			Collection<User> children = getChildrenInCustodyOf(user);
 			if (children != null) {
-				Iterator kids = children.iterator();
+				Iterator<User> kids = children.iterator();
 				while (kids.hasNext()) {
-					User child = (User) kids.next();
+					User child = kids.next();
 					removeAsCustodianFor(user, child);
 				}
 			}
@@ -859,11 +869,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection parents = getParentsFor(user);
+			Collection<User> parents = getParentsFor(user);
 			if (parents != null) {
-				Iterator ents = parents.iterator();
+				Iterator<User> ents = parents.iterator();
 				while (ents.hasNext()) {
-					User ent = (User) ents.next();
+					User ent = ents.next();
 					removeAsParentFor(ent, user);
 				}
 			}
@@ -876,11 +886,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection custodians = getCustodiansFor(user);
+			Collection<User> custodians = getCustodiansFor(user);
 			if (custodians != null) {
-				Iterator ents = custodians.iterator();
+				Iterator<User> ents = custodians.iterator();
 				while (ents.hasNext()) {
-					User ent = (User) ents.next();
+					User ent = ents.next();
 					removeAsCustodianFor(ent, user);
 				}
 			}
@@ -893,11 +903,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection siblings = getSiblingsFor(user);
+			Collection<User> siblings = getSiblingsFor(user);
 			if (siblings != null) {
-				Iterator sibling = siblings.iterator();
+				Iterator<User> sibling = siblings.iterator();
 				while (sibling.hasNext()) {
-					User sibl = (User) sibling.next();
+					User sibl = sibling.next();
 					removeAsSiblingFor(sibl, user);
 				}
 			}
@@ -911,11 +921,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	@Override
 	public void removeAllFamilyRelationsForUser(User user, User performer) {
 		try {
-			Collection children = getChildrenFor(user);
+			Collection<User> children = getChildrenFor(user);
 			if (children != null) {
-				Iterator kids = children.iterator();
+				Iterator<User> kids = children.iterator();
 				while (kids.hasNext()) {
-					User child = (User) kids.next();
+					User child = kids.next();
 					removeAsChildFor(child, user, performer);
 				}
 			}
@@ -928,11 +938,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection children = getChildrenInCustodyOf(user);
+			Collection<User> children = getChildrenInCustodyOf(user);
 			if (children != null) {
-				Iterator kids = children.iterator();
+				Iterator<User> kids = children.iterator();
 				while (kids.hasNext()) {
-					User child = (User) kids.next();
+					User child = kids.next();
 					removeAsCustodianFor(user, child, performer);
 				}
 			}
@@ -958,11 +968,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection parents = getParentsFor(user);
+			Collection<User> parents = getParentsFor(user);
 			if (parents != null) {
-				Iterator ents = parents.iterator();
+				Iterator<User> ents = parents.iterator();
 				while (ents.hasNext()) {
-					User ent = (User) ents.next();
+					User ent = ents.next();
 					removeAsParentFor(ent, user, performer);
 				}
 			}
@@ -975,11 +985,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection custodians = getCustodiansFor(user);
+			Collection<User> custodians = getCustodiansFor(user);
 			if (custodians != null) {
-				Iterator ents = custodians.iterator();
+				Iterator<User> ents = custodians.iterator();
 				while (ents.hasNext()) {
-					User ent = (User) ents.next();
+					User ent = ents.next();
 					removeAsCustodianFor(ent, user, performer);
 				}
 			}
@@ -992,11 +1002,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 
 		try {
-			Collection siblings = getSiblingsFor(user);
+			Collection<User> siblings = getSiblingsFor(user);
 			if (siblings != null) {
-				Iterator sibling = siblings.iterator();
+				Iterator<User> sibling = siblings.iterator();
 				while (sibling.hasNext()) {
-					User sibl = (User) sibling.next();
+					User sibl = sibling.next();
 					removeAsSiblingFor(sibl, user, performer);
 				}
 			}
@@ -1039,9 +1049,9 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	public FamilyData getFamily(String familyNr) throws FinderException {
 		FamilyData familyData = new FamilyData();
 		FamilyMemberHome familyMemberHome = getFamilyMemberHome();
-		Iterator iter = familyMemberHome.findAllByFamilyNR(familyNr).iterator();
+		Iterator<FamilyMember> iter = familyMemberHome.findAllByFamilyNR(familyNr).iterator();
 		while (iter.hasNext()) {
-			FamilyMember familyMember = (FamilyMember) iter.next();
+			FamilyMember familyMember = iter.next();
 			switch (familyMember.getRole()) {
 				case FamilyMember.FATHER: {
 					familyData.setHusband(familyMember.getUser());
@@ -1064,16 +1074,15 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Collection<User> getChildrenForUserUnderAge(User user, int age) throws NoChildrenFound, RemoteException {
-		Collection<Object> allChildren = getChildrenFor(user);
+		Collection<User> allChildren = getChildrenFor(user);
 		if (ListUtil.isEmpty(allChildren)) {
 			return null;
 		}
-		
+
 		IWTimestamp dateBeforeXYears = new IWTimestamp(System.currentTimeMillis());
 		dateBeforeXYears.setYear(dateBeforeXYears.getYear() - age);
-		
+
 		Collection<User> childrenUnderAge = new ArrayList<User>();
 		for (Object object: allChildren) {
 			if (object instanceof Custodian) {
@@ -1083,20 +1092,20 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 					getLogger().log(Level.WARNING, "Error getting user", e);
 				}
 			}
-			
+
 			if (object instanceof User) {
 				User child = (User) object;
-				
+
 				Date dateOfBirth = child.getDateOfBirth();
 				if (dateOfBirth == null)
 					continue;
-				
+
 				IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
 				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears))
 					childrenUnderAge.add(child);
 			}
 		}
-		
+
 		return childrenUnderAge;
 	}
 
@@ -1148,7 +1157,6 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Collection<User> getRelatedUsers(User user, String relationType)
 			throws RemoteException, FinderException {
 		if(relationType.equals(getChildRelationType())){
@@ -1188,4 +1196,21 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 				RELATION_TYPE_GROUP_COHABITANT
 				);
 	}
+
+	@Override
+	public Collection<Custodian> getConvertedUsersAsCustodians(Collection<User> custodians) {
+		if (ListUtil.isEmpty(custodians)) {
+			return Collections.emptyList();
+		}
+
+		Collection<Custodian> results = new ArrayList<Custodian>();
+		for (User custodian: custodians) {
+			Custodian result = castUserGroupToCustodian(custodian);
+			if (result != null) {
+				results.add(result);
+			}
+		}
+		return results;
+	}
+
 }

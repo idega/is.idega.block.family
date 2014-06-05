@@ -11,11 +11,11 @@ import com.idega.data.IDOEntity;
 import com.idega.user.data.User;
 
 public interface Child extends IDOEntity, User {
-	
-	
+
+
 	/**
-	 * 
-	 * @return all siblings for this {@link Child} or 
+	 *
+	 * @return all siblings for this {@link Child} or
 	 * {@link Collections#emptyList()} on failure;
 	 */
 	public Collection<User> getSiblings();
@@ -68,7 +68,7 @@ public interface Child extends IDOEntity, User {
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getRelatives
 	 */
-	public List getRelatives();
+	public List<Relative> getRelatives();
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getRelatives
@@ -104,7 +104,7 @@ public interface Child extends IDOEntity, User {
 	 * @see is.idega.block.family.data.ChildBMPBean#removeExtraCustodian
 	 */
 	public void removeExtraCustodian();
-	
+
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#removeRelative
 	 */

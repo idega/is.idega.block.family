@@ -16,7 +16,6 @@ import is.idega.block.family.business.NoSpouseFound;
 import java.sql.Date;
 import java.util.Collection;
 
-
 import com.idega.core.contact.data.Email;
 import com.idega.core.contact.data.Phone;
 import com.idega.data.IDOEntity;
@@ -30,7 +29,7 @@ import com.idega.user.data.User;
  * TODO laddi Describe Type Custodian
  * </p>
  *  Last modified: $Date$ by $Author$
- * 
+ *
  * @author <a href="mailto:laddi@idega.com">laddi</a>
  * @version $Revision$
  */
@@ -39,7 +38,7 @@ public interface Custodian extends IDOEntity, User {
 	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#getChildrenInCustody
 	 */
-	public Collection getChildrenInCustody() throws NoChildrenFound;
+	public Collection<User> getChildrenInCustody() throws NoChildrenFound;
 
 	/**
 	 * @see is.idega.block.family.data.CustodianBMPBean#isCustodianOf
