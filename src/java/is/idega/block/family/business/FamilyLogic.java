@@ -335,7 +335,7 @@ public interface FamilyLogic extends IBOService {
 	 * @return
 	 */
 	public Collection<User> getRelatedUsers(User user, String relationType) throws RemoteException, FinderException;
+	public Collection<User> getRelatedUsers(User user);
 
 	public Collection<Custodian> getConvertedUsersAsCustodians(Collection<User> custodians);
-
 }

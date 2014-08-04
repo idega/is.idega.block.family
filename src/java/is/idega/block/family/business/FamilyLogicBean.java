@@ -10,6 +10,7 @@ import is.idega.block.family.data.FamilyMemberHome;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -1178,6 +1179,22 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return cohabitants;
 		}
 		return Collections.emptyList();
+	}
+	
+	@Override
+	public Collection<User> getRelatedUsers(User user){
+		return user.getRelatedUsers(getAllRelations());
+	}
+	
+	private Collection<String> getAllRelations(){
+		return Arrays.asList(
+				RELATION_TYPE_GROUP_PARENT,
+				RELATION_TYPE_GROUP_CUSTODIAN,
+				RELATION_TYPE_GROUP_CHILD,
+				RELATION_TYPE_GROUP_SPOUSE,
+				RELATION_TYPE_GROUP_SIBLING,
+				RELATION_TYPE_GROUP_COHABITANT
+				);
 	}
 
 	@Override
