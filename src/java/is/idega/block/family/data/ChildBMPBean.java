@@ -231,20 +231,22 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 					(a == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) +
 					"_personalID");
 
-			if (!StringUtil.isEmpty(name) && !StringUtil.isEmpty(personalID)) {
+			if (!StringUtil.isEmpty(name)) {
 				Relative relative = new Relative();
-				if (personalID.indexOf("_") != -1) {
-					String userPK = personalID.substring(personalID.indexOf("_") + 1);
-					try {
-						User user = ((UserHome) IDOLookup.getHome(User.class))
-								.findByPrimaryKey(new Integer(userPK));
-						if (user != null) {
-							personalID = user.getPersonalID();
+				if (!StringUtil.isEmpty(personalID)) {
+					if (personalID.indexOf("_") != -1) {
+						String userPK = personalID.substring(personalID.indexOf("_") + 1);
+						try {
+							User user = ((UserHome) IDOLookup.getHome(User.class))
+									.findByPrimaryKey(new Integer(userPK));
+							if (user != null) {
+								personalID = user.getPersonalID();
+							}
+						} catch (Exception ile) {
+							getLogger().log(Level.WARNING,
+									"Failed to get " + User.class.getSimpleName() +
+									" by primary key: " + userPK);
 						}
-					} catch (Exception ile) {
-						getLogger().log(Level.WARNING,
-								"Failed to get " + User.class.getSimpleName() +
-								" by primary key: " + userPK);
 					}
 				}
 
