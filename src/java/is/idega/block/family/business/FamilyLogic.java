@@ -1,11 +1,6 @@
 package is.idega.block.family.business;
 
 
-import is.idega.block.family.data.Child;
-import is.idega.block.family.data.Custodian;
-import is.idega.block.family.data.FamilyData;
-import is.idega.block.family.data.FamilyMember;
-
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,6 +14,11 @@ import com.idega.business.IBOService;
 import com.idega.idegaweb.IWResourceBundle;
 import com.idega.user.business.UserBusiness;
 import com.idega.user.data.User;
+
+import is.idega.block.family.data.Child;
+import is.idega.block.family.data.Custodian;
+import is.idega.block.family.data.FamilyData;
+import is.idega.block.family.data.FamilyMember;
 
 public interface FamilyLogic extends IBOService {
 
@@ -65,6 +65,7 @@ public interface FamilyLogic extends IBOService {
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor
 	 */
 	public Collection<User> getCustodiansFor(User user, boolean returnParentsIfNotFound) throws NoCustodianFound, RemoteException;
+	public Collection<User> getCustodiansFor(com.idega.user.data.bean.User user, boolean returnParentsIfNotFound) throws NoCustodianFound, RemoteException;
 
 	/**
 	 * @see is.idega.block.family.business.FamilyLogicBean#getCustodiansFor

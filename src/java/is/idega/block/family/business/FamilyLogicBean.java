@@ -1,13 +1,5 @@
 package is.idega.block.family.business;
 
-import is.idega.block.family.data.Child;
-import is.idega.block.family.data.ChildHome;
-import is.idega.block.family.data.Custodian;
-import is.idega.block.family.data.CustodianHome;
-import is.idega.block.family.data.FamilyData;
-import is.idega.block.family.data.FamilyMember;
-import is.idega.block.family.data.FamilyMemberHome;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,6 +30,14 @@ import com.idega.user.data.UserHome;
 import com.idega.util.CoreConstants;
 import com.idega.util.IWTimestamp;
 import com.idega.util.ListUtil;
+
+import is.idega.block.family.data.Child;
+import is.idega.block.family.data.ChildHome;
+import is.idega.block.family.data.Custodian;
+import is.idega.block.family.data.CustodianHome;
+import is.idega.block.family.data.FamilyData;
+import is.idega.block.family.data.FamilyMember;
+import is.idega.block.family.data.FamilyMemberHome;
 
 /**
  * Title: idegaWeb Member User Subsystem Description: idegaWeb Member User
@@ -346,6 +346,11 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
+	public Collection<User> getCustodiansFor(com.idega.user.data.bean.User user, boolean returnParentsIfNotFound) throws NoCustodianFound {
+		return getCustodiansFor(user.getId(), user.getName(), returnParentsIfNotFound);
+	}
+
 	/**
 	 * @return A Collection of User object who are custodians of a user. If no
 	 *         custodian is found it will return the parents of that user. Returns
@@ -359,27 +364,27 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return Collections.emptyList();
 		}
 
-		String userName = null;
+		return getCustodiansFor(Integer.valueOf(user.getId()), user.getName(), returnParentsIfNotFound);
+	}
+
+	private Collection<User> getCustodiansFor(Integer id, String name, boolean returnParentsIfNotFound) throws NoCustodianFound {
 		try {
-			userName = user.getName();
-			Collection<Group> coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
+			GroupHome groupHome = getGroupHome();
+			Collection<Group> coll = groupHome.getReverseRelatedBy(id, RELATION_TYPE_GROUP_CUSTODIAN);
 			if (coll == null || coll.isEmpty()) {
 				if (returnParentsIfNotFound) {
 					try {
-						return getParentsFor(user);// todo remove this when database is fixed
+						return getParentsFor(id, name);
+					} catch (NoParentFound ex) {
+						throw new NoCustodianFound(name);
 					}
-					catch (NoParentFound ex) {
-						throw new NoCustodianFound(userName);
-					}
-				}
-				else {
-					throw new NoCustodianFound(userName);
+				} else {
+					throw new NoCustodianFound(name);
 				}
 			}
 			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_CUSTODIAN);
-		}
-		catch (FinderException e) {
-			throw new NoCustodianFound(userName);
+		} catch (FinderException e) {
+			throw new NoCustodianFound(name);
 		}
 	}
 
@@ -396,17 +401,23 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 	 */
 	@Override
 	public Collection<User> getParentsFor(User user) throws NoParentFound {
-		String userName = null;
+		if (user == null) {
+			return Collections.emptyList();
+		}
+		return getParentsFor(Integer.valueOf(user.getId()), user.getName());
+	}
+
+	private Collection<User> getParentsFor(Integer id, String name) throws NoParentFound {
 		try {
-			userName = user.getName();
-			Collection<Group> coll = user.getReverseRelatedBy(RELATION_TYPE_GROUP_PARENT);
+			GroupHome groupHome = getGroupHome();
+			Collection<Group> coll = groupHome.getReverseRelatedBy(id, RELATION_TYPE_GROUP_PARENT);
 			if (coll == null || coll.isEmpty()) {
-				throw new NoParentFound(userName);
+				throw new NoParentFound(name);
 			}
 			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_PARENT);
 		}
 		catch (FinderException e) {
-			throw new NoParentFound(userName);
+			throw new NoParentFound(name);
 		}
 	}
 
@@ -1180,12 +1191,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 		return Collections.emptyList();
 	}
-	
+
 	@Override
 	public Collection<User> getRelatedUsers(User user){
 		return user.getRelatedUsers(getAllRelations());
 	}
-	
+
 	private Collection<String> getAllRelations(){
 		return Arrays.asList(
 				RELATION_TYPE_GROUP_PARENT,
