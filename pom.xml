@@ -3,12 +3,10 @@
   <parent>
     <groupId>com.idega.block.egov</groupId>
     <artifactId>com.idega.block.egov</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>6.0.0-SNAPSHOT</version>
   </parent>
   <name>Family</name>
-  <groupId>com.idega.block.egov</groupId>
   <artifactId>is.idega.block.family</artifactId>
-  <version>5.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
   <inceptionYear>2000</inceptionYear>
   <description>idegaWeb Family Block</description>
