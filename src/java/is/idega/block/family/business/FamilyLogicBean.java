@@ -265,12 +265,17 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		try {
 			userName = user.getName();
 
-			Collection<Group> coll = user.getRelatedBy(RELATION_TYPE_GROUP_CUSTODIAN);
+			String relation = RELATION_TYPE_GROUP_CUSTODIAN;
+			Collection<Group> coll = user.getRelatedBy(relation);
 
+			if (ListUtil.isEmpty(coll)) {
+				relation = RELATION_TYPE_GROUP_PARENT;
+				coll = user.getRelatedBy(relation);
+			}
 			if (coll == null || coll.isEmpty()) {
 				throw new NoChildrenFound(userName);
 			}
-			return convertGroupCollectionToUserCollection(coll, RELATION_TYPE_GROUP_CUSTODIAN);
+			return convertGroupCollectionToUserCollection(coll, relation);
 		}
 		catch (FinderException e) {
 			throw new NoChildrenFound(userName);
