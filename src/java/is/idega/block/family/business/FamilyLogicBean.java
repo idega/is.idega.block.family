@@ -185,8 +185,9 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	@Override
 	public Child getChild(User child) {
-		if (child instanceof Child)
+		if (child instanceof Child) {
 			return (Child) child;
+		}
 
 		if (child == null) {
 			getLogger().warning("Provided user object (expected child as user) is null!");
@@ -824,7 +825,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		try {
 			removeAllFamilyRelationsForUser(user, performer);
 			UserStatusBusiness userStatusService = getServiceInstance(UserStatusBusiness.class);
-			userStatusService.setUserAsDeceased((Integer) user.getPrimaryKey(), deceasedDate);
+			userStatusService.setUserAsDeceased(user, deceasedDate);
 		}
 		catch (RemoteException re) {
 			throw new IBORuntimeException(re);
@@ -1113,12 +1114,14 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 				User child = (User) object;
 
 				Date dateOfBirth = child.getDateOfBirth();
-				if (dateOfBirth == null)
+				if (dateOfBirth == null) {
 					continue;
+				}
 
 				IWTimestamp childBirthDay = new IWTimestamp(dateOfBirth);
-				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears))
+				if (childBirthDay.isLaterThanOrEquals(dateBeforeXYears)) {
 					childrenUnderAge.add(child);
+				}
 			}
 		}
 
@@ -1127,12 +1130,24 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	@Override
 	public String getRelationName(IWResourceBundle iwrb, String type) {
-		if(type.equals(RELATION_TYPE_GROUP_PARENT)) return iwrb.getLocalizedString("parent", "Parent");
-		if(type.equals(RELATION_TYPE_GROUP_CUSTODIAN)) return iwrb.getLocalizedString("custodian", "Custodian");
-		if(type.equals(RELATION_TYPE_GROUP_CHILD)) return iwrb.getLocalizedString("child", "Child");
-		if(type.equals(RELATION_TYPE_GROUP_SPOUSE)) return iwrb.getLocalizedString("spouse", "Spouse");
-		if(type.equals(RELATION_TYPE_GROUP_SIBLING)) return iwrb.getLocalizedString("sibling", "Sibling");
-		if(type.equals(RELATION_TYPE_GROUP_COHABITANT)) return iwrb.getLocalizedString("cohabitant", "Cohabitant");
+		if(type.equals(RELATION_TYPE_GROUP_PARENT)) {
+			return iwrb.getLocalizedString("parent", "Parent");
+		}
+		if(type.equals(RELATION_TYPE_GROUP_CUSTODIAN)) {
+			return iwrb.getLocalizedString("custodian", "Custodian");
+		}
+		if(type.equals(RELATION_TYPE_GROUP_CHILD)) {
+			return iwrb.getLocalizedString("child", "Child");
+		}
+		if(type.equals(RELATION_TYPE_GROUP_SPOUSE)) {
+			return iwrb.getLocalizedString("spouse", "Spouse");
+		}
+		if(type.equals(RELATION_TYPE_GROUP_SIBLING)) {
+			return iwrb.getLocalizedString("sibling", "Sibling");
+		}
+		if(type.equals(RELATION_TYPE_GROUP_COHABITANT)) {
+			return iwrb.getLocalizedString("cohabitant", "Cohabitant");
+		}
 		return CoreConstants.EMPTY;
 	}
 
