@@ -7,10 +7,6 @@
  */
 package is.idega.block.family.data;
 
-import is.idega.block.family.business.FamilyConstants;
-import is.idega.block.family.business.FamilyLogic;
-import is.idega.block.family.business.NoCustodianFound;
-
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,6 +29,10 @@ import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
 import com.idega.user.data.UserHome;
 import com.idega.util.StringUtil;
+
+import is.idega.block.family.business.FamilyConstants;
+import is.idega.block.family.business.FamilyLogic;
+import is.idega.block.family.business.NoCustodianFound;
 
 public class ChildBMPBean extends UserBMPBean implements User, Child {
 
@@ -339,13 +339,23 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 			return;
 		}
 
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+
+
+		//FIXME: This is not removing, but rather creating a new METADATA/RELATIVE!!!
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
+//		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", "", "java.lang.String");
 		store();
 	}
 
