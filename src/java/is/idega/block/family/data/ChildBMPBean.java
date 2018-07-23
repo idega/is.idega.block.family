@@ -321,10 +321,26 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		}
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name", name, "java.lang.String");
 		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation", relation, "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone", homePhone, "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
-		setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
+		if (StringUtil.isEmpty(homePhone)) {
+			removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone");
+		} else {
+			setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone", homePhone, "java.lang.String");
+		}
+		if (StringUtil.isEmpty(workPhone)) {
+			removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		} else {
+			setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone", workPhone, "java.lang.String");
+		}
+		if (StringUtil.isEmpty(mobilePhone)) {
+			removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
+		} else {
+			setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone", mobilePhone, "java.lang.String");
+		}
+		if (StringUtil.isEmpty(email)) {
+			removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
+		} else {
+			setMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email", email, "java.lang.String");
+		}
 		store();
 	}
 
@@ -342,10 +358,10 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_personalID");
 		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_name");
 		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
-		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_relation");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_homePhone");
 		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
-		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
-		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_workPhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_mobilePhone");
+		removeMetaData(prefix + (number == 1 ? METADATA_RELATIVE_1 : METADATA_RELATIVE_2) + "_email");
 
 
 		//FIXME: This is not removing, but rather creating a new METADATA/RELATIVE!!!
