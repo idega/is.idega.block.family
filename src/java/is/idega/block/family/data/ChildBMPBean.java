@@ -22,12 +22,15 @@ import com.idega.business.IBOLookupException;
 import com.idega.business.IBORuntimeException;
 import com.idega.data.IDOLookup;
 import com.idega.data.IDOLookupException;
+import com.idega.idegaweb.IWMainApplication;
 import com.idega.user.data.Gender;
 import com.idega.user.data.GenderHome;
 import com.idega.user.data.Group;
 import com.idega.user.data.User;
 import com.idega.user.data.UserBMPBean;
 import com.idega.user.data.UserHome;
+import com.idega.util.ListUtil;
+import com.idega.util.StringHandler;
 import com.idega.util.StringUtil;
 
 import is.idega.block.family.business.FamilyConstants;
@@ -162,15 +165,52 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 		return getMetaData(METADATA_RELATION + custodian.getPrimaryKey().toString());
 	}
 
+	private boolean isCustodianFor(User custodian, User child) {
+		if (custodian == null || child == null) {
+			return false;
+		}
+
+		try {
+			FamilyLogic familyLogic = IBOLookup.getServiceInstance(IWMainApplication.getDefaultIWApplicationContext(), FamilyLogic.class);
+			Collection<User> custodians = familyLogic.getCustodiansFor(child, false);
+			if (ListUtil.isEmpty(custodians)) {
+				return false;
+			}
+
+			String id = custodian.getId();
+			for (User childCustodian: custodians) {
+				if (childCustodian.getId().equals(id)) {
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			getLogger().log(Level.WARNING, "Error while checking if " + custodian + " is in custody of child " + child, e);
+		}
+
+		return false;
+	}
+
 	@Override
 	public Custodian getExtraCustodian() {
 		String custodianPK = this.getMetaData(METADATA_OTHER_CUSTODIAN);
-		if (custodianPK != null) {
+		if (StringHandler.isNumeric(custodianPK)) {
 			try {
-				return getCustodianByPrimaryKey(new Integer(custodianPK));
-			}
-			catch (FinderException fe) {
+				Custodian custodian = getCustodianByPrimaryKey(new Integer(custodianPK));
+				if (custodian == null) {
+					return null;
+				}
+
+				//	Double checking if found custodian is currently a custodian of a child
+				if (isCustodianFor(custodian, this)) {
+					return custodian;
+				}
+
+				removeMetaData(METADATA_OTHER_CUSTODIAN);
+				return null;
+			} catch (FinderException fe) {
 				fe.printStackTrace();
+			} catch (Exception e) {
+				getLogger().log(Level.WARNING, "Error getting extra custodian (ID: " + custodianPK + ") for " + this, e);
 			}
 		}
 		return null;
