@@ -172,7 +172,10 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 
 		try {
 			FamilyLogic familyLogic = IBOLookup.getServiceInstance(IWMainApplication.getDefaultIWApplicationContext(), FamilyLogic.class);
-			Collection<User> custodians = familyLogic.getCustodiansFor(child, false);
+			Collection<User> custodians = null;
+			try {
+				custodians = familyLogic.getCustodiansFor(child, false);
+			} catch (Exception e) {}
 			if (ListUtil.isEmpty(custodians)) {
 				return false;
 			}
@@ -205,7 +208,11 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 					return custodian;
 				}
 
-				removeMetaData(METADATA_OTHER_CUSTODIAN);
+				try {
+					removeMetaData(METADATA_OTHER_CUSTODIAN);
+				} catch (Exception e) {
+					getLogger().log(Level.WARNING, "Error removing metadata '" + METADATA_OTHER_CUSTODIAN + "' for " + this, e);
+				}
 				return null;
 			} catch (FinderException fe) {
 				fe.printStackTrace();
