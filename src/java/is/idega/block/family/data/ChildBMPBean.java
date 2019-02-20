@@ -157,7 +157,23 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 
 	@Override
 	public void setRelation(Custodian custodian, String relation) {
+		storeRelation(custodian, relation, false);
+	}
+
+	@Override
+	public void storeRelation(Custodian custodian, String relation) {
+		storeRelation(custodian, relation, true);
+	}
+
+	private void storeRelation(Custodian custodian, String relation, boolean store) {
 		setMetaData(METADATA_RELATION + custodian.getPrimaryKey().toString(), relation, "java.lang.String");
+		if (store) {
+			try {
+				store();
+			} catch (Exception e) {
+				getLogger().log(Level.WARNING, "Error storing child " + this + " after relation (" + relation + ") with " + custodian + " added");
+			}
+		}
 	}
 
 	@Override

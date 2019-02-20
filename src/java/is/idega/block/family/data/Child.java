@@ -1,14 +1,14 @@
 package is.idega.block.family.data;
 
 
-import is.idega.block.family.business.NoCustodianFound;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.idega.data.IDOEntity;
 import com.idega.user.data.User;
+
+import is.idega.block.family.business.NoCustodianFound;
 
 public interface Child extends IDOEntity, User {
 
@@ -44,6 +44,8 @@ public interface Child extends IDOEntity, User {
 	 * @see is.idega.block.family.data.ChildBMPBean#setRelation
 	 */
 	public void setRelation(Custodian custodian, String relation);
+
+	public void storeRelation(Custodian custodian, String relation);
 
 	/**
 	 * @see is.idega.block.family.data.ChildBMPBean#getRelation
