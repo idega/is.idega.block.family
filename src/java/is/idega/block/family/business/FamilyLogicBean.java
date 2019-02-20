@@ -1225,7 +1225,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 				RELATION_TYPE_GROUP_SPOUSE,
 				RELATION_TYPE_GROUP_SIBLING,
 				RELATION_TYPE_GROUP_COHABITANT
-				);
+		);
 	}
 
 	@Override
