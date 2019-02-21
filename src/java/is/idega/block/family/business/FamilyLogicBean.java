@@ -1244,4 +1244,43 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		return results;
 	}
 
+	@Override
+	public void store(Custodian custodian, Child child, boolean storeMaritalStatus, String relation, String maritalStatus) {
+		try {
+			Thread saver = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					if (storeMaritalStatus) {
+						custodian.setMaritalStatus(maritalStatus);
+					}
+					custodian.store();
+
+					if (custodian.isCustodianOf(child)) {
+						try {
+							child.storeRelation(custodian, relation);
+						} catch (Throwable e) {
+							getLogger().log(Level.WARNING, "Error storing child " + child + " after relation '" + relation + "' with " + custodian + " added");
+						}
+					} else {
+						child.setExtraCustodian(custodian, relation);
+						try {
+							child.store();
+						} catch (Throwable e) {
+							getLogger().log(Level.WARNING, "Error storing child " + child + " after extra custodian (" + custodian + ") added");
+						}
+					}
+				}
+
+			});
+			if (getIWMainApplication().getSettings().getBoolean("family.update_un_synchron", false)) {
+				saver.start();
+			} else {
+				saver.run();
+			}
+		} catch (Throwable e) {
+			getLogger().log(Level.WARNING, "Error storing custodian (" + custodian + ") and child " + child, e);
+		}
+	}
+
 }

@@ -339,4 +339,7 @@ public interface FamilyLogic extends IBOService {
 	public Collection<User> getRelatedUsers(User user);
 
 	public Collection<Custodian> getConvertedUsersAsCustodians(Collection<User> custodians);
+
+	public void store(Custodian custodian, Child child, boolean storeMaritalStatus, String relation, String maritalStatus);
+
 }
