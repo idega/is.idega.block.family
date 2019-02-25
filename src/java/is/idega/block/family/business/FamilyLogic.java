@@ -342,4 +342,8 @@ public interface FamilyLogic extends IBOService {
 
 	public void store(Custodian custodian, Child child, boolean storeMaritalStatus, String relation, String maritalStatus);
 
+	public void storeRelative(Child child, String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email);
+
+	public void removeRelative(Child child, int number);
+
 }

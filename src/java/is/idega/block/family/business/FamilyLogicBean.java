@@ -1283,4 +1283,32 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		}
 	}
 
+	@Override
+	public void storeRelative(Child child, String personalID, String name, String relation, int number, String homePhone, String workPhone, String mobilePhone, String email) {
+		if (child == null) {
+			getLogger().warning("Child is not provided");
+			return;
+		}
+
+		try {
+			child.storeRelative(personalID, name, relation, number, homePhone, workPhone, mobilePhone, email);
+		} catch (Throwable e) {
+			getLogger().log(Level.WARNING, "Error storing relative (name: '" + name + "', personal ID: '" + personalID + "', number: " + number + ") for child " + child, e);
+		}
+	}
+
+	@Override
+	public void removeRelative(Child child, int number) {
+		if (child == null) {
+			getLogger().warning("Child is not provided");
+			return;
+		}
+
+		try {
+			child.removeRelative(number);
+		} catch (Throwable e) {
+			getLogger().log(Level.WARNING, "Error removing relative (number: " + number + ") for child " + child, e);
+		}
+	}
+
 }
