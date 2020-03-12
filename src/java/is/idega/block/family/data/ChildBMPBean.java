@@ -219,17 +219,20 @@ public class ChildBMPBean extends UserBMPBean implements User, Child {
 					return null;
 				}
 
-				//	Double checking if found custodian is currently a custodian of a child
-				if (isCustodianFor(custodian, this)) {
-					return custodian;
-				}
+				//*** Return custodian without additional checking, because extra custodian is saved ONLY as metadata and isCustodianFor(custodian, this) will return always FALSE. ***
+				return custodian;
 
-				try {
-					removeMetaData(METADATA_OTHER_CUSTODIAN);
-				} catch (Exception e) {
-					getLogger().log(Level.WARNING, "Error removing metadata '" + METADATA_OTHER_CUSTODIAN + "' for " + this, e);
-				}
-				return null;
+//				//	Double checking if found custodian is currently a custodian of a child
+//				if (isCustodianFor(custodian, this)) {
+//					return custodian;
+//				}
+//
+//				try {
+//					removeMetaData(METADATA_OTHER_CUSTODIAN);
+//				} catch (Exception e) {
+//					getLogger().log(Level.WARNING, "Error removing metadata '" + METADATA_OTHER_CUSTODIAN + "' for " + this, e);
+//				}
+//				return null;
 			} catch (FinderException fe) {
 				fe.printStackTrace();
 			} catch (Exception e) {
