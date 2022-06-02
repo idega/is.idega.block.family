@@ -52,12 +52,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 
 	private static final long serialVersionUID = -8696169731242119560L;
 
-	private static final String RELATION_TYPE_GROUP_PARENT = "FAM_PARENT";
-	private static final String RELATION_TYPE_GROUP_CUSTODIAN = "FAM_CUSTODIAN";
-	private static final String RELATION_TYPE_GROUP_CHILD = "FAM_CHILD";
-	private static final String RELATION_TYPE_GROUP_SPOUSE = "FAM_SPOUSE";
-	private static final String RELATION_TYPE_GROUP_SIBLING = "FAM_SIBLING";
-	private static final String RELATION_TYPE_GROUP_COHABITANT = "FAM_COHABITANT";
+	private static final String RELATION_TYPE_GROUP_PARENT = CoreConstants.FAM_RELATION_PARENT;
+	private static final String RELATION_TYPE_GROUP_CUSTODIAN = CoreConstants.FAM_RELATION_CUSTODIAN;
+	private static final String RELATION_TYPE_GROUP_CHILD = CoreConstants.FAM_RELATION_CHILD;
+	private static final String RELATION_TYPE_GROUP_SPOUSE = CoreConstants.FAM_RELATION_SPOUSE;
+	private static final String RELATION_TYPE_GROUP_SIBLING = CoreConstants.FAM_RELATION_SIBLING;
+	private static final String RELATION_TYPE_GROUP_COHABITANT = CoreConstants.FAM_RELATION_COHABITANT;
 
 	protected FamilyMemberHome getFamilyMemberHome() {
 		try {
@@ -109,7 +109,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return Collections.emptyList();
 		}
 
-		Collection<User> newColl = new ArrayList<User>();
+		Collection<User> newColl = new ArrayList<>();
 		for (Group group: coll) {
 			newColl.add(convertGroupToUser(group, relationType));
 		}
@@ -1100,7 +1100,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 		IWTimestamp dateBeforeXYears = new IWTimestamp(System.currentTimeMillis());
 		dateBeforeXYears.setYear(dateBeforeXYears.getYear() - age);
 
-		Collection<User> childrenUnderAge = new ArrayList<User>();
+		Collection<User> childrenUnderAge = new ArrayList<>();
 		for (Object object: allChildren) {
 			if (object instanceof Custodian) {
 				try {
@@ -1200,12 +1200,12 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return getSiblingsFor(user);
 		}else if(relationType.equals(getSpouseRelationType())){
 			User spouse = getSpouseFor(user);
-			ArrayList<User> spouses = new ArrayList<User>();
+			ArrayList<User> spouses = new ArrayList<>();
 			spouses.add(spouse);
 			return spouses;
 		}else if(relationType.equals(getCohabitantRelationType())){
 			User cohabitant = getCohabitantFor(user);
-			ArrayList<User> cohabitants = new ArrayList<User>();
+			ArrayList<User> cohabitants = new ArrayList<>();
 			cohabitants.add(cohabitant);
 			return cohabitants;
 		}
@@ -1234,7 +1234,7 @@ public class FamilyLogicBean extends IBOServiceBean implements FamilyLogic {
 			return Collections.emptyList();
 		}
 
-		Collection<Custodian> results = new ArrayList<Custodian>();
+		Collection<Custodian> results = new ArrayList<>();
 		for (User custodian: custodians) {
 			Custodian result = castUserGroupToCustodian(custodian);
 			if (result != null) {
